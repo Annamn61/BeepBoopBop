@@ -1,0 +1,14 @@
+.container {
+    width: fit-content;
+    min-height: 260px;
+    background-color: pink;
+    display: flex;
+    flex-direction: row;
+    padding: 16px;
+    gap: 8px;
+}
+
+.section {
+    padding: 16px;
+    background-color: grey;
+}
