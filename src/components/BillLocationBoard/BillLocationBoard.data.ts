@@ -1,1 +1,1 @@
-export const possibleLocation = ['introduced', 'firstCommittee']
+export const possibleLocation = ['Introduced', 'In Committee', 'First Chamber', 'Second Chamber', 'Passed', 'Failed']
