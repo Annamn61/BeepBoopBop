@@ -1,0 +1,21 @@
+export const measureData = [
+  { "measurePrefix": "HB", "measureNumber": 3119 },
+  { "measurePrefix": "HB", "measureNumber": 3103 },
+  { "measurePrefix": "SB", "measureNumber": 681 },
+  { "measurePrefix": "HB", "measureNumber": 2200 },
+  { "measurePrefix": "HB", "measureNumber": 3170 },
+  { "measurePrefix": "SB", "measureNumber": 88 },
+  { "measurePrefix": "HB", "measureNumber": 3081 },
+  { "measurePrefix": "SB", "measureNumber": 682 },
+  { "measurePrefix": "HB", "measureNumber": 3450 },
+  { "measurePrefix": "HB", "measureNumber": 2949 },
+  { "measurePrefix": "SB", "measureNumber": 680 },
+  { "measurePrefix": "SB", "measureNumber": 685 },
+  { "measurePrefix": "SB", "measureNumber": 73 },
+  { "measurePrefix": "SB", "measureNumber": 79 },
+  { "measurePrefix": "LC", "measureNumber": 1440 },
+  { "measurePrefix": "HB", "measureNumber": 3193 },
+  { "measurePrefix": "HB", "measureNumber": 3062 },
+  { "measurePrefix": "HB", "measureNumber": 3336 },
+  { "measurePrefix": "HJM", "measureNumber": 10 }
+];

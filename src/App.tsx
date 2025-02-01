@@ -6,8 +6,12 @@ import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 const localizer = momentLocalizer(moment)
+import { fetchMeasures } from './utils/ODataRquests';
 
 function App() {
+  const [count, setCount] = useState(0);
+
+  fetchMeasures();
 
   return (
       <div>
