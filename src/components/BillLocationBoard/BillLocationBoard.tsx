@@ -24,7 +24,7 @@ export const BillLocationBoard = () => {
         fetchMeasures().then(response => {
             response.forEach(bill => {
                 if(bill?.value?.[0]) {
-                    console.log('position', bill?.value?.[0]?.CurrentLocation);
+                    // TODO: We should create a helper function to getCurrentLocation
                     const location = convertGivenLocationToLocationColumn(bill.value[0].CurrentLocation);
                     tempBillsInLocations[location] = [...tempBillsInLocations[location], bill]
                 };
@@ -45,9 +45,10 @@ export const BillLocationBoard = () => {
                     
                     {billsInLocations[location].map(bill => {                       
                         const position = findMeasureByNumber(bill.value[0].MeasureNumber)?.position;
+                        const measureDocURL = bill.value[0].MeasureDocuments[0].DocumentUrl;
 
                         return (
-                        <div className='bill'>
+                        <a className='bill' href={measureDocURL} target='_blank'>
                             <div className="bill-title">
                                 {bill.value[0].RelatingTo}
                             </div>
@@ -56,10 +57,10 @@ export const BillLocationBoard = () => {
                                     {position === 'Support' ? '🌍' : '🚨'}
                                 </div>
                                 <div className={`bill-number ${position === 'Support' ? 'bill-number-green' : 'bill-number-orange'}`} >
-                                    {`${bill.value[0].MeasurePrefix} ${bill.value[0].LCNumber}`}
+                                    {`${bill.value[0].MeasurePrefix} ${bill.value[0].MeasureNumber}`}
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     )})}
                     </div>
                 </div>)
