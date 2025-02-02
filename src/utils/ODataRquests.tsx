@@ -7,7 +7,6 @@ const sessionKey = "2025R1";
 export const getMeasure = async (sessionKey: string, measurePrefix: string, measureNumber: number) => {
   try {
     const response = await axios.get(`${baseURL}/Measures?$filter=SessionKey eq '${sessionKey}' and MeasurePrefix eq '${measurePrefix}' and MeasureNumber eq ${measureNumber}`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching measures:", error);
@@ -48,26 +47,24 @@ export const fetchMeasures = async () => {
   const measures = getMeasuresFromStore();
   if(measures && !isMeasureCacheOutdated(measures)) {
     return measures?.measures || [];
-    
   }
   try {
-    
     const requests = measureData.map(({ measurePrefix, measureNumber }) => {
-      const url = `${baseURL}/Measures?$filter=MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}' and SessionKey eq '${sessionKey}'`;
+      const url = `${baseURL}/Measures?$filter=MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}' and SessionKey eq '${sessionKey}'&$expand=MeasureDocuments`;
       return axios.get(url);
     });
 
     const responses = await Promise.all(requests);
-    
+
     // Extract data from responses
     const data = responses.map(response => response.data);
 
-    // console.log("Fetched Measures:", data);
     const measureObject = {
       lastUpdated: Date.now().toString(),
     measures: data,
     }
-    localStorage.setItem('Measures', JSON.stringify(measureObject))
+    localStorage.setItem('Measures', JSON.stringify(measureObject));
+    // localStorage.setItem('MeasureDocuments', JSON.stringify(measureObject.measures.))
     return data;
   } catch (error) {
     console.error("Error fetching measures:", error);
@@ -89,8 +86,6 @@ export const fetchCommitteeMeetings = async () => {
     console.error("Error fetching committee meetings:", error);
     throw error;
   }
-  
-
 };
 
 
@@ -115,7 +110,6 @@ export const fetchCommitteeAgendaItems = async () => {
 
 export const fetchMeasureDocuments = async () => {
   try {
-
     const url = `${baseURL}/MeasureDocuments?$filter=SessionKey eq '${sessionKey}'`;
     axios.get(url).then((response) => {
       console.log('MD', response);
