@@ -2,7 +2,6 @@ import axios from "axios";
 import { measureData } from "../data/measureData";
 
 const baseURL = "https://api.oregonlegislature.gov/odata/odataservice.svc/";
-const sessionKey = "2025R1";
 
 export const getMeasure = async (sessionKey: string, measurePrefix: string, measureNumber: number) => {
   try {
@@ -46,10 +45,11 @@ export const isMeasureCacheOutdated = (measures: MeasureStore) => {
 export const fetchMeasures = async () => {
   const measures = getMeasuresFromStore();
   if(measures && !isMeasureCacheOutdated(measures)) {
+    console.log(isMeasureCacheOutdated(measures))
     return measures?.measures || [];
   }
   try {
-    const requests = measureData.map(({ measurePrefix, measureNumber }) => {
+    const requests = measureData.map(({ measurePrefix, measureNumber, sessionKey }) => {
       const url = `${baseURL}/Measures?$filter=MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}' and SessionKey eq '${sessionKey}'&$expand=MeasureDocuments`;
       return axios.get(url);
     });
@@ -75,6 +75,7 @@ export const fetchMeasures = async () => {
 };
 
 export const fetchCommitteeMeetings = async () => {
+  const sessionKey = '2025R1';
   try {
 
     const url = `${baseURL}/CommitteeMeetings?$filter=SessionKey eq '${sessionKey}'`;
@@ -109,6 +110,8 @@ export const fetchCommitteeAgendaItems = async () => {
 };
 
 export const fetchMeasureDocuments = async () => {
+  const sessionKey = '2025R1';
+
   try {
     const url = `${baseURL}/MeasureDocuments?$filter=SessionKey eq '${sessionKey}'`;
     axios.get(url).then((response) => {

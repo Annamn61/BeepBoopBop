@@ -29,37 +29,3 @@
     flex-direction: column;
     gap: 8px;
 }
-
-.bill {
-    flex-direction: column;
-    text-align: left;
-    border: 2px solid lightgray;
-    border-radius: 8px;
-    padding: 8px;
-    display: flex;
-    align-items: flex-start;
-}
-
-.bill-title {
-    display: -webkit-box;
-    max-width: 100%;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.bill-additonal-info {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-}
-
-.bill-number {
-    font-weight: 600;
-}
-.bill-number-green {
- color: #366FD2;
-}
-.bill-number-orange {
-    color: #E37C32;
-}
