@@ -5,11 +5,11 @@ import { possibleLocation } from './BillLocationBoard.data'
 import Bill from './BillCard/BillCard';
 
 const convertGivenLocationToLocationColumn = (location: string) => {
-    console.log('location', location);
-    if(location === 'In House Committee' || location === 'In Senate Committee') {
-        return 'In Committee'
-    }
-    return 'Error'
+    return location;
+    // if(location === 'In House Committee' || location === 'In Senate Committee') {
+    //     return 'In Committee'
+    // }
+    // return 'Error'
 }
 
 export const BillLocationBoard = () => {
