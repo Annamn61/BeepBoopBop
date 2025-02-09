@@ -1,6 +1,5 @@
 import axios from "axios";
 import { userTrackedMeasures } from "../data/userMeasureData";
-import useBillStore from "../store/MeasureStore";
 import { MeasureLocalStorage } from "../types/MeasureTypes";
 
 const baseURL = "https://api.oregonlegislature.gov/odata/odataservice.svc/";
