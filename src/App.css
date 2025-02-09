@@ -1,7 +1,11 @@
+#body {
+  overscroll-behavior-y: none;
+}
+
 #root {
-  padding: 2rem;
   text-align: center;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .logo {
@@ -38,4 +42,22 @@
 
 .read-the-docs {
   color: #888;
+}
+
+
+.app-container {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.content {
+  /* flex-grow: 1; */
+  overflow: hidden;
+}
+
+.sidebar {
+  min-width: 100px;
+  background-color: lightblue;
 }

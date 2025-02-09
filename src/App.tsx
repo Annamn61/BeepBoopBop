@@ -15,16 +15,19 @@ function App() {
   // fetchMeasureDocuments();
 
   return (
-      <div>
+      <div className="app-container">
+        <div className="sidebar"> SIDEBAR</div>
+        <div className="content">
         <BillLocationBoard />
         
         <Calendar
-      localizer={localizer}
-      events={[]}
-      startAccessor="start"
-      endAccessor="end"
-      style={{ height: 500, width: 800 }}
-    />
+          localizer={localizer}
+          events={[]}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: 500, width: 800 }}
+        />
+        </div>
       </div>
   )
 }

@@ -31,22 +31,27 @@ export const BillLocationBoard = () => {
 
 
     return (
-        <div className="container">
-            {renderedKanbanLocations.map((group) => {
-                return (
-                    <div className="groups-container">
-                        <GroupTitle group={group} />
-                        <div className="group"> 
-                            {group.data.map((section) => (
-                                <Section
-                                    billsInStatuses={billsInLocations[group.group]?.[section.section]}
-                                    sectionData={section}
-                                />
-                            ))}
-                        </div>
-                   </div>
-                )
-            })}
+        <div className="kanban-container">
+            <div className="kanban-title">KANBAN</div>
+            <div className="kanban-content">
+                <div className="groups-container">
+                {renderedKanbanLocations.map((group) => {
+                    return (
+                        <div className="group">
+                            <GroupTitle group={group} />
+                            <div className="sections-container"> 
+                                {group.data.map((section) => (
+                                    <Section
+                                        billsInStatuses={billsInLocations[group.group]?.[section.section]}
+                                        sectionData={section}
+                                    />
+                                ))}
+                            </div>
+                    </div>
+                    )
+                })}
+                </div>
+            </div>
         </div>
     )
 }

@@ -10,13 +10,42 @@
     box-sizing: border-box;
 }
 
+.kanban-container {
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: #000;
+    align-items: flex-start;
+    padding: 48px 0px;
+}
+
+.kanban-title {
+    padding-left: 32px;
+}
+
+.kanban-content {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
 .groups-container {
+    padding-left: 32px;
+    padding-right: 48px;
+    display: flex;
+    width: fit-content;
+    flex-direction: row;
+    gap: 16px;
+}
+
+.group {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-.group {
+.sections-container {
     display: flex;
     flex-direction: row;
     gap: 16px;
