@@ -1,34 +1,26 @@
 import { useEffect, useState } from 'react';
 import { fetchMeasures } from '../../utils/ODataRquests';
 import './BillLocationBoard.css'
-import { possibleLocation } from './BillLocationBoard.data'
-import Bill from './BillCard/BillCard';
-
-const convertGivenLocationToLocationColumn = (location: string) => {
-    return location;
-    // if(location === 'In House Committee' || location === 'In Senate Committee') {
-    //     return 'In Committee'
-    // }
-    // return 'Error'
-}
+import { getKanbanLocationFromBilLocation, renderedKanbanLocations } from './Locations/Locations.helpers';
+import GroupTitle from './GroupTitle/GroupTitle';
+import Section from './Section/Section';
 
 export const BillLocationBoard = () => {
 
-    const [billsInLocations, setBillsInLocations] = useState<{[key: string]: any[]}>({});
+    const [billsInLocations, setBillsInLocations] = useState<any>({});
 
     useEffect(() => {
-        let tempBillsInLocations: {[key: string]: any[]} = {}
-        possibleLocation.forEach(location => (
-            tempBillsInLocations[location] = []
-        ))
+        let tempBillsInLocations: any = {}
     
         fetchMeasures().then(response => {
             response.forEach(bill => {
                 if(bill?.value?.[0]) {
-                    console.log('bill', bill)
-                    // TODO: We should create a helper function to getCurrentLocation
-                    const location = convertGivenLocationToLocationColumn(bill.value[0].CurrentLocation);
-                    tempBillsInLocations[location] = [...tempBillsInLocations[location], bill]
+                    const {group, section, status, sublocation} = getKanbanLocationFromBilLocation(bill.value[0].CurrentLocation, bill.value[0].MeasurePrefix);
+                    tempBillsInLocations[group] = tempBillsInLocations[group] || {};
+                    tempBillsInLocations[group][section] = tempBillsInLocations[group][section] || {}
+                    tempBillsInLocations[group][section][status] = tempBillsInLocations[group][section][status] || {}
+                    tempBillsInLocations[group][section][status][sublocation] = tempBillsInLocations[group][section][status][sublocation] || []
+                    tempBillsInLocations[group][section][status][sublocation] = [...tempBillsInLocations[group][section][status][sublocation], bill];
                 };
             })
             setBillsInLocations(tempBillsInLocations);
@@ -40,13 +32,20 @@ export const BillLocationBoard = () => {
 
     return (
         <div className="container">
-            {Object.keys(billsInLocations).map((location) => {
-                return (<div className="section">
-                    <div className="section-title">{location}</div>
-                    <div className="bill-container">
-                        {billsInLocations[location].map((bill) => (<Bill bill={bill} />))}
-                    </div>
-                </div>)
+            {renderedKanbanLocations.map((group) => {
+                return (
+                    <div className="groups-container">
+                        <GroupTitle group={group} />
+                        <div className="group"> 
+                            {group.data.map((section) => (
+                                <Section
+                                    billsInStatuses={billsInLocations[group.group]?.[section.section]}
+                                    sectionData={section}
+                                />
+                            ))}
+                        </div>
+                   </div>
+                )
             })}
         </div>
     )

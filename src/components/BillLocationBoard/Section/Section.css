@@ -1,0 +1,29 @@
+.section {
+    display: flex;
+    flex-direction: column;
+    color: #000;
+    gap: 24px;
+    width: 300px;
+    background-color: #F7F7F7;
+    padding: 20px 20px;
+    box-sizing: border-box;
+    border-radius: 8px;
+}
+
+.status-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sublocation-title {
+    font-size: 14px;
+    color: #585858;
+}
+
+.sublocations-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}

@@ -8,12 +8,17 @@ interface BillProps {
 const Bill = ({bill}: BillProps) => {
     const position = findMeasureByNumber(bill.value[0].MeasureNumber)?.position;
     const measureDocURL = bill.value[0].MeasureDocuments?.[0]?.DocumentUrl;
+    const committeeCode = bill.value[0].CurrentCommitteeCode;
+    const billTitle = bill.value[0].RelatingTo;
 
     return (
     <a className='bill' href={measureDocURL} target='_blank'>
         <div className="bill-title">
-            {bill.value[0].RelatingTo}
+            {billTitle}
         </div>
+        {committeeCode && <div className="bill-committee">
+            {committeeCode}
+        </div>}
         <div className="bill-additonal-info">
             <div className="bill-position">
                 {position === 'Support' ? '🌍' : '🚨'}
