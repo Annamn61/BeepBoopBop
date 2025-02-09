@@ -6,13 +6,18 @@ import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 const localizer = momentLocalizer(moment)
-import { fetchCommitteeMeetings, fetchCommitteeAgendaItems, fetchMeasureDocuments } from './utils/ODataRquests';
+import { fetchMeasures, fetchCommitteeAgendaItems, fetchMeasureDocuments } from './utils/ODataRquests';
+import useBillStore from './store/MeasureStore'
+import { useEffect } from 'react'
 
 function App() {
+  const { setMeasures } = useBillStore();
 
-  // fetchCommitteeMeetings();
-  fetchCommitteeAgendaItems(); //Ok so this is where the data we would need for meetings would be theoretically I think. 
-  // fetchMeasureDocuments();
+  useEffect(() => {
+    fetchMeasures().then((response) => {
+      setMeasures(response)
+    });
+  }, [])
 
   return (
       <div className="app-container">

@@ -1,3 +1,4 @@
+import useBillStore from '../../../store/MeasureStore';
 import Bill from '../BillCard/BillCard';
 import './Section.css'
 import SectionHeader from './SectionHeader/SectionHeader';
@@ -5,7 +6,8 @@ import StatusTitle from './StatusTitle/StatusTitle';
 
 interface SectionProps {
     sectionData: {data: any, section: string},
-    billsInStatuses: any,
+    groupTitle: string,
+    sectionTitle: string,
 }
 
 const getSectionBillCount = (billsInStatuses: any, statusData: any) => {
@@ -21,8 +23,11 @@ const getSectionBillCount = (billsInStatuses: any, statusData: any) => {
     return totalCount;
 }
 
-const Section = ({sectionData, billsInStatuses}: SectionProps) => {
+const Section = ({sectionData, groupTitle, sectionTitle}: SectionProps) => {
     const {section, data} = sectionData;
+    const measuresInKanbanLocations = useBillStore.getState().getMeasuresSortedIntoKanbanLocations();
+    const billsInStatuses = measuresInKanbanLocations[groupTitle]?.[sectionTitle]
+
     const billCount = getSectionBillCount(billsInStatuses, data);
 
     return (
@@ -35,7 +40,7 @@ const Section = ({sectionData, billsInStatuses}: SectionProps) => {
                 {status.data.map((sublocation: string) => (
                     <>
                         <div className="sublocation-title">{sublocation}</div>
-                        {(billsInStatuses?.[status.status]?.[sublocation] || []).map((bill: any) => (<Bill bill={bill} />))}
+                        {(billsInStatuses?.[status.status]?.[sublocation] || []).map((bill: any) => (<Bill billId={bill.id} />))}
                     </>
                 ))}
                 </div>

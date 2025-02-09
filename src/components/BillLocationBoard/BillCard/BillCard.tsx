@@ -1,15 +1,15 @@
-import { findMeasureByNumber } from "../../../data/measureData";
+import useBillStore from "../../../store/MeasureStore";
 import './BillCard.css'
 
 interface BillProps {
-    bill: any, //TODO: Fix any
+    billId: string,
 }
 
-const Bill = ({bill}: BillProps) => {
-    const position = findMeasureByNumber(bill.value[0].MeasureNumber)?.position;
-    const measureDocURL = bill.value[0].MeasureDocuments?.[0]?.DocumentUrl;
-    const committeeCode = bill.value[0].CurrentCommitteeCode;
-    const billTitle = bill.value[0].RelatingTo;
+const Bill = ({ billId }: BillProps) => {
+    const committeeCode = useBillStore.getState().getMeasureCommitteeNameById(billId);
+    const position = useBillStore.getState().getUserTrackedMeasurePositionById(billId);
+    const measureDocURL = useBillStore.getState().getMeasureDocumentUrlById(billId);
+    const billTitle = useBillStore.getState().getMeasureTitleById(billId);
 
     return (
     <a className='bill' href={measureDocURL} target='_blank'>
@@ -24,7 +24,7 @@ const Bill = ({bill}: BillProps) => {
                 {position === 'Support' ? '🌍' : '🚨'}
             </div>
             <div className={`bill-number ${position === 'Support' ? 'bill-number-green' : 'bill-number-orange'}`} >
-                {`${bill.value[0].MeasurePrefix} ${bill.value[0].MeasureNumber}`}
+                {billId}
             </div>
         </div>
     </a>

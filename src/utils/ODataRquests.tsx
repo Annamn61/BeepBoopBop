@@ -1,5 +1,7 @@
 import axios from "axios";
-import { measureData } from "../data/measureData";
+import { userTrackedMeasures } from "../data/userMeasureData";
+import useBillStore from "../store/MeasureStore";
+import { MeasureLocalStorage } from "../types/MeasureTypes";
 
 const baseURL = "https://api.oregonlegislature.gov/odata/odataservice.svc/";
 
@@ -13,28 +15,15 @@ export const getMeasure = async (sessionKey: string, measurePrefix: string, meas
   }
 };
 
-interface MeasureObject {
-  value: [Measure]
-}
-
-interface Measure {
-  MeasureNumber: number,
-}
-
-interface MeasureStore {
-  lastUpdated: string,
-  measures: Measure[], 
-}
-
 export const getMeasuresFromStore = () => {
   const result = localStorage.getItem('Measures')
   if(result) {
-    return  JSON.parse(result) as MeasureStore;
+    return  JSON.parse(result) as MeasureLocalStorage;
   }
   return undefined;
 }
 
-export const isMeasureCacheOutdated = (measures: MeasureStore) => {
+export const isMeasureCacheOutdated = (measures: MeasureLocalStorage) => {
   const now = new Date();
   const lastUpdated = new Date(measures.lastUpdated)
   const oneDayInMilliseconds = 24 * 60 * 60 * 1000;    
@@ -45,11 +34,15 @@ export const isMeasureCacheOutdated = (measures: MeasureStore) => {
 export const fetchMeasures = async () => {
   const measures = getMeasuresFromStore();
   if(measures && !isMeasureCacheOutdated(measures)) {
-    console.log(isMeasureCacheOutdated(measures))
-    return measures?.measures || [];
+    const measureState =  measures?.measures || [];
+    console.log('setting measure state', measures?.measures)
+    return measureState;
   }
   try {
-    const requests = measureData.map(({ measurePrefix, measureNumber, sessionKey }) => {
+    const requests = userTrackedMeasures.map(({ id, sessionKey }) => {
+      const splitId = id.split(' ');
+      const measurePrefix = splitId[0];
+      const measureNumber = splitId[1];
       const url = `${baseURL}/Measures?$filter=MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}' and SessionKey eq '${sessionKey}'&$expand=MeasureDocuments`;
       return axios.get(url);
     });
@@ -61,10 +54,11 @@ export const fetchMeasures = async () => {
 
     const measureObject = {
       lastUpdated: Date.now().toString(),
-    measures: data,
+      measures: data,
     }
     localStorage.setItem('Measures', JSON.stringify(measureObject));
     // localStorage.setItem('MeasureDocuments', JSON.stringify(measureObject.measures.))
+    console.log('setting Fresh state', data)
     return data;
   } catch (error) {
     console.error("Error fetching measures:", error);
@@ -99,7 +93,7 @@ export const fetchCommitteeAgendaItems = async () => {
 
     const url = `${baseURL}/CommitteeAgendaItems?$filter=MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}'`;
     axios.get(url).then((response) => {
-      console.log('AI', response);
+      // console.log('AI', response);
     });
     
   } catch (error) {

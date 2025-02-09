@@ -1,3 +1,6 @@
+import { administrativeKanban, chamberKanban, notPassedKanban, passedKanban } from "../../../types/KanbanTypes";
+import { Measure } from "../../../types/MeasureTypes";
+
 const chamberOptions = [
     "In House Committee",
     "In House Committee Awaiting transfer to Desk",
@@ -77,40 +80,12 @@ export const renderedKanbanLocations = [
         ]},
     ]
 
-interface passedKanban {
-    group: 'Passed'
-    section: ''
-    status: ''
-    sublocation: ''
-}
-
-interface notPassedKanban {
-    group: 'Not Passed'
-    section: ''
-    status: ''
-    sublocation: ''
-}
-
-interface administrativeKanban {
-    group:  'Administrative Checks'
-    section:  'Awaiting Signature'
-    status: "Governors Office" | "Chamber"
-    sublocation: "Senate President Desk" | "Speakers Desk"
-}
-
-interface chamberKanban {
-    group: 'First Chamber' | 'Second Chamber',
-    section: 'Committee' | 'Floor',
-    status: 'In Committee' | 'Awaiting Transfer to desk'
-    sublocation: 'In House Committee' | 'In Senate Committee' | 'On House Floor' | 'On Senate Floor'
-}
-
-export const getKanbanLocationFromBilLocation = (location: string, xxx: 'SB' | 'HB') => {
+export const getKanbanLocationFromBilLocation = (location: string, xxx: Measure["MeasurePrefix"]) => {
     // Chambers
     if(chamberOptions.some(option => location === option)) {
         var chamberLocation = {} as chamberKanban;
 
-        // TODO: Fix for joint Measures (HJM)
+        // TODO: Fix for joint Measures (HJM) + LC
         const billAndChamberMatch = (location.includes('Senate') && xxx === 'SB') || (location.includes('House') && xxx === 'HB');
         const inCommittee = location.includes('Committee');
 
