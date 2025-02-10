@@ -9,9 +9,10 @@ const localizer = momentLocalizer(moment)
 import { fetchMeasures } from './utils/ODataRquests';
 import useBillStore from './store/MeasureStore'
 import { useEffect } from 'react'
+import { Sidebar } from './components/Sidebar/Sidebar'
 
 function App() {
-  const { setUnfilteredMeasures, userTrackedMeasures, getMeasureTitleById, setUserTrackedMeasureFilterStatusById} = useBillStore();
+  const { setUnfilteredMeasures } = useBillStore();
 
 
   useEffect(() => {
@@ -22,22 +23,7 @@ function App() {
 
   return (
       <div className="app-container">
-        <div className="sidebar">
-          TrackedBills
-          {userTrackedMeasures.map((measure) => {
-            const {isDisplayed, id } = measure;
-            const title = getMeasureTitleById(id);
-            return (
-              <div className="sidebar-measure-filter">
-                  <button className={`checkbox${isDisplayed ? '-active': ''}`} onClick={() => setUserTrackedMeasureFilterStatusById(id, !isDisplayed)} />
-                  <div className="sidebar-measure-filter-data">
-                    <div>{id}</div>
-                    <div>{title}</div>
-                  </div>
-              </div>
-            )
-          })}
-        </div>
+        <Sidebar />
         <div className="content">
         <BillLocationBoard />
         
