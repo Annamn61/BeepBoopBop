@@ -34,7 +34,6 @@ export const fetchMeasures = async () => {
   const measures = getMeasuresFromStore();
   if(measures && !isMeasureCacheOutdated(measures)) {
     const measureState =  measures?.measures || [];
-    console.log('setting measure state', measures?.measures)
     return measureState;
   }
   try {
@@ -57,7 +56,6 @@ export const fetchMeasures = async () => {
     }
     localStorage.setItem('Measures', JSON.stringify(measureObject));
     // localStorage.setItem('MeasureDocuments', JSON.stringify(measureObject.measures.))
-    console.log('setting Fresh state', data)
     return data;
   } catch (error) {
     console.error("Error fetching measures:", error);
@@ -73,7 +71,7 @@ export const fetchCommitteeMeetings = async () => {
 
     const url = `${baseURL}/CommitteeMeetings?$filter=SessionKey eq '${sessionKey}'`;
     axios.get(url).then((response) => {
-      console.log('CM', response);
+      // console.log('CM', response);
     });
     
   } catch (error) {
@@ -108,7 +106,7 @@ export const fetchMeasureDocuments = async () => {
   try {
     const url = `${baseURL}/MeasureDocuments?$filter=SessionKey eq '${sessionKey}'`;
     axios.get(url).then((response) => {
-      console.log('MD', response);
+      // console.log('MD', response);
     });
     
   } catch (error) {

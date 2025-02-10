@@ -12,7 +12,7 @@ const Bill = ({ billId }: BillProps) => {
     const billTitle = useBillStore.getState().getMeasureTitleById(billId);
 
     return (
-    <a className='bill' href={measureDocURL} target='_blank'>
+    <a className='bill' href={measureDocURL} target='_blank' key={billId}>
         <div className="bill-title">
             {billTitle}
         </div>

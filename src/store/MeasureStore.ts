@@ -8,6 +8,7 @@ interface MeasureState {
   getUserTrackedMeasurePositionById: (id: string) => UserTrackedMeasure['position'] | undefined;
   measures: Measure[];
   getMeasuresSortedIntoKanbanLocations: () => any,
+  getHasKanbanSortingError: () => boolean,
   setMeasures: (measures: MeasureObject[]) => void;
   getMeasureById: (id: string) => Measure | undefined;
   getMeasureCommitteeNameById: (id: string) => string | undefined;
@@ -19,7 +20,8 @@ export const useBillStore = create<MeasureState>((set, get) => ({
   userTrackedMeasures,
   getUserTrackedMeasurePositionById: (id) => get().userTrackedMeasures.find((utm: UserTrackedMeasure) => utm.id === id)?.position,
   measures: [],
-  getMeasuresSortedIntoKanbanLocations: () => getMeasuresSortedIntoKanbanLocations(get().measures),
+  getMeasuresSortedIntoKanbanLocations: () => sortMeasuresIntoKanbanLocations(get().measures),
+  getHasKanbanSortingError: () => getHasSortingError(get().getMeasuresSortedIntoKanbanLocations()),
   setMeasures: (measureObjects) => set({ measures: getMeasuresFromMeasureObjects(measureObjects) }),
   getMeasureById: (id) => get().measures.find((measure: Measure) => measure.id === id),
   getMeasureCommitteeNameById: (id) => get().getMeasureById(id)?.CurrentCommitteeCode,
@@ -27,16 +29,20 @@ export const useBillStore = create<MeasureState>((set, get) => ({
   getMeasureDocumentUrlById: (id) => get().getMeasureById(id)?.MeasureDocuments?.[0]?.DocumentUrl,
 }));
 
-const getMeasuresSortedIntoKanbanLocations = (measures: Measure[]) => {
+const getHasSortingError = (sortedObject: any) => {
+  return !!sortedObject?.['Sorting Errors']
+}
+
+const sortMeasuresIntoKanbanLocations = (measures: Measure[]) => {
   let tempBillsInLocations: any = {}
   if(measures) {
-    measures.forEach(measure => {
-      const {group, section, status, sublocation} = getKanbanLocationFromBilLocation(measure.CurrentLocation, measure.MeasurePrefix);
-      tempBillsInLocations[group] = tempBillsInLocations[group] || {};
-      tempBillsInLocations[group][section] = tempBillsInLocations[group][section] || {}
-      tempBillsInLocations[group][section][status] = tempBillsInLocations[group][section][status] || {}
-      tempBillsInLocations[group][section][status][sublocation] = tempBillsInLocations[group][section][status][sublocation] || []
-      tempBillsInLocations[group][section][status][sublocation] = [...tempBillsInLocations[group][section][status][sublocation], measure];  
+    measures.forEach((measure) => {
+      let {group, section, status, sublocation} = getKanbanLocationFromBilLocation(measure.CurrentLocation, measure.MeasurePrefix);
+        tempBillsInLocations[group] = tempBillsInLocations[group] || {};
+        tempBillsInLocations[group][section] = tempBillsInLocations[group][section] || {}
+        tempBillsInLocations[group][section][status] = tempBillsInLocations[group][section][status] || {}
+        tempBillsInLocations[group][section][status][sublocation] = tempBillsInLocations[group][section][status][sublocation] || []
+        tempBillsInLocations[group][section][status][sublocation] = [...tempBillsInLocations[group][section][status][sublocation], measure];  
     })
   }
   return tempBillsInLocations;

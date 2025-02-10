@@ -1,20 +1,25 @@
 import './BillLocationBoard.css'
-import { renderedKanbanLocations } from './Locations/Locations.helpers';
+import { errorColumn, renderedKanbanLocations } from './Locations/Locations.helpers';
 import GroupTitle from './GroupTitle/GroupTitle';
 import Section from './Section/Section';
+import useBillStore from '../../store/MeasureStore';
 
-export const BillLocationBoard = () => (
+export const BillLocationBoard = () => {
+    const hasErrantMeasures = useBillStore.getState().getHasKanbanSortingError();
+
+    return (
     <div className="kanban-container">
         <div className="kanban-title">KANBAN</div>
         <div className="kanban-content">
             <div className="groups-container">
-            {renderedKanbanLocations.map((group) => {
+            {[...(hasErrantMeasures ? errorColumn : []), ...renderedKanbanLocations].map((group) => {
                 return (
-                    <div className="group">
+                    <div className="group" key={group.group}>
                         <GroupTitle group={group} />
                         <div className="sections-container"> 
                             {group.data.map((section) => (
                                 <Section
+                                    key={`${group.group}-${section.section}`}
                                     sectionData={section}
                                     groupTitle={group.group}
                                     sectionTitle={section.section}
@@ -27,4 +32,4 @@ export const BillLocationBoard = () => (
             </div>
         </div>
     </div>
-)
+)}

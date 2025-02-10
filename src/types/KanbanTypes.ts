@@ -1,22 +1,22 @@
 export interface passedKanban {
     group: 'Passed'
-    section: ''
-    status: ''
+    section: 'Passed'
+    status: 'Filed with Secretary of State' | 'Awaiting Chapter Number' | 'Chapter Number Assigned'
     sublocation: ''
 }
 
 export interface notPassedKanban {
     group: 'Not Passed'
-    section: ''
-    status: ''
-    sublocation: ''
+    section: 'Not Passed'
+    status: 'Failed' | 'Tabled' | 'At Desk Upon Adjourment'
+    sublocation: 'In Senate' | 'In House' | 'At House Speakers Desk' | 'At Senate Desk' | 'At House Desk'
 }
 
 export interface administrativeKanban {
     group:  'Administrative Checks'
     section:  'Awaiting Signature'
     status: "Governors Office" | "Chamber"
-    sublocation: "Senate President Desk" | "Speakers Desk"
+    sublocation: "Senate President Desk" | "Speakers Desk" | ''
 }
 
 export interface chamberKanban {
