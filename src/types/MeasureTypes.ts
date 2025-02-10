@@ -16,6 +16,7 @@ export interface UserTrackedMeasure {
     id: string, 
     position: 'Support' | 'Oppose',
     sessionKey: string,
+    isDisplayed: boolean,
 }
 
 export interface MeasureLocalStorage {

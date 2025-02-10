@@ -11,17 +11,33 @@ import useBillStore from './store/MeasureStore'
 import { useEffect } from 'react'
 
 function App() {
-  const { setMeasures } = useBillStore();
+  const { setUnfilteredMeasures, userTrackedMeasures, getMeasureTitleById, setUserTrackedMeasureFilterStatusById} = useBillStore();
+
 
   useEffect(() => {
     fetchMeasures().then((response) => {
-      setMeasures(response)
+      setUnfilteredMeasures(response)
     });
   }, [])
 
   return (
       <div className="app-container">
-        <div className="sidebar"> SIDEBAR</div>
+        <div className="sidebar">
+          TrackedBills
+          {userTrackedMeasures.map((measure) => {
+            const {isDisplayed, id } = measure;
+            const title = getMeasureTitleById(id);
+            return (
+              <div className="sidebar-measure-filter">
+                  <button className={`checkbox${isDisplayed ? '-active': ''}`} onClick={() => setUserTrackedMeasureFilterStatusById(id, !isDisplayed)} />
+                  <div className="sidebar-measure-filter-data">
+                    <div>{id}</div>
+                    <div>{title}</div>
+                  </div>
+              </div>
+            )
+          })}
+        </div>
         <div className="content">
         <BillLocationBoard />
         
