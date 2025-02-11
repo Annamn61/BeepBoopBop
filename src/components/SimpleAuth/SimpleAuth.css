@@ -1,0 +1,20 @@
+.auth {
+    width: 100vw;
+    height: 100vh;
+    background-color: salmon;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-input {
+    background-color: white;
+    color: salmon;
+    border: 2px solid salmon;
+    border-radius: 8px;
+    height: 28px;
+    width: 130px;
+    font-size: 24px;
+    padding: 12px;
+    outline: none;
+}

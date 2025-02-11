@@ -9,9 +9,12 @@ import { fetchCommitteeMeetings, fetchMeasures, fetchCommitteeAgendaItems } from
 import useBillStore from './store/MeasureStore'
 import { useEffect } from 'react'
 import { Sidebar } from './components/Sidebar/Sidebar'
+import { useSimpleAuth } from './components/SimpleAuth/SimpleAuth.helpers'
+import { SimpleAuth } from './components/SimpleAuth/SimpleAuth'
 
 function App() {
   const { setUnfilteredMeasures } = useBillStore();
+  const { isLoggedIn, checkPassword} = useSimpleAuth();
   fetchCommitteeAgendaItems()
   // fetchCommitteeMeetings();
 
@@ -23,6 +26,7 @@ function App() {
   }, [])
 
   return (
+    isLoggedIn ? (
       <div className="app-container">
         <Sidebar />
         <div className="content">
@@ -37,6 +41,7 @@ function App() {
         />
         </div>
       </div>
+      ): <SimpleAuth checkPassword={checkPassword} />
   )
 }
 
