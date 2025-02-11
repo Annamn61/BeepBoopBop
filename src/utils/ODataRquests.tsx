@@ -41,11 +41,15 @@ export const fetchMeasures = async () => {
       const splitId = id.split(' ');
       const measurePrefix = splitId[0];
       const measureNumber = splitId[1];
-      const url = `${baseURL}/Measures?$filter=MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}' and SessionKey eq '${sessionKey}'&$expand=MeasureDocuments`;
+      const url = `${baseURL}/Measures?$filter=${encodeURIComponent(
+        `MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}' and SessionKey eq '${sessionKey}'`
+      )}&$expand=MeasureDocuments,MeasureHistoryActions`;
       return axios.get(url);
     });
 
     const responses = await Promise.all(requests);
+
+    console.log(responses);
 
     // Extract data from responses
     const data = responses.map(response => response.data);
