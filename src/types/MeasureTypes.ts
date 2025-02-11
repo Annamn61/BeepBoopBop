@@ -9,7 +9,8 @@ export interface Measure {
     CurrentLocation: string,
     RelatingTo: string,
     id: string,
-    MeasureDocuments: any, //TODO fix this
+    MeasureDocuments: MeasureDocument[],
+    MeasureHistoryActions: MeasureHistoryItem[],
 }
 
 export interface UserTrackedMeasure {
@@ -23,3 +24,28 @@ export interface MeasureLocalStorage {
     lastUpdated: string,
     measures: MeasureObject[], 
 }
+
+export interface MeasureDocument {
+    CreatedDate: string;  // ISO date string
+    DocumentUrl: string;
+    MeasureNumber: number;
+    MeasurePrefix: string;
+    ModifiedDate: string | null;
+    SessionKey: string;
+    VersionDescription: string;
+}
+
+export interface MeasureHistoryItem {
+    ActionDate: string; // ISO date string
+    ActionText: string;
+    Chamber: string;
+    CreatedDate: string; // ISO date string
+    MeasureHistoryId: number;
+    MeasureNumber: number;
+    MeasurePrefix: string;
+    ModifiedDate: string | null;
+    PublicNotification: boolean;
+    SessionKey: string;
+    VoteText: string | null;
+}
+
