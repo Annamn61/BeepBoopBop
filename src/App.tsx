@@ -2,17 +2,18 @@ import './App.css'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import { BillLocationBoard } from './components/BillLocationBoard/BillLocationBoard'
 import moment from 'moment'
-// import 'react-big-calendar/lib/sass/styles';
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 const localizer = momentLocalizer(moment)
-import { fetchMeasures } from './utils/ODataRquests';
+import { fetchCommitteeMeetings, fetchMeasures, fetchCommitteeAgendaItems } from './utils/ODataRquests';
 import useBillStore from './store/MeasureStore'
 import { useEffect } from 'react'
 import { Sidebar } from './components/Sidebar/Sidebar'
 
 function App() {
   const { setUnfilteredMeasures } = useBillStore();
+  fetchCommitteeAgendaItems()
+  // fetchCommitteeMeetings();
 
 
   useEffect(() => {

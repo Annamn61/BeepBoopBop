@@ -75,7 +75,7 @@ export const fetchCommitteeMeetings = async () => {
 
     const url = `${baseURL}/CommitteeMeetings?$filter=SessionKey eq '${sessionKey}'`;
     axios.get(url).then((response) => {
-      // console.log('CM', response);
+      console.log('CM', response);
     });
     
   } catch (error) {
@@ -85,20 +85,49 @@ export const fetchCommitteeMeetings = async () => {
 };
 
 
+
+// fetch all of the agenda items for all of the bills were looking at 
 export const fetchCommitteeAgendaItems = async () => {
   const measureNumber = '2978'
   const measurePrefix = 'HB'
   // const sessionKey = '2023R1'
 
-  try {
+  // try {
 
-    const url = `${baseURL}/CommitteeAgendaItems?$filter=MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}'`;
-    axios.get(url).then((response) => {
-      // console.log('AI', response);
-    });
+  //   const url = `${baseURL}/CommitteeAgendaItems?$filter=MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}'`;
+  //   axios.get(url).then((response) => {
+  //     console.log('AI', response);
+  //   });
     
+  // } catch (error) {
+  //   console.error("Error fetching committee agenda items:", error);
+  //   throw error;
+  // }
+
+  try {
+    const requests = userTrackedMeasures.map(({ id, sessionKey }) => {
+      const splitId = id.split(' ');
+      const measurePrefix = splitId[0];
+      const measureNumber = splitId[1];
+      const url = `${baseURL}/CommitteeAgendaItems?$filter=MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}' and SessionKey eq '${sessionKey}'`;
+      return axios.get(url);
+    });
+
+    const responses = await Promise.all(requests);
+
+    // Extract data from responses
+    const data = responses.map(response => response.data);
+
+    // const measureObject = {
+    //   lastUpdated: Date.now().toString(),
+    //   measures: data,
+    // }
+    // localStorage.setItem('Measures', JSON.stringify(measureObject));
+    // localStorage.setItem('MeasureDocuments', JSON.stringify(measureObject.measures.))
+    console.log('ai data', data);
+    return data;
   } catch (error) {
-    console.error("Error fetching committee agenda items:", error);
+    console.error("Error fetching measures:", error);
     throw error;
   }
 
