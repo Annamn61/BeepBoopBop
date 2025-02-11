@@ -5,7 +5,7 @@ import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 const localizer = momentLocalizer(moment)
-import { fetchCommitteeMeetings, fetchMeasures, fetchCommitteeAgendaItems } from './utils/ODataRquests';
+import { fetchMeasures, fetchCommitteeAgendaItems } from './utils/ODataRquests';
 import useBillStore from './store/MeasureStore'
 import { useEffect } from 'react'
 import { Sidebar } from './components/Sidebar/Sidebar'
