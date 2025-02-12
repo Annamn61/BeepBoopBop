@@ -88,8 +88,8 @@ export const fetchCommitteeMeetings = async () => {
 
 // fetch all of the agenda items for all of the bills were looking at 
 export const fetchCommitteeAgendaItems = async () => {
-  const measureNumber = '2978'
-  const measurePrefix = 'HB'
+  // const measureNumber = '2978'
+  // const measurePrefix = 'HB'
   // const sessionKey = '2023R1'
 
   // try {
@@ -134,13 +134,13 @@ export const fetchCommitteeAgendaItems = async () => {
 };
 
 export const fetchMeasureDocuments = async () => {
-  const sessionKey = '2025R1';
+  // const sessionKey = '2025R1';
 
   try {
-    const url = `${baseURL}/MeasureDocuments?$filter=SessionKey eq '${sessionKey}'`;
-    axios.get(url).then((response) => {
-      // console.log('MD', response);
-    });
+    // const url = `${baseURL}/MeasureDocuments?$filter=SessionKey eq '${sessionKey}'`;
+    // axios.get(url).then((response) => {
+    //   // console.log('MD', response);
+    // });
     
   } catch (error) {
     console.error("Error fetching measure documents:", error);
