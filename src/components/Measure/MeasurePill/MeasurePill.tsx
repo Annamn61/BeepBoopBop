@@ -9,7 +9,7 @@ const MeasurePill = ({title} : MeasurePillProps) => {
     // const measureColor = getMeasureColor()
 
     return (
-        <Box sx={{ backgroundColor: 'salmon', padding: '0px 16px', borderRadius: '16px', width: '70px', textAlign: 'center'}}>   
+        <Box sx={{ backgroundColor: 'salmon', padding: '0px 16px', borderRadius: '16px', width: '70px', textAlign: 'center', height: 'fit-content', flexShrink: 0}}>   
             <Typography sx={{color: 'white'}}>{title}</Typography>
         </Box>
     )

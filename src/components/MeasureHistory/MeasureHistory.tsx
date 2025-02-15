@@ -1,29 +1,27 @@
-import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal } from 'react'
+import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal } from 'react';
 import useHistoryStore from '../../store/HistoryStore';
 import DateTitle from './DateTitle/DateTitle';
 import HistoryItemLine from './HistoryItemLine/HistoryItemLine';
-import Box from '@mui/material/Box'
+import Box from '@mui/material/Box';
 
-const MeasureHistory = () => {
+export const MeasureHistory = () => {
   const { getFilteredHistorySortedByDate } = useHistoryStore();
 
   return (
 
-        <Box sx={{display: 'flex', flexDirection: 'column', gap: 6}}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
 
-        {Object.entries(getFilteredHistorySortedByDate()).map(([dateString, actions]) => (
-      <Box sx={{display: 'flex', flexDirection: 'column', gap: 3}} key={dateString}>
-        <DateTitle dateString={dateString} />
-        <Box sx={{display: 'flex', flexDirection: 'column', gap: 3}}>
-          {actions.map((action: { MeasureHistoryId: Key | null | undefined; ActionDate: string | number | Date; ActionText: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined }) => (
-            <HistoryItemLine key={action.MeasureHistoryId} action={action} />
-          ))}
+      {Object.entries(getFilteredHistorySortedByDate()).map(([dateString, actions]) => (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }} key={dateString}>
+          <DateTitle dateString={dateString} />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            {actions.map((action: { MeasureHistoryId: Key | null | undefined; ActionDate: string | number | Date; ActionText: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }) => (
+              <HistoryItemLine key={action.MeasureHistoryId} action={action} />
+            ))}
           </Box>
-      </Box>
-    ))}
+        </Box>
+      ))}
 
-  </Box>
-  )
-}
-
-export default MeasureHistory
+    </Box>
+  );
+};

@@ -21,18 +21,14 @@
     padding: 48px 0px;
 }
 
-.kanban-title {
-    padding-left: 32px;
-}
-
 .kanban-content {
     max-width: 100%;
     overflow-x: auto;
 }
 
 .groups-container {
-    padding-left: 32px;
-    padding-right: 48px;
+    padding-left: 96px;
+    padding-right: 96px;
     display: flex;
     width: fit-content;
     flex-direction: row;

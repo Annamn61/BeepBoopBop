@@ -17,7 +17,7 @@ const HistoryItemLine = ({action}: HistoryItemProps) => {
         flexDirection: 'row',
         gap: 1,
     }}>
-        <Typography sx={{width: '70px', color: '#A7A7A7'}}>{getMMHHFromDate(new Date(action.ActionDate))}</Typography>
+        <Typography sx={{width: '70px', color: '#A7A7A7', flexShrink: 0}}>{getMMHHFromDate(new Date(action.ActionDate))}</Typography>
         <MeasurePill title={getMeasureTitle(action.MeasurePrefix, action.MeasureNumber)} />
         <Typography>{action.ActionText}</Typography>
   </Box>
