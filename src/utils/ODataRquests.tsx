@@ -148,3 +148,37 @@ export const fetchMeasureDocuments = async () => {
   }
 
 };
+
+
+// fetch all of the agenda items for all of the bills were looking at 
+export const fetchMeasureHistoryActions = async () => {
+
+  try {
+    const requests = userTrackedMeasures.map(({ id, sessionKey }) => {
+      const splitId = id.split(' ');
+      const measurePrefix = splitId[0];
+      const measureNumber = splitId[1];
+      const url = `${baseURL}/MeasureHistoryActions?$filter=MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}' and SessionKey eq '${sessionKey}'`;
+      return axios.get(url);
+    });
+
+    const responses = await Promise.all(requests);
+
+    let history: any[] = []; // Add type
+
+    responses.forEach(response => {
+      if(response?.data?.value?.length) {
+        history.push(...response.data.value);
+      } 
+
+      // should show an error if there is one
+    });
+
+    console.log('history data', history);
+    return history;
+  } catch (error) {
+    console.error("Error fetching measures:", error);
+    throw error;
+  }
+
+};

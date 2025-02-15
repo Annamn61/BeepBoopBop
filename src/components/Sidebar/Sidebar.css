@@ -46,6 +46,9 @@
   .section-header {
     font-weight: 600;
     font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .sidebar-section {
