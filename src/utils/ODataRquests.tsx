@@ -72,7 +72,7 @@ export const fetchCommitteeMeetings = async () => {
 
     const url = `${baseURL}/CommitteeMeetings?$filter=SessionKey eq '${sessionKey}'`;
     axios.get(url).then((response) => {
-      console.log('CM', response);
+      // console.log('CM', response);
     });
     
   } catch (error) {
@@ -100,7 +100,6 @@ export const fetchCommitteeAgendaItems = async () => {
     const data = responses
       .map(response => response.data.value)
       .filter(agendaList => agendaList.length > 0);
-    console.log('HEREEEE', data);
 
     return data;
   } catch (error) {
@@ -151,7 +150,7 @@ export const fetchMeasureHistoryActions = async () => {
       // should show an error if there is one
     });
 
-    console.log('history data', history);
+    // console.log('history data', history);
     return history;
   } catch (error) {
     console.error("Error fetching measures:", error);

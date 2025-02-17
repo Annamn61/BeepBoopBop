@@ -11,7 +11,7 @@ const MeasurePill = ({id} : MeasurePillProps) => {
 
     return (
         <Box sx={{ backgroundColor: measureColor, padding: '0px 16px', borderRadius: '16px', width: '70px', textAlign: 'center', height: 'fit-content', flexShrink: 0}}>   
-            <Typography sx={{color: 'white'}}>{id}</Typography>
+            <Typography sx={{color: 'white', fontWeight: '600'}}>{id}</Typography>
         </Box>
     )
 }

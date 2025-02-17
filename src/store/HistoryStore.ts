@@ -36,6 +36,7 @@ const sortAndGroupHistory = (history: any[]) => {
       .sort((a, b) => new Date(b.ActionDate).getTime() - new Date(a.ActionDate).getTime()) // Sort by full datetime (ascending)
       .reduce((acc, entry) => {
         const dateKey = new Date(entry.ActionDate).toISOString().split("T")[0]; // Extract YYYY-MM-DD
+        console.log('entry.actionDate', entry.actionDate, new Date(entry.actionDate), new Date(entry.ActionDate).toISOString());
   
         if (!acc[dateKey]) {
           acc[dateKey] = [];
