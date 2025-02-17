@@ -1,5 +1,7 @@
 import useBillStore from "../../store/MeasureStore";
 import './Sidebar.css'
+import Typography from '@mui/material/Typography';
+import { AddTrackedBill } from "./AddTrackedBill/AddTrackedBill";
 
 export const Sidebar = () => {
     const { userTrackedMeasures, getMeasureTitleById, setUserTrackedMeasureFilterStatusById} = useBillStore();
@@ -8,7 +10,9 @@ export const Sidebar = () => {
         <div className="sidebar">
             <div className="sidebar-section">
             <div className="section-header">
-            Tracked Bills
+                <Typography>Tracked Bills</Typography>
+            
+                <AddTrackedBill />
 
             </div>
 

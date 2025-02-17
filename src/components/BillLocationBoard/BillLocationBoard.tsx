@@ -9,7 +9,6 @@ export const BillLocationBoard = () => {
 
     return (
     <div className="kanban-container">
-        <div className="kanban-title">KANBAN</div>
         <div className="kanban-content">
             <div className="groups-container">
             {[...(hasErrantMeasures ? errorColumn : []), ...renderedKanbanLocations].map((group) => {
