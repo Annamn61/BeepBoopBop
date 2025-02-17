@@ -49,8 +49,6 @@ export const fetchMeasures = async () => {
 
     const responses = await Promise.all(requests);
 
-    console.log(responses);
-
     // Extract data from responses
     const data = responses.map(response => response.data);
 
@@ -59,7 +57,6 @@ export const fetchMeasures = async () => {
       measures: data,
     }
     localStorage.setItem('Measures', JSON.stringify(measureObject));
-    // localStorage.setItem('MeasureDocuments', JSON.stringify(measureObject.measures.))
     return data;
   } catch (error) {
     console.error("Error fetching measures:", error);
@@ -146,5 +143,4 @@ export const fetchMeasureDocuments = async () => {
     console.error("Error fetching measure documents:", error);
     throw error;
   }
-
 };
