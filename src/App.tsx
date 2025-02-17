@@ -9,6 +9,7 @@ import { SimpleAuth } from './components/SimpleAuth/SimpleAuth'
 import { useSimpleAuth } from './components/SimpleAuth/SimpleAuth.helpers'
 import useHistoryStore from './store/HistoryStore'
 import useBillStore from './store/MeasureStore'
+import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
 import { fetchCommitteeAgendaItems, fetchMeasureHistoryActions, fetchMeasures } from './utils/ODataRquests'
 import { MeasureHistory } from './components/MeasureHistory/MeasureHistory'
 import TitleLogo from './components/TitleLogo/TitleLogo'
@@ -20,9 +21,9 @@ const localizer = momentLocalizer(moment)
 function App() {
   const { setUnfilteredMeasures } = useBillStore();
   const { setUnfilteredHistory } = useHistoryStore();
+  const { setUnfilteredCommitteeAgenda, getCommitteeAgendaItems } = useCommitteeAgendaStore();
   const { isLoggedIn, checkPassword} = useSimpleAuth();
-  const [selectedPage, setSelectedPage] = useState('location')
-  fetchCommitteeAgendaItems()
+  const [selectedPage, setSelectedPage] = useState('location');
 
   useEffect(() => {
     fetchMeasures().then((response) => {
@@ -31,6 +32,9 @@ function App() {
     fetchMeasureHistoryActions().then((response)=> {
       setUnfilteredHistory(response);
     });
+    fetchCommitteeAgendaItems().then((response) => {
+      setUnfilteredCommitteeAgenda(response);
+    })
   }, [])
 
   return (

@@ -85,22 +85,6 @@ export const fetchCommitteeMeetings = async () => {
 
 // fetch all of the agenda items for all of the bills were looking at 
 export const fetchCommitteeAgendaItems = async () => {
-  // const measureNumber = '2978'
-  // const measurePrefix = 'HB'
-  // const sessionKey = '2023R1'
-
-  // try {
-
-  //   const url = `${baseURL}/CommitteeAgendaItems?$filter=MeasureNumber eq ${measureNumber} and MeasurePrefix eq '${measurePrefix}'`;
-  //   axios.get(url).then((response) => {
-  //     console.log('AI', response);
-  //   });
-    
-  // } catch (error) {
-  //   console.error("Error fetching committee agenda items:", error);
-  //   throw error;
-  // }
-
   try {
     const requests = userTrackedMeasures.map(({ id, sessionKey }) => {
       const splitId = id.split(' ');
@@ -113,15 +97,11 @@ export const fetchCommitteeAgendaItems = async () => {
     const responses = await Promise.all(requests);
 
     // Extract data from responses
-    const data = responses.map(response => response.data);
+    const data = responses
+      .map(response => response.data.value)
+      .filter(agendaList => agendaList.length > 0);
+    console.log('HEREEEE', data);
 
-    // const measureObject = {
-    //   lastUpdated: Date.now().toString(),
-    //   measures: data,
-    // }
-    // localStorage.setItem('Measures', JSON.stringify(measureObject));
-    // localStorage.setItem('MeasureDocuments', JSON.stringify(measureObject.measures.))
-    console.log('ai data', data);
     return data;
   } catch (error) {
     console.error("Error fetching measures:", error);
