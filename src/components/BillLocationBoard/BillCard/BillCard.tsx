@@ -10,9 +10,10 @@ const Bill = ({ billId }: BillProps) => {
     const position = useBillStore.getState().getUserTrackedMeasurePositionById(billId);
     const measureDocURL = useBillStore.getState().getMeasureDocumentUrlById(billId);
     const billTitle = useBillStore.getState().getMeasureTitleById(billId);
+    const measureColor = useBillStore.getState().getUserMeasureColorById(billId)
 
     return (
-    <a className='bill' href={measureDocURL} target='_blank' key={billId}>
+    <a style={{borderLeft: `6px solid ${measureColor}`}} className='bill' href={measureDocURL} target='_blank' key={billId}>
         <div className="bill-title">
             {billTitle}
         </div>

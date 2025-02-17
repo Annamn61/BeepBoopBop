@@ -1,3 +1,3 @@
-export const getMeasureTitle = (MeasurePrefix: string, MeasureNumber: number) => {
+export const getMeasureId = (MeasurePrefix: string, MeasureNumber: number) => {
     return `${MeasurePrefix} ${MeasureNumber}`
 }

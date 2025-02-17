@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { getMMHHFromDate } from '../../../utils/time'
-import { getMeasureTitle } from '../../../utils/measure';
+import { getMeasureId } from '../../../utils/measure';
 import MeasurePill from '../../Measure/MeasurePill/MeasurePill';
 
 interface HistoryItemProps {
@@ -18,7 +18,7 @@ const HistoryItemLine = ({action}: HistoryItemProps) => {
         gap: 1,
     }}>
         <Typography sx={{width: '70px', color: '#A7A7A7', flexShrink: 0}}>{getMMHHFromDate(new Date(action.ActionDate))}</Typography>
-        <MeasurePill title={getMeasureTitle(action.MeasurePrefix, action.MeasureNumber)} />
+        <MeasurePill id={getMeasureId(action.MeasurePrefix, action.MeasureNumber)} />
         <Typography>{action.ActionText}</Typography>
   </Box>
   )
