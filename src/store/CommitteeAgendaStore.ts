@@ -5,7 +5,7 @@ interface CommitteeAgendaState {
   unfilteredCommitteeAgenda: AgendaItem[][]; //Each Measure will return a list of AgendaItems so it is a double array of Measures and the corresponding Agenda Items
   setUnfilteredCommitteeAgenda: (agendaItems: AgendaItem[][]) => void;
   getCommitteeAgendaItems: () => AgendaItem[][];
-  getCalendarEvents: () => { title: string; start: Date; end: Date }[];
+  getCalendarEvents: () => { title: string; start: Date; end: Date; measureNumber: number; comments: string }[];
 };
 
 export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) => ({
@@ -18,7 +18,9 @@ export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) =
       .map(item => ({
         title: item.MeetingType,
         start: new Date(item.MeetingDate),
-        end: new Date(item.MeetingDate), // You may want to adjust the end time dynamically
+        end: new Date(item.MeetingDate),
+        measureNumber: item.MeasureNumber,
+        comments: item.Comments,
       })),
 }));
 

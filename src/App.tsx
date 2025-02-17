@@ -66,6 +66,13 @@ function App() {
               startAccessor="start"
               endAccessor="end"
               style={{ height: 500, width: 800 }}
+              onSelectEvent={(event) => {
+                window.alert(`
+                  Title: ${event.title} \n
+                  Measure: ${event.measureNumber} \n
+                  Comments: ${event.comments} \n
+                `);
+              }}
             />
           }
                 </Box>
