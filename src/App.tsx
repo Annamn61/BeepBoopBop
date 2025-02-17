@@ -8,7 +8,7 @@ import { Sidebar } from './components/Sidebar/Sidebar'
 import { SimpleAuth } from './components/SimpleAuth/SimpleAuth'
 import { useSimpleAuth } from './components/SimpleAuth/SimpleAuth.helpers'
 import useHistoryStore from './store/HistoryStore'
-import useBillStore from './store/MeasureStore'
+import useMeasureStore from './store/MeasureStore'
 import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
 import { fetchCommitteeAgendaItems, fetchMeasureHistoryActions, fetchMeasures } from './utils/ODataRquests'
 import { MeasureHistory } from './components/MeasureHistory/MeasureHistory'
@@ -19,7 +19,7 @@ import PageTabs from './components/PageTabs/PageTabs'
 const localizer = momentLocalizer(moment)
 
 function App() {
-  const { setUnfilteredMeasures } = useBillStore();
+  const { setUnfilteredMeasures } = useMeasureStore();
   const { setUnfilteredHistory } = useHistoryStore();
   const { setUnfilteredCommitteeAgenda, getCalendarEvents } = useCommitteeAgendaStore();
   const { isLoggedIn, checkPassword} = useSimpleAuth();
