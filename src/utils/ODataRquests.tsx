@@ -49,8 +49,6 @@ export const fetchMeasures = async () => {
 
     const responses = await Promise.all(requests);
 
-    console.log(responses);
-
     // Extract data from responses
     const data = responses.map(response => response.data);
 
@@ -75,7 +73,7 @@ export const fetchCommitteeMeetings = async () => {
 
     const url = `${baseURL}/CommitteeMeetings?$filter=SessionKey eq '${sessionKey}'`;
     axios.get(url).then((response) => {
-      console.log('CM', response);
+      // console.log('CM', response);
     });
     
   } catch (error) {
@@ -124,7 +122,7 @@ export const fetchCommitteeAgendaItems = async () => {
     // }
     // localStorage.setItem('Measures', JSON.stringify(measureObject));
     // localStorage.setItem('MeasureDocuments', JSON.stringify(measureObject.measures.))
-    console.log('ai data', data);
+    // console.log('ai data', data);
     return data;
   } catch (error) {
     console.error("Error fetching measures:", error);
@@ -174,7 +172,7 @@ export const fetchMeasureHistoryActions = async () => {
       // should show an error if there is one
     });
 
-    console.log('history data', history);
+    // console.log('history data', history);
     return history;
   } catch (error) {
     console.error("Error fetching measures:", error);

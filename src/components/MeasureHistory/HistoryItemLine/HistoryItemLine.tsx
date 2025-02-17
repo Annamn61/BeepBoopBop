@@ -9,7 +9,6 @@ interface HistoryItemProps {
 }
 
 const HistoryItemLine = ({action}: HistoryItemProps) => {
-    console.log('action', action);
 
   return (
     <Box sx={{

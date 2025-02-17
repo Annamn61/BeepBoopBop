@@ -7,7 +7,8 @@ interface DateTitleProps {
 }
 
 const DateTitle = ({dateString}: DateTitleProps) => {
-    const date = new Date(dateString);
+    var date = new Date(`${dateString}T00:00:00.000`);
+    
     return (
         <div className="date-title-container">
             <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>

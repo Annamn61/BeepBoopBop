@@ -9,7 +9,6 @@ export const SimpleAuth = ({checkPassword}: SimpleAuthProps) => {
     const [password, setPassword] = useState('');
 
     const handleSubmit = () => {
-        console.log('handling submit');
         checkPassword(password);
     }
 
