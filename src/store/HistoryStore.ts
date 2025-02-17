@@ -4,7 +4,7 @@ interface HistoryState {
   unfilteredHistory: {ActionDate: string}[]; //Todo: update any
   setUnfilteredHistory: (history: any[]) => void;
 //   activeHistoryItems: any[]; //Todo: update any
-    getFilteredHistorySortedByDate: () => any[];
+  getFilteredHistorySortedByDate: () => any[];
 }
 
 export const useHistoryStore = create<HistoryState>((set, get) => ({
