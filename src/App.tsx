@@ -15,6 +15,7 @@ import { MeasureHistory } from './components/MeasureHistory/MeasureHistory'
 import TitleLogo from './components/TitleLogo/TitleLogo'
 import Box from '@mui/material/Box'
 import PageTabs from './components/PageTabs/PageTabs'
+import { Modal } from '@mui/material'
 
 const localizer = momentLocalizer(moment)
 
@@ -24,6 +25,23 @@ function App() {
   const { setUnfilteredCommitteeAgenda, getCalendarEvents } = useCommitteeAgendaStore();
   const { isLoggedIn, checkPassword} = useSimpleAuth();
   const [selectedPage, setSelectedPage] = useState('location');
+
+  // Modal States
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
   useEffect(() => {
     fetchMeasures().then((response) => {
@@ -67,12 +85,13 @@ function App() {
               endAccessor="end"
               style={{ height: 500, width: 800 }}
               onSelectEvent={(event) => {
-                window.alert(`
-                  Title: ${event.title} \n
-                  Measure: ${event.measureNumber} \n
-                  Comments: ${event.comments} \n
-                `);
-              }}
+              //   window.alert(`
+              //     Title: ${event.title} \n
+              //     Measure: ${event.measureNumber} \n
+              //     Comments: ${event.comments} \n
+              //   `);
+              // }}
+              handleOpen()}}
             />
           }
                 </Box>
@@ -80,6 +99,16 @@ function App() {
                   {selectedPage === 'location' && <BillLocationBoard />}
 
         </Box>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            HEY
+          </Box>
+        </Modal>
       </div>
       ): <SimpleAuth checkPassword={checkPassword} />
   )
