@@ -92,6 +92,17 @@ function App() {
               //   `);
               // }}
               handleOpen()}}
+              eventPropGetter={(event) => {
+                const backgroundColor = event.color || "green"; // Default color
+                return {
+                  style: {
+                    backgroundColor,
+                    color: "white",
+                    borderRadius: "4px",
+                    padding: "5px",
+                  },
+                };
+              }}
             />
           }
                 </Box>
