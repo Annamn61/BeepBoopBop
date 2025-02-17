@@ -21,7 +21,7 @@ const localizer = momentLocalizer(moment)
 function App() {
   const { setUnfilteredMeasures } = useBillStore();
   const { setUnfilteredHistory } = useHistoryStore();
-  const { setUnfilteredCommitteeAgenda, getCommitteeAgendaItems } = useCommitteeAgendaStore();
+  const { setUnfilteredCommitteeAgenda, getCalendarEvents } = useCommitteeAgendaStore();
   const { isLoggedIn, checkPassword} = useSimpleAuth();
   const [selectedPage, setSelectedPage] = useState('location');
 
@@ -35,7 +35,9 @@ function App() {
     fetchCommitteeAgendaItems().then((response) => {
       setUnfilteredCommitteeAgenda(response);
     })
-  }, [])
+  }, []);
+
+  console.log(getCalendarEvents())
 
   return (
     isLoggedIn ? (
@@ -57,13 +59,15 @@ function App() {
           <PageTabs selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
 
           {selectedPage === 'history' && <MeasureHistory />}
-          {selectedPage === 'calendar' && <Calendar
-          localizer={localizer}
-          events={[]}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 500, width: 800 }}
-        />}
+          {selectedPage === 'calendar' && 
+            <Calendar
+              localizer={localizer}
+              events={getCalendarEvents()}
+              startAccessor="start"
+              endAccessor="end"
+              style={{ height: 500, width: 800 }}
+            />
+          }
                 </Box>
 
                   {selectedPage === 'location' && <BillLocationBoard />}
