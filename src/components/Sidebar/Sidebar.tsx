@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { AddTrackedBill } from "./AddTrackedBill/AddTrackedBill";
 
 export const Sidebar = () => {
-    const { userTrackedMeasures, getMeasureTitleById, setUserTrackedMeasureFilterStatusById} = useBillStore();
+    const { userTrackedMeasures, getMeasureTitleById, setUserTrackedMeasureFilterStatusById, getUserMeasureColorById} = useBillStore();
 
     return(
         <div className="sidebar">
@@ -19,9 +19,10 @@ export const Sidebar = () => {
             {userTrackedMeasures.map((measure) => {
           const {isDisplayed, id } = measure;
           const title = getMeasureTitleById(id);
+          const measureColor = getUserMeasureColorById(id);
           return (
             <div className="sidebar-measure-filter">
-                <button className={`checkbox${isDisplayed ? '-active': ''}`} onClick={() => setUserTrackedMeasureFilterStatusById(id, !isDisplayed)} />
+                <button style={{backgroundColor: isDisplayed ? measureColor: 'transparent', borderColor: measureColor}} className={`checkbox${isDisplayed ? '-active': ''}`} onClick={() => setUserTrackedMeasureFilterStatusById(id, !isDisplayed)} />
                 <div className="sidebar-measure-filter-data">
                   <div className="sidebar-measure-filter-billid">{id}</div>
                   <div>{title}</div>

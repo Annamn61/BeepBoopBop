@@ -14,9 +14,11 @@ interface MeasureState {
   getHasKanbanSortingError: () => boolean,
   setUnfilteredMeasures: (measures: MeasureObject[]) => void;
   getMeasureById: (id: string) => Measure | undefined;
+  getUserMeasureMetadataById: (id: string) => UserTrackedMeasure | undefined;
   getMeasureCommitteeNameById: (id: string) => string | undefined;
   getMeasureTitleById: (id: string) => string | undefined;
   getMeasureDocumentUrlById: (id: string) => string | undefined;
+  getUserMeasureColorById: (id: string) => string | undefined;
 }
 
 export const useBillStore = create<MeasureState>((set, get) => ({
@@ -30,9 +32,11 @@ export const useBillStore = create<MeasureState>((set, get) => ({
   getHasKanbanSortingError: () => getHasSortingError(get().getMeasuresSortedIntoKanbanLocations()),
   setUnfilteredMeasures: (measureObjects) => set({ unfilteredMeasures: getMeasuresFromMeasureObjects(measureObjects) }),
   getMeasureById: (id) => get().unfilteredMeasures.find((measure: Measure) => measure.id === id),
+  getUserMeasureMetadataById: (id) => get().userTrackedMeasures.find((measure: UserTrackedMeasure) => measure.id === id),
   getMeasureCommitteeNameById: (id) => get().getMeasureById(id)?.CurrentCommitteeCode,
   getMeasureTitleById: (id) => get().getMeasureById(id)?.RelatingTo,
   getMeasureDocumentUrlById: (id) => get().getMeasureById(id)?.MeasureDocuments?.[0]?.DocumentUrl,
+  getUserMeasureColorById: (id) => get().getUserMeasureMetadataById(id)?.color,
 }));
 
 

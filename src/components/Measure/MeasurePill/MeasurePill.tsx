@@ -1,16 +1,17 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography';
+import useBillStore from '../../../store/MeasureStore';
 
 interface MeasurePillProps {
-    title: string,
+    id: string,
 }
 
-const MeasurePill = ({title} : MeasurePillProps) => {
-    // const measureColor = getMeasureColor()
+const MeasurePill = ({id} : MeasurePillProps) => {
+    const measureColor = useBillStore.getState().getUserMeasureColorById(id)
 
     return (
-        <Box sx={{ backgroundColor: 'salmon', padding: '0px 16px', borderRadius: '16px', width: '70px', textAlign: 'center', height: 'fit-content', flexShrink: 0}}>   
-            <Typography sx={{color: 'white'}}>{title}</Typography>
+        <Box sx={{ backgroundColor: measureColor, padding: '0px 16px', borderRadius: '16px', width: '70px', textAlign: 'center', height: 'fit-content', flexShrink: 0}}>   
+            <Typography sx={{color: 'white'}}>{id}</Typography>
         </Box>
     )
 }

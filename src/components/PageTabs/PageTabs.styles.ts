@@ -12,12 +12,12 @@ export const styles: Record<string, SxProps<Theme>> = {
         paddingLeft: 3,
         paddingRight: 3,
         color: '#A7A7A7',
-        backgroundColor: 'transparent',
+        backgroundColor: '#f7f7f7',
         boxShadow: 'none',
         '&:hover': {
-            backgroundColor: '#F8F7F7',
+            backgroundColor: '#e7e7e7',
             boxShadow: 'none',
-            color: '#979797',
+            color: '#878787',
         }
     },
     activeTabButton: {
