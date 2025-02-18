@@ -1,6 +1,10 @@
 export interface MeasureObject {
     value: [Measure]
   }
+
+export interface HistoryObject {
+    value: [History]
+}
   
 export interface Measure {
     MeasureNumber: number,
@@ -24,6 +28,7 @@ export interface UserTrackedMeasure {
 export interface MeasureLocalStorage {
     lastUpdated: string,
     measures: MeasureObject[], 
+    history: MeasureHistoryItem[],
 }
 
 export interface MeasureDocument {

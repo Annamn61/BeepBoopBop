@@ -17,26 +17,11 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
 
 export default useHistoryStore;
 
-// const getHistorySortedIntoDates = (history: any[]) => {
-//     return history.sort((a, b) => new Date(a.ActionDate).getTime() - new Date(b.ActionDate).getTime()) // Sort by date
-//     .reduce((acc, entry) => {
-//       const dateKey = new Date(entry.ActionDate).toISOString().split("T")[0]; // Extract YYYY-MM-DD
-      
-//       if (!acc[dateKey]) {
-//         acc[dateKey] = [];
-//       }
-
-//       acc[dateKey].push(entry);
-//       return acc;
-//     }, {});
-// }
-
 const sortAndGroupHistory = (history: any[]) => {
     return history
       .sort((a, b) => new Date(b.ActionDate).getTime() - new Date(a.ActionDate).getTime()) // Sort by full datetime (ascending)
       .reduce((acc, entry) => {
         const dateKey = new Date(entry.ActionDate).toISOString().split("T")[0]; // Extract YYYY-MM-DD
-        console.log('entry.actionDate', entry.actionDate, new Date(entry.actionDate), new Date(entry.ActionDate).toISOString());
   
         if (!acc[dateKey]) {
           acc[dateKey] = [];

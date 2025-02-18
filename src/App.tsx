@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import './App.css'
@@ -7,10 +7,8 @@ import { BillLocationBoard } from './components/BillLocationBoard/BillLocationBo
 import { Sidebar } from './components/Sidebar/Sidebar'
 import { SimpleAuth } from './components/SimpleAuth/SimpleAuth'
 import { useSimpleAuth } from './components/SimpleAuth/SimpleAuth.helpers'
-import useHistoryStore from './store/HistoryStore'
-import useMeasureStore from './store/MeasureStore'
 import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
-import { fetchCommitteeAgendaItems, fetchMeasureHistoryActions, fetchMeasures } from './utils/ODataRquests'
+import {useFetchMeasureInfoFromApi } from './utils/ODataRquests'
 import { MeasureHistory } from './components/MeasureHistory/MeasureHistory'
 import TitleLogo from './components/TitleLogo/TitleLogo'
 import Box from '@mui/material/Box'
@@ -19,25 +17,10 @@ import PageTabs from './components/PageTabs/PageTabs'
 const localizer = momentLocalizer(moment)
 
 function App() {
-  const { setUnfilteredMeasures } = useMeasureStore();
-  const { setUnfilteredHistory } = useHistoryStore();
-  const { setUnfilteredCommitteeAgenda, getCalendarEvents } = useCommitteeAgendaStore();
+  const { getCalendarEvents } = useCommitteeAgendaStore();
   const { isLoggedIn, checkPassword} = useSimpleAuth();
   const [selectedPage, setSelectedPage] = useState('location');
-
-  useEffect(() => {
-    fetchMeasures().then((response) => {
-      setUnfilteredMeasures(response)
-    });
-    fetchMeasureHistoryActions().then((response)=> {
-      setUnfilteredHistory(response);
-    });
-    fetchCommitteeAgendaItems().then((response) => {
-      setUnfilteredCommitteeAgenda(response);
-    })
-  }, []);
-
-  console.log(getCalendarEvents())
+  useFetchMeasureInfoFromApi();
 
   return (
     isLoggedIn ? (

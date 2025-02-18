@@ -2,10 +2,10 @@ import './BillLocationBoard.css'
 import { errorColumn, renderedKanbanLocations } from './Locations/Locations.helpers';
 import GroupTitle from './GroupTitle/GroupTitle';
 import Section from './Section/Section';
-import useBillStore from '../../store/MeasureStore';
+import useMeasureStore from '../../store/MeasureStore';
 
 export const BillLocationBoard = () => {
-    const hasErrantMeasures = useBillStore.getState().getHasKanbanSortingError();
+    const hasErrantMeasures = useMeasureStore.getState().getHasKanbanSortingError();
 
     return (
     <div className="kanban-container">

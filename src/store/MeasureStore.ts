@@ -21,7 +21,7 @@ interface MeasureState {
   getUserMeasureColorById: (id: string) => string | undefined;
 }
 
-export const useBillStore = create<MeasureState>((set, get) => ({
+export const useMeasureStore = create<MeasureState>((set, get) => ({
   userTrackedMeasures,
   setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[]) => set({userTrackedMeasures}),
   getUserTrackedMeasurePositionById: (id) => get().userTrackedMeasures.find((utm: UserTrackedMeasure) => utm.id === id)?.position,
@@ -91,4 +91,4 @@ const getMeasuresFromMeasureObjects = (measureObjects: MeasureObject[]) => {
   return ret;
 }
 
-export default useBillStore;
+export default useMeasureStore;

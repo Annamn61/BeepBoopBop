@@ -1,10 +1,10 @@
-import useBillStore from "../../store/MeasureStore";
+import useMeasureStore from "../../store/MeasureStore";
 import './Sidebar.css'
 import Typography from '@mui/material/Typography';
 import { AddTrackedBill } from "./AddTrackedBill/AddTrackedBill";
 
 export const Sidebar = () => {
-    const { userTrackedMeasures, getMeasureTitleById, setUserTrackedMeasureFilterStatusById, getUserMeasureColorById} = useBillStore();
+    const { userTrackedMeasures, getMeasureTitleById, setUserTrackedMeasureFilterStatusById, getUserMeasureColorById} = useMeasureStore();
 
     return(
         <div className="sidebar">
