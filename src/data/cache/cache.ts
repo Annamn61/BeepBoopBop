@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AgendaItem } from "../../types/CommitteeAgendaTypes";
-import { Measure, MeasureLocalStorage } from "../../types/MeasureTypes";
+import { Measure } from "../../types/MeasureTypes";
 import useCommitteeAgendaStore from "../../store/CommitteeAgendaStore";
 import { useMeasureStore } from "../../store/MeasureStore";
 import useHistoryStore from "../../store/HistoryStore";
@@ -42,22 +42,6 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
     return now > dateToUpdateData;
 }
 
-export const isMeasureCacheOutdated = (measures: MeasureLocalStorage) => {
-    const now = new Date();
-    const lastUpdated = new Date(measures.lastUpdated)
-    const oneDayInMilliseconds = 24 * 60 * 60 * 1000;    
-    const dateToUpdateData = new Date(lastUpdated.getTime() + oneDayInMilliseconds)
-    return now > dateToUpdateData;
-}
-
-export const getMeasuresFromStore = () => {
-    const result = localStorage.getItem('Measures')
-    if(result) {
-      return  JSON.parse(result) as MeasureLocalStorage;
-    }
-    return undefined;
-  }
-
   export const getLocalStorageCache = () => {
     const result = localStorage.getItem('Measures')
     if(result) {
@@ -89,15 +73,6 @@ export const getMeasuresFromStore = () => {
     })
     console.log('agendaItems', agendaItems);
     return agendaItems;
-  }
-
-  export const setNewMeasureLocalStorageObject = (measure: Measure, agendaItems: AgendaItem, uniqueMeasureId: UniqueMeasureIdentifier) => {
-    const cache = {...getLocalStorageCache()};
-    cache[uniqueMeasureId] = {
-      MeasureData: measure,
-      CommitteeAgendaItems: agendaItems,
-      lastUpdate: new Date().toDateString(),
-    }
   }
 
   export const useLocalStorage = () => {
