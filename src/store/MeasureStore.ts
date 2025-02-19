@@ -14,7 +14,7 @@ interface MeasureState {
   getMeasuresSortedIntoKanbanLocations: () => any,
   getHasKanbanSortingError: () => boolean,
   setUnfilteredMeasures: (measures: MeasureObject[]) => void;
-  getMeasureById: (id: string) => Measure | undefined;
+  getMeasureById: (id?: string) => Measure | undefined;
   getUserMeasureMetadataById: (id: string) => UserTrackedMeasure | undefined;
   getMeasureCommitteeNameById: (id: string) => string | undefined;
   getMeasureTitleById: (id: string) => string | undefined;
@@ -34,7 +34,7 @@ export const useMeasureStore = create<MeasureState>((set, get) => ({
   getMeasuresSortedIntoKanbanLocations: () => sortMeasuresIntoKanbanLocations(get().getMeasures()),
   getHasKanbanSortingError: () => getHasSortingError(get().getMeasuresSortedIntoKanbanLocations()),
   setUnfilteredMeasures: (measureObjects) => set({ unfilteredMeasures: getMeasuresFromMeasureObjects(measureObjects) }),
-  getMeasureById: (id) => get().unfilteredMeasures.find((measure: Measure) => measure.MeasureNumber === Number(id)),
+  getMeasureById: (id) => get().unfilteredMeasures.find((measure: Measure) =>  measure.id === id),
   getUserMeasureMetadataById: (id) => get().userTrackedMeasures.find((measure: UserTrackedMeasure) => measure.id === id),
   getMeasureCommitteeNameById: (id) => get().getMeasureById(id)?.CurrentCommitteeCode,
   getMeasureTitleById: (id) => get().getMeasureById(id)?.RelatingTo,
