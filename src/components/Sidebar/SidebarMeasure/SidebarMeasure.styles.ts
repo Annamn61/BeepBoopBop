@@ -1,10 +1,15 @@
 import { SxProps, Theme } from "@mui/material/styles";
 
 export const styles: Record<string, SxProps<Theme>> = {
-    measureFilter: {
+    measureFilterContainer: {
         display: 'flex',
         flexDirection: 'row',
         gap: '16px',
+        padding: 2,
+        borderRadius: '8px',
+        '&:hover': {
+            backgroundColor: '#EDEDED'
+        }
     },
     checkbox: {
         height: '20px',

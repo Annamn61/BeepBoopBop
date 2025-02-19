@@ -11,7 +11,7 @@ export const Sidebar = () => {
         <div className="sidebar">
             <div className="sidebar-section">
             <div className="section-header">
-                <Typography>Tracked Bills</Typography>
+                <Typography variant="h6">Tracked Bills</Typography>
             
                 <AddTrackedBill />
 

@@ -83,6 +83,7 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
 
     useEffect(() => {
         localStorage.setItem('Measures', JSON.stringify(cacheObject));
+        console.log('cacheObject updated');
         setUnfilteredMeasures(getAllMeasureDataFromLocalStorage());
         setUnfilteredHistory(getAllHistoryDataFromLocalStorage());
         setUnfilteredCommitteeAgenda(getAllCommitteeAgendaItemsFromStore());
