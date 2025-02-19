@@ -6,6 +6,7 @@ import { getKanbanLocationFromBilLocation } from '../components/BillLocationBoar
 interface MeasureState {
   userTrackedMeasures: UserTrackedMeasure[];
   setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[]) => void;
+  addUserTrackedMeasure: (newUserTrackedMeasure: UserTrackedMeasure) => void;
   getUserTrackedMeasurePositionById: (id: string) => UserTrackedMeasure['position'] | undefined;
   unfilteredMeasures: Measure[];
   setUserTrackedMeasureFilterStatusById: (id: string, isDisplayed: boolean) => void;
@@ -24,6 +25,7 @@ interface MeasureState {
 export const useMeasureStore = create<MeasureState>((set, get) => ({
   userTrackedMeasures,
   setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[]) => set({userTrackedMeasures}),
+  addUserTrackedMeasure: (newUserTrackedMeasure: UserTrackedMeasure) => set({userTrackedMeasures: [...get().userTrackedMeasures, newUserTrackedMeasure]}),
   getUserTrackedMeasurePositionById: (id) => get().userTrackedMeasures.find((utm: UserTrackedMeasure) => utm.id === id)?.position,
   unfilteredMeasures: [],
   setUserTrackedMeasureFilterStatusById: (id, isDisplayed) => set({userTrackedMeasures: getUserTrackedMeasuresWithNewFilterStatus(get().userTrackedMeasures, id, isDisplayed)}),

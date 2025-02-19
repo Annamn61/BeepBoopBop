@@ -22,7 +22,7 @@ const SidebarMeasure = ({userTrackedMeasure} : SidebarMeasureProps) => {
           }
 
           return (
-            <Box sx={styles.measureFilter} onClick={() => console.log('toggle all others on or off')}>
+            <Box sx={styles.measureFilterContainer} onClick={() => console.log('toggle all others on or off')}>
                 <Button sx={{...styles.checkbox, ...checkboxStyles}} onClick={() => setUserTrackedMeasureFilterStatusById(id, !isDisplayed)} />
                 <Box sx={styles.infoArea} className="sidebar-measure-filter-data">
                   <Typography sx={styles.measureId} className="sidebar-measure-filter-billid">{id}</Typography>
