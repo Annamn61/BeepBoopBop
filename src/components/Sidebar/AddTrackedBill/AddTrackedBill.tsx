@@ -5,10 +5,11 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MEASURE_COLORS } from '../../../utils/colors';
 import ColorSquare from '../../Accessories/ColorSquare/ColorSquare';
 import useMeasureStore from '../../../store/MeasureStore';
+import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 
 export const AddTrackedBill = () => {
   const { addUserTrackedMeasure } = useMeasureStore();
@@ -20,6 +21,16 @@ export const AddTrackedBill = () => {
   const [measureId, setMeasureId] = useState('');
   const [measureColor, setMeasureColor] = useState(MEASURE_COLORS.SAGE);
   const [sessionKey, setSessionKey] = useState('2025R1');
+
+  const resetState = () => {
+    setMeasureId('');
+    setMeasureColor(MEASURE_COLORS.SAGE);
+    setSessionKey('2025R1');
+  };
+
+  useEffect(() => {
+    resetState();
+  }, [anchorEl]);
 
   return (
     <>
@@ -54,6 +65,7 @@ export const AddTrackedBill = () => {
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
             <TextField
+              // Steals focus back after second popover is closed by clicking on first popover ?????
               sx={{ width: '140px' }}
               placeholder="Bill Number"
               value={measureId}
@@ -74,8 +86,8 @@ export const AddTrackedBill = () => {
               onClick={(e) => setColorAnchorEl(e.currentTarget)}
             >
               <ColorSquare color={measureColor} />
-              <AddRoundedIcon />
-              {/* <KeyboardArrowDownRoundedIcon /> */}
+              {/* TODO: Up/down when open/closed */}
+              <KeyboardArrowDownRoundedIcon />
               <Popover
                 open={!!colorAnchorEl}
                 anchorEl={colorAnchorEl}
