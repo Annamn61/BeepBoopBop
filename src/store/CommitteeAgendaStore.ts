@@ -6,7 +6,7 @@ interface CommitteeAgendaState {
   unfilteredCommitteeAgenda: AgendaItem[];
   setUnfilteredCommitteeAgenda: (agendaItems: AgendaItem[]) => void;
   getCommitteeAgendaItems: () => AgendaItem[];
-  getCalendarEvents: () => { title: string; start: Date; end: Date; measureNumber: number; comments: string }[];
+  getCalendarEvents: () => { title: string; start: Date; end: Date; measureNumber: number; comments: string; color: string }[];
 };
 
 export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) => ({

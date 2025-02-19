@@ -13,7 +13,7 @@ import { MeasureHistory } from './components/MeasureHistory/MeasureHistory'
 import TitleLogo from './components/TitleLogo/TitleLogo'
 import Box from '@mui/material/Box'
 import PageTabs from './components/PageTabs/PageTabs'
-import { Modal } from '@mui/material'
+import EventDetailModal from './components/Calendar/EventDetailModal'
 
 const localizer = momentLocalizer(moment)
 
@@ -27,17 +27,6 @@ function App() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
   useFetchMeasureInfoFromApi();
 
   return (
@@ -67,14 +56,7 @@ function App() {
               startAccessor="start"
               endAccessor="end"
               style={{ height: 500, width: 800 }}
-              onSelectEvent={(event) => {
-              //   window.alert(`
-              //     Title: ${event.title} \n
-              //     Measure: ${event.measureNumber} \n
-              //     Comments: ${event.comments} \n
-              //   `);
-              // }}
-              handleOpen()}}
+              onSelectEvent={(event) => {handleOpen()}}
               eventPropGetter={(event) => {
                 const backgroundColor = event.color || "green"; // Default color
                 return {
@@ -93,16 +75,7 @@ function App() {
                   {selectedPage === 'location' && <BillLocationBoard />}
 
         </Box>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            HEY
-          </Box>
-        </Modal>
+        <EventDetailModal open={open} handleClose={handleClose}/>
       </div>
       ): <SimpleAuth checkPassword={checkPassword} />
   )
