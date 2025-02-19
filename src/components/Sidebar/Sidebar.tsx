@@ -1,10 +1,11 @@
-import useBillStore from "../../store/MeasureStore";
+import useMeasureStore from "../../store/MeasureStore";
 import './Sidebar.css'
 import Typography from '@mui/material/Typography';
 import { AddTrackedBill } from "./AddTrackedBill/AddTrackedBill";
+import SidebarMeasure from './SidebarMeasure/SidebarMeasure'
 
 export const Sidebar = () => {
-    const { userTrackedMeasures, getMeasureTitleById, setUserTrackedMeasureFilterStatusById, getUserMeasureColorById} = useBillStore();
+    const { userTrackedMeasures } = useMeasureStore();
 
     return(
         <div className="sidebar">
@@ -16,24 +17,10 @@ export const Sidebar = () => {
 
             </div>
 
-            {userTrackedMeasures.map((measure) => {
-          const {isDisplayed, id } = measure;
-          const title = getMeasureTitleById(id);
-          const measureColor = getUserMeasureColorById(id);
-          return (
-            <div className="sidebar-measure-filter">
-                <button style={{backgroundColor: isDisplayed ? measureColor: 'transparent', borderColor: measureColor}} className={`checkbox${isDisplayed ? '-active': ''}`} onClick={() => setUserTrackedMeasureFilterStatusById(id, !isDisplayed)} />
-                <div className="sidebar-measure-filter-data">
-                  <div className="sidebar-measure-filter-billid">{id}</div>
-                  <div>{title}</div>
-                </div>
+            {userTrackedMeasures.map((userTrackedMeasure) => (
+              <SidebarMeasure userTrackedMeasure={userTrackedMeasure} />
+            ))}
             </div>
-          )
-        })}
-            </div>
-
-
-        
       </div>
     )
 }

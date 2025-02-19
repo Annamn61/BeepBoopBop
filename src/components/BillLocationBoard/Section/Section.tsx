@@ -1,5 +1,5 @@
 import React from 'react';
-import useBillStore from '../../../store/MeasureStore';
+import useMeasureStore from '../../../store/MeasureStore';
 import Bill from '../BillCard/BillCard';
 import './Section.css'
 import SectionHeader from './SectionHeader/SectionHeader';
@@ -24,7 +24,7 @@ const getSectionBillCount = (billsInStatuses: any) => {
 
 const Section = ({sectionData, groupTitle, sectionTitle}: SectionProps) => {
     const {section, data} = sectionData;
-    const measuresInKanbanLocations = useBillStore.getState().getMeasuresSortedIntoKanbanLocations();
+    const measuresInKanbanLocations = useMeasureStore.getState().getMeasuresSortedIntoKanbanLocations();
     const billsInStatuses = measuresInKanbanLocations[groupTitle]?.[sectionTitle]
     const billCount = getSectionBillCount(billsInStatuses);
 

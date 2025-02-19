@@ -3,10 +3,10 @@ import { AgendaItem } from '../types/CommitteeAgendaTypes';
 import { userTrackedMeasures } from '../data/userMeasureData';
 
 interface CommitteeAgendaState {
-  unfilteredCommitteeAgenda: AgendaItem[][]; //Each Measure will return a list of AgendaItems so it is a double array of Measures and the corresponding Agenda Items
-  setUnfilteredCommitteeAgenda: (agendaItems: AgendaItem[][]) => void;
-  getCommitteeAgendaItems: () => AgendaItem[][];
-  getCalendarEvents: () => { title: string; start: Date; end: Date; measureNumber: number; comments: string; color: string }[];
+  unfilteredCommitteeAgenda: AgendaItem[];
+  setUnfilteredCommitteeAgenda: (agendaItems: AgendaItem[]) => void;
+  getCommitteeAgendaItems: () => AgendaItem[];
+  getCalendarEvents: () => { title: string; start: Date; end: Date; measureNumber: number; comments: string }[];
 };
 
 export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) => ({

@@ -1,4 +1,4 @@
-import useBillStore from "../../../store/MeasureStore";
+import useMeasureStore from "../../../store/MeasureStore";
 import './BillCard.css'
 
 interface BillProps {
@@ -6,11 +6,11 @@ interface BillProps {
 }
 
 const Bill = ({ billId }: BillProps) => {
-    const committeeCode = useBillStore.getState().getMeasureCommitteeNameById(billId);
-    const position = useBillStore.getState().getUserTrackedMeasurePositionById(billId);
-    const measureDocURL = useBillStore.getState().getMeasureDocumentUrlById(billId);
-    const billTitle = useBillStore.getState().getMeasureTitleById(billId);
-    const measureColor = useBillStore.getState().getUserMeasureColorById(billId)
+    const committeeCode = useMeasureStore.getState().getMeasureCommitteeNameById(billId);
+    const position = useMeasureStore.getState().getUserTrackedMeasurePositionById(billId);
+    const measureDocURL = useMeasureStore.getState().getMeasureDocumentUrlById(billId);
+    const billTitle = useMeasureStore.getState().getMeasureTitleById(billId);
+    const measureColor = useMeasureStore.getState().getUserMeasureColorById(billId)
 
     return (
     <a style={{borderLeft: `6px solid ${measureColor}`}} className='bill' href={measureDocURL} target='_blank' key={billId}>

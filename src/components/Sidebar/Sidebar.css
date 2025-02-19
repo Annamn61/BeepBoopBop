@@ -6,38 +6,6 @@
     color: black;
     text-align: left;
   }
-  
-  .sidebar-measure-filter {
-    display: flex;
-    flex-direction: row;
-    gap: 16px;
-  }
-  
-  .checkbox, .checkbox-active {
-    height: 20px;
-    width: 20px;
-    padding: 0px;
-    border-width: '2px';
-    border-style: solid;
-    border-radius: 4px;
-    flex-shrink: 0;
-  }
-
-  .checkbox-active:hover {
-    background-color: rgb(168, 168, 168) !important;
-  }
-  
-  .sidebar-measure-filter-data {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    gap: 8px;
-  }
-
-  .sidebar-measure-filter-billid {
-    font-weight: 600;
-  }
 
   .section-header {
     font-weight: 600;
