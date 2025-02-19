@@ -81,7 +81,8 @@ const sortMeasuresIntoKanbanLocations = (measures: Measure[]) => {
 }
 
 const getMeasuresFromMeasureObjects = (measureObjects: MeasureObject[]) => {
-  const ret =  measureObjects.filter(o => o.value[0]).map((obj) => {
+  const definedMeasures = measureObjects.filter(measure => measure !== undefined);
+  const ret =  definedMeasures.filter(o => o.value[0]).map((obj) => {
     const measure = obj.value[0];
     const id = `${measure.MeasurePrefix} ${measure.MeasureNumber}`
     return {
