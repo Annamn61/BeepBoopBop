@@ -20,16 +20,22 @@ import EventDetailModal from './components/Calendar/EventDetailModal'
 const localizer = momentLocalizer(moment);
 
 function App() {
-  const { getCalendarEvents } = useCommitteeAgendaStore();
   const { isLoggedIn, checkPassword } = useSimpleAuth();
   const [selectedPage, setSelectedPage] = useState('location');
 
+  const { getCalendarEvents } = useCommitteeAgendaStore();
+  useFetchMeasureInfoFromApi();
+
   // Modal States
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const [currentMeasure, setCurrentMeasure] = useState<number | undefined>(undefined);
+  const handleOpen = (event: any) => {
+    setCurrentMeasure(event.measureNumber);
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
-  useFetchMeasureInfoFromApi();
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -66,7 +72,7 @@ function App() {
               startAccessor="start"
               endAccessor="end"
               style={{ height: 500, width: 800 }}
-              onSelectEvent={(event) => {handleOpen()}}
+              onSelectEvent={(event) => {handleOpen(event)}}
               eventPropGetter={(event) => {
                 const backgroundColor = event.color || "green"; // Default color
                 return {
@@ -85,7 +91,7 @@ function App() {
                   {selectedPage === 'location' && <BillLocationBoard />}
 
         </Box>
-        <EventDetailModal open={open} handleClose={handleClose}/>
+        <EventDetailModal open={open} handleClose={handleClose} measureId={currentMeasure} />
       </div>
       ): <SimpleAuth checkPassword={checkPassword} />
     }

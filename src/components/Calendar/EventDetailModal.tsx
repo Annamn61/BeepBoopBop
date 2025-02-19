@@ -16,9 +16,15 @@ const style = {
 interface EventDetailModalProps {
   open: boolean;
   handleClose: () => void;
+  measureId: number | undefined;
 };
 
-const EventDetailModal = ({open, handleClose}: EventDetailModalProps) => (
+// TODO: Andrew add logic to get measure from store using the measure id value passed in as a prop
+
+const EventDetailModal = ({open, handleClose, measureId}: EventDetailModalProps) => {
+
+  console.log(measureId);
+  return (
   <Modal
     open={open}
     onClose={handleClose}
@@ -26,9 +32,9 @@ const EventDetailModal = ({open, handleClose}: EventDetailModalProps) => (
     aria-describedby="modal-modal-description"
   >
     <Box sx={style}>
-      HEY
+      {measureId}
     </Box>
   </Modal>
-);
+)};
 
 export default EventDetailModal;
