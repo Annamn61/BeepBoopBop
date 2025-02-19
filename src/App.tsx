@@ -15,14 +15,29 @@ import Box from '@mui/material/Box';
 import PageTabs from './components/PageTabs/PageTabs';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import theme from './utils/theme';
+import EventDetailModal from './components/Calendar/EventDetailModal'
 
 const localizer = momentLocalizer(moment);
 
 function App() {
-  const { getCalendarEvents } = useCommitteeAgendaStore();
   const { isLoggedIn, checkPassword } = useSimpleAuth();
   const [selectedPage, setSelectedPage] = useState('location');
+
+  const { getCalendarEvents } = useCommitteeAgendaStore();
   useFetchMeasureInfoFromApi();
+
+  // Modal States
+  const [open, setOpen] = useState(false);
+  const [currentMeasure, setCurrentMeasure] = useState<number | undefined>(undefined);
+  const [currentEvent, setCurrentEvent] = useState(undefined);
+  const handleOpen = (event: any) => {
+    setCurrentEvent(event);
+    setCurrentMeasure(event.measureNumber);
+    setOpen(true);
+  };
+  const handleClose = () => setOpen(false);
+
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -51,33 +66,39 @@ function App() {
                 setSelectedPage={setSelectedPage}
               />
 
-              {selectedPage === 'history' && <MeasureHistory />}
-              {selectedPage === 'calendar' && (
-                <Calendar
-                  localizer={localizer}
-                  events={getCalendarEvents()}
-                  startAccessor="start"
-                  endAccessor="end"
-                  style={{ height: 500, width: 800 }}
-                  onSelectEvent={(event) => {
-                    window.alert(`
-                  Title: ${event.title} \n
-                  Measure: ${event.measureNumber} \n
-                  Comments: ${event.comments} \n
-                `);
-                  }}
-                />
-              )}
-            </Box>
+          {selectedPage === 'history' && <MeasureHistory />}
+          {selectedPage === 'calendar' && 
+            <Calendar
+              localizer={localizer}
+              events={getCalendarEvents()}
+              startAccessor="start"
+              endAccessor="end"
+              style={{ height: 500, width: 800 }}
+              onSelectEvent={(event) => {handleOpen(event)}}
+              eventPropGetter={(event) => {
+                const backgroundColor = event.color || "green"; // Default color
+                return {
+                  style: {
+                    backgroundColor,
+                    color: "white",
+                    borderRadius: "4px",
+                    padding: "5px",
+                  },
+                };
+              }}
+            />
+          }
+                </Box>
 
-            {selectedPage === 'location' && <BillLocationBoard />}
-          </Box>
-        </div>
-      ) : (
-        <SimpleAuth checkPassword={checkPassword} />
-      )}
+                  {selectedPage === 'location' && <BillLocationBoard />}
+
+        </Box>
+        <EventDetailModal open={open} handleClose={handleClose} measureId={currentMeasure} event={currentEvent}/>
+      </div>
+      ): <SimpleAuth checkPassword={checkPassword} />
+    }
     </ThemeProvider>
-  );
+  )
 }
 
 export default App;
