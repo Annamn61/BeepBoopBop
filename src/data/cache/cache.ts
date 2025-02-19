@@ -43,7 +43,7 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
 }
 
   export const getLocalStorageCache = () => {
-    const result = localStorage.getItem('Measures')
+    const result = localStorage.getItem('Measures');
     if(result) {
       return  JSON.parse(result) as LocalStoreageCache;
     }
@@ -60,9 +60,14 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
 
   export const getAllHistoryDataFromLocalStorage = () => {
     const cache = getLocalStorageCache();
-    const history = Object.keys(cache).map((uniqueMeasureId: UniqueMeasureIdentifier) => {
-        return cache[uniqueMeasureId].MeasureData;
-    }).filter((measure) => measure.value[0]?.MeasureHistoryActions).flatMap((measure) => measure.value[0]?.MeasureHistoryActions);
+
+    // TODO: THIS IS A TEMPORARY FIX
+    // getLocalStorageCache() is returning everything in the cache so we are trying to access the value of "lastUpdated" and "measures" which is undefined and therefore breaks the app
+    // I think we might need to reorganize the way the cache data object is saved 
+    const history = Object.keys(cache)
+      .map((uniqueMeasureId: UniqueMeasureIdentifier) => cache[uniqueMeasureId].MeasureData)
+      .filter((measure) => measure?.value?.[0]?.MeasureHistoryActions)
+      .flatMap((measure) => measure.value?.[0]?.MeasureHistoryActions ?? []);
     return history;
   }
 
@@ -83,7 +88,6 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
 
     useEffect(() => {
         localStorage.setItem('Measures', JSON.stringify(cacheObject));
-        console.log('cacheObject updated');
         setUnfilteredMeasures(getAllMeasureDataFromLocalStorage());
         setUnfilteredHistory(getAllHistoryDataFromLocalStorage());
         setUnfilteredCommitteeAgenda(getAllCommitteeAgendaItemsFromStore());
