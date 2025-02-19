@@ -29,7 +29,9 @@ function App() {
   // Modal States
   const [open, setOpen] = useState(false);
   const [currentMeasure, setCurrentMeasure] = useState<number | undefined>(undefined);
+  const [currentEvent, setCurrentEvent] = useState(undefined);
   const handleOpen = (event: any) => {
+    setCurrentEvent(event);
     setCurrentMeasure(event.measureNumber);
     setOpen(true);
   };
@@ -91,7 +93,7 @@ function App() {
                   {selectedPage === 'location' && <BillLocationBoard />}
 
         </Box>
-        <EventDetailModal open={open} handleClose={handleClose} measureId={currentMeasure} />
+        <EventDetailModal open={open} handleClose={handleClose} measureId={currentMeasure} event={currentEvent}/>
       </div>
       ): <SimpleAuth checkPassword={checkPassword} />
     }

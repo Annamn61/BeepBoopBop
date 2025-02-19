@@ -1,5 +1,6 @@
-import { Modal } from '@mui/material';
+import { Link, Modal, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
+import { useMeasureStore } from "../../store/MeasureStore";
 
 const style = {
   position: 'absolute',
@@ -17,13 +18,18 @@ interface EventDetailModalProps {
   open: boolean;
   handleClose: () => void;
   measureId: number | undefined;
+  event: any;
 };
 
 // TODO: Andrew add logic to get measure from store using the measure id value passed in as a prop
 
-const EventDetailModal = ({open, handleClose, measureId}: EventDetailModalProps) => {
+const EventDetailModal = ({open, handleClose, measureId, event}: EventDetailModalProps) => {
 
-  console.log(measureId);
+  const { getMeasureById } = useMeasureStore();
+  const measure = getMeasureById(String(measureId));
+
+  // Get details about the event
+
   return (
   <Modal
     open={open}
@@ -32,7 +38,12 @@ const EventDetailModal = ({open, handleClose, measureId}: EventDetailModalProps)
     aria-describedby="modal-modal-description"
   >
     <Box sx={style}>
-      {measureId}
+      <Typography>{`Measure Number: ${measure?.MeasurePrefix} ${measure?.MeasureNumber}`}</Typography>
+      <Typography>{`Current Location: ${measure?.CurrentLocation}`}</Typography>
+      <Typography>{`Current Event: ${event?.title}`}</Typography>
+      <Typography>{`Measure Documents: `} <Link href={measure?.MeasureDocuments[0].DocumentUrl} target="_target">View Here</Link></Typography>
+      {/* TODO: Add the history of this specific measure */}
+      {measure?.MeasureHistoryActions[0].ActionText}
     </Box>
   </Modal>
 )};
