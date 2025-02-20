@@ -22,6 +22,7 @@ const localizer = momentLocalizer(moment);
 function App() {
   const { isLoggedIn, checkPassword } = useSimpleAuth();
   const [selectedPage, setSelectedPage] = useState('location');
+  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
 
   const { getCalendarEvents } = useCommitteeAgendaStore();
   useFetchMeasureInfoFromApi();
@@ -43,17 +44,19 @@ function App() {
     <ThemeProvider theme={theme}>
       {isLoggedIn ? (
         <div className="app-container">
-          <Sidebar />
+          <Sidebar open={sidebarIsOpen} setOpen={setSidebarIsOpen} />
           <Box
             sx={{
               overflow: 'hidden',
               paddingTop: 4,
               paddingBottom: 4,
+              paddingLeft: sidebarIsOpen ? '348px' : '0px',
+              transition: '0.3s all ease-in-out',
             }}
           >
             <Box
               sx={{
-                paddingLeft: 12,
+                paddingLeft: 6,
                 paddingRight: 12,
                 display: 'flex',
                 flexDirection: 'column',

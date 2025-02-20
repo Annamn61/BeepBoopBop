@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Measure, MeasureObject, UserTrackedMeasure } from '../types/MeasureTypes';
 import { userTrackedMeasures } from '../data/userMeasureData';
 import { getKanbanLocationFromBilLocation } from '../components/BillLocationBoard/Locations/Locations.helpers';
+import { getMeasureId } from '../utils/measure';
 
 interface MeasureState {
   userTrackedMeasures: UserTrackedMeasure[];
@@ -10,6 +11,7 @@ interface MeasureState {
   getUserTrackedMeasurePositionById: (id: string) => UserTrackedMeasure['position'] | undefined;
   unfilteredMeasures: Measure[];
   setUserTrackedMeasureFilterStatusById: (id: string, isDisplayed: boolean) => void;
+  toggleAllUserTrackedFilterStatusesBasedOnAnId: (id: string) => void;
   getMeasures: () => Measure[];
   getMeasuresSortedIntoKanbanLocations: () => any,
   getHasKanbanSortingError: () => boolean,
@@ -30,6 +32,7 @@ export const useMeasureStore = create<MeasureState>((set, get) => ({
   getUserTrackedMeasurePositionById: (id) => get().userTrackedMeasures.find((utm: UserTrackedMeasure) => utm.id === id)?.position,
   unfilteredMeasures: [],
   setUserTrackedMeasureFilterStatusById: (id, isDisplayed) => set({userTrackedMeasures: getUserTrackedMeasuresWithNewFilterStatus(get().userTrackedMeasures, id, isDisplayed)}),
+  toggleAllUserTrackedFilterStatusesBasedOnAnId: (id) => set({userTrackedMeasures: getToggledFilters(get().userTrackedMeasures, id)}),
   getMeasures: () => getMeasuresFromFiltersAndUnfilteredMeasures(get().unfilteredMeasures, get().userTrackedMeasures),
   getMeasuresSortedIntoKanbanLocations: () => sortMeasuresIntoKanbanLocations(get().getMeasures()),
   getHasKanbanSortingError: () => getHasSortingError(get().getMeasuresSortedIntoKanbanLocations()),
@@ -42,6 +45,28 @@ export const useMeasureStore = create<MeasureState>((set, get) => ({
   getUserMeasureColorById: (id) => get().getUserMeasureMetadataById(id)?.color,
   getUnfilteredMeasures: () => get().unfilteredMeasures,
 }));
+
+const getToggledFilters = (userTrackedMeasures: UserTrackedMeasure[], id: string) => {
+    let newTrackedMeasures: UserTrackedMeasure[] = [];
+    const displayedMeasures = userTrackedMeasures.filter((measure) => measure.isDisplayed);
+    if(displayedMeasures.length === 1 && displayedMeasures[0].id === id) {
+        // turn all on
+        userTrackedMeasures.forEach((measure) => {
+            newTrackedMeasures.push({...measure, isDisplayed: true});
+        })
+    } else {
+        // turn all off except for the id
+        userTrackedMeasures.forEach((measure) => {
+            if(measure.id === id) {
+            newTrackedMeasures.push({...measure, isDisplayed: true})
+            } else {
+            newTrackedMeasures.push({...measure, isDisplayed: false});
+            }
+        })
+    }
+    
+    return newTrackedMeasures
+}
 
 
 const getMeasuresFromFiltersAndUnfilteredMeasures = (unfilteredMeasures: Measure[], userTrackedMeasures: UserTrackedMeasure[]) => {

@@ -4,11 +4,13 @@ export const styles: Record<string, SxProps<Theme>> = {
     measureFilterContainer: {
         display: 'flex',
         flexDirection: 'row',
+        alignItems: 'flex-start',
         gap: '16px',
         padding: 2,
         borderRadius: '8px',
         '&:hover': {
-            backgroundColor: '#EDEDED'
+            backgroundColor: '#EDEDED',
+            cursor: 'pointer',
         }
     },
     checkbox: {
@@ -30,6 +32,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         alignItems: 'flexStart',
         textAlign: 'left',
         gap: '8px',
+        flexGrow: 1,
     },
     measureId: {
         fontWeight: 600,
