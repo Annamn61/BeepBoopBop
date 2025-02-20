@@ -1,23 +1,23 @@
 import { getDaysAgo } from '../../../utils/time';
-import './DateTitle.css'
-import Box from '@mui/material/Box'
+import Box from '@mui/material/Box';
+import { styles } from './DateTitle.styles';
 
 interface DateTitleProps {
-    dateString: string,
+  dateString: string;
 }
 
-const DateTitle = ({dateString}: DateTitleProps) => {
-    var date = new Date(`${dateString}T00:00:00.000`);
-    
-    return (
-        <div className="date-title-container">
-            <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%'}}>
-            <div className="date-title">{date.toLocaleDateString()}</div>
-            <Box sx={{color: '#a7a7a7'}}>{getDaysAgo(date)}</Box>
-            </Box>
-            <div className="date-divider" />
-        </div>
-    );
-}
+const DateTitle = ({ dateString }: DateTitleProps) => {
+  var date = new Date(`${dateString}T00:00:00.000`);
+
+  return (
+    <Box sx={styles.container}>
+      <Box sx={styles.dateAndDaysAgo}>
+        <Box sx={styles.date}>{date.toLocaleDateString()}</Box>
+        <Box sx={styles.daysAgo}>{getDaysAgo(date)}</Box>
+      </Box>
+      <Box sx={styles.divider} />
+    </Box>
+  );
+};
 
 export default DateTitle;
