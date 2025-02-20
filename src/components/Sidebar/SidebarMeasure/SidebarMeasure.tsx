@@ -5,6 +5,7 @@ import { styles } from './SidebarMeasure.styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 interface SidebarMeasureProps {
   userTrackedMeasure: UserTrackedMeasure;
@@ -40,13 +41,20 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
           setUserTrackedMeasureFilterStatusById(id, !isDisplayed);
         }}
       />
-      <Box sx={styles.infoArea} className="sidebar-measure-filter-data">
-        <Typography
-          sx={styles.measureId}
-          className="sidebar-measure-filter-billid"
-        >
-          {id}
-        </Typography>
+      <Box sx={styles.infoArea}>
+        <Box sx={styles.infoTopline}>
+          <Typography sx={styles.measureId}>{id}</Typography>
+          <IconButton
+            id="moreIcon"
+            sx={styles.moreIcon}
+            size="small"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <MoreHorizIcon />
+          </IconButton>
+        </Box>
         <Typography>{title}</Typography>
       </Box>
     </Box>

@@ -11,9 +11,13 @@ export const styles: Record<string, SxProps<Theme>> = {
         '&:hover': {
             backgroundColor: '#EDEDED',
             cursor: 'pointer',
+        },
+        '&:hover #moreIcon': {
+            visibility: 'visible',
         }
     },
     checkbox: {
+        marginTop: '6px',
         height: '20px',
         width: '20px',
         minWidth: 'unset',
@@ -31,10 +35,19 @@ export const styles: Record<string, SxProps<Theme>> = {
         flexDirection: 'column',
         alignItems: 'flexStart',
         textAlign: 'left',
-        gap: '8px',
+        gap: '4px',
         flexGrow: 1,
+    },
+    infoTopline: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     measureId: {
         fontWeight: 600,
     }, 
+    moreIcon: {
+        visibility: 'hidden',
+    },
 }
