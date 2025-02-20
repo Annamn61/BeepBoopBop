@@ -22,6 +22,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-end',
+        gap: 0.5,
         "&:hover #closeIcon": {
             visibility: 'visible',
             opacity: 1,
