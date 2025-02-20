@@ -27,7 +27,7 @@
 }
 
 .groups-container {
-    padding-left: 48px;
+    /* padding-left: 48px; */
     padding-right: 96px;
     display: flex;
     width: fit-content;

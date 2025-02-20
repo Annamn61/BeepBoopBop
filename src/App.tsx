@@ -56,11 +56,12 @@ function App() {
           >
             <Box
               sx={{
-                paddingLeft: 6,
+                paddingLeft: sidebarIsOpen ? 6 : 12,
                 paddingRight: 12,
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 4,
+                transition: '0.3s all ease-in-out',
               }}
             >
               <TitleLogo />
@@ -95,7 +96,9 @@ function App() {
               )}
             </Box>
 
-            {selectedPage === 'location' && <BillLocationBoard />}
+            {selectedPage === 'location' && (
+              <BillLocationBoard sidebarIsOpen={sidebarIsOpen} />
+            )}
           </Box>
           <EventDetailModal
             open={open}
