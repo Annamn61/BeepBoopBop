@@ -5,22 +5,49 @@ import { styles } from './PageTabs.styles';
 import { SxProps, Theme } from '@mui/material/styles';
 
 interface PageTabProps {
-  selectedPage: string,
+  selectedPage: string;
   setSelectedPage: (selectedPage: string) => void;
 }
 
-const PageTabs = ({selectedPage, setSelectedPage}: PageTabProps) => {
+const PageTabs = ({ selectedPage, setSelectedPage }: PageTabProps) => {
   return (
     <Box sx={styles.buttonRow}>
-              <Button variant="contained" sx={[styles.tabButton, ...(selectedPage === 'location' ? [styles.activeTabButton] : [])] as SxProps<Theme>} onClick={() => setSelectedPage('location')}>
-          <Typography  sx={styles.buttonText}>Location</Typography>
-        </Button>
-        <Button variant="contained" sx={[styles.tabButton, ...(selectedPage === 'history' ? [styles.activeTabButton] : [])] as SxProps<Theme>} onClick={() => setSelectedPage('history')}>
-          <Typography sx={styles.buttonText}>History</Typography>
-        </Button>
-        <Button variant="contained" sx={[styles.tabButton, ...(selectedPage === 'calendar' ? [styles.activeTabButton] : [])] as SxProps<Theme>} onClick={() => setSelectedPage('calendar')}>
-          <Typography  sx={styles.buttonText}>Calendar</Typography>
-        </Button>
+      <Button
+        variant="contained"
+        sx={
+          [
+            styles.tabButton,
+            ...(selectedPage === 'location' ? [styles.activeTabButton] : []),
+          ] as SxProps<Theme>
+        }
+        onClick={() => setSelectedPage('location')}
+      >
+        <Typography variant="button">Location</Typography>
+      </Button>
+      <Button
+        variant="contained"
+        sx={
+          [
+            styles.tabButton,
+            ...(selectedPage === 'history' ? [styles.activeTabButton] : []),
+          ] as SxProps<Theme>
+        }
+        onClick={() => setSelectedPage('history')}
+      >
+        <Typography variant="button">History</Typography>
+      </Button>
+      <Button
+        variant="contained"
+        sx={
+          [
+            styles.tabButton,
+            ...(selectedPage === 'calendar' ? [styles.activeTabButton] : []),
+          ] as SxProps<Theme>
+        }
+        onClick={() => setSelectedPage('calendar')}
+      >
+        <Typography variant="button">Calendar</Typography>
+      </Button>
     </Box>
   );
 };

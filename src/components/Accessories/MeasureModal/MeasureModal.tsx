@@ -38,11 +38,11 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
         </Box>
         <Box sx={styles.modalContent}>
           <MeasurePill id={measureId} />
-          <Typography sx={styles.title} variant="h5">
+          <Typography variant="h1" sx={styles.title}>
             {CatchLine}
           </Typography>
           <Box sx={styles.measureDocumentSection}>
-            <Typography variant="subtitle1">Measure Documents</Typography>
+            <Typography variant="subtitle2">Measure Documents</Typography>
             <Box sx={styles.documentsContainer}>
               {MeasureDocuments.map((doc) => (
                 <Link
@@ -51,24 +51,26 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
                   href={doc.DocumentUrl}
                   target="_blank"
                 >
-                  <Typography>{doc.VersionDescription}</Typography>
+                  <Typography variant="body1">
+                    {doc.VersionDescription}
+                  </Typography>
                   <LaunchRoundedIcon sx={styles.launchIcon} fontSize="small" />
                 </Link>
               ))}
             </Box>
           </Box>
           <Box sx={styles.quicklook}>
-            <Typography>Quicklook</Typography>
+            <Typography variant="h3">Quicklook</Typography>
           </Box>
           <Box sx={styles.summary}>
-            <Typography>Summary</Typography>
+            <Typography variant="h3">Summary</Typography>
             <Box sx={styles.lineItem}>
-              <Typography variant="subtitle1">Catchline</Typography>
-              <Typography>{CatchLine}</Typography>
+              <Typography variant="subtitle2">Catchline</Typography>
+              <Typography variant="body1">{CatchLine}</Typography>
             </Box>
             <Box sx={styles.lineItem}>
               <Typography variant="subtitle1">Location</Typography>
-              <Typography>{CurrentLocation}</Typography>
+              <Typography variant="body1">{CurrentLocation}</Typography>
             </Box>
           </Box>
         </Box>

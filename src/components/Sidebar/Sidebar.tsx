@@ -36,9 +36,7 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
           </IconButton>
           <Box sx={styles.section}>
             <Box sx={styles.sectionHeader}>
-              <Typography sx={styles.sectionHeaderTitle} variant="h6">
-                Tracked Bills
-              </Typography>
+              <Typography variant="h2">Tracked Bills</Typography>
               <AddTrackedBill />
             </Box>
             {userTrackedMeasures.map((userTrackedMeasure) => (

@@ -12,13 +12,13 @@ interface HistoryItemProps {
 const HistoryItemLine = ({ action }: HistoryItemProps) => {
   return (
     <Box sx={styles.container}>
-      <Typography sx={styles.time}>
+      <Typography variant="subtitle2" sx={styles.time}>
         {getMMHHFromDate(new Date(action.ActionDate))}
       </Typography>
       <MeasurePill
         id={getMeasureId(action.MeasurePrefix, action.MeasureNumber)}
       />
-      <Typography>{action.ActionText}</Typography>
+      <Typography variant="body1">{action.ActionText}</Typography>
     </Box>
   );
 };

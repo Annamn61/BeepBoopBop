@@ -44,9 +44,6 @@ export const styles: Record<string, SxProps<Theme>> = {
         justifyContent: 'space-between',
         alignItems: 'center'
     },
-    measureId: {
-        fontWeight: 600,
-    }, 
     moreIcon: {
         visibility: 'hidden',
     },

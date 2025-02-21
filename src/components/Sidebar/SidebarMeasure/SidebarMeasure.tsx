@@ -43,7 +43,9 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
       />
       <Box sx={styles.infoArea}>
         <Box sx={styles.infoTopline}>
-          <Typography sx={styles.measureId}>{id}</Typography>
+          <Typography variant="h5" sx={styles.measureId}>
+            {id}
+          </Typography>
           <IconButton
             id="moreIcon"
             sx={styles.moreIcon}
@@ -55,7 +57,7 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
             <MoreHorizIcon />
           </IconButton>
         </Box>
-        <Typography>{title}</Typography>
+        <Typography variant="body1">{title}</Typography>
       </Box>
     </Box>
   );

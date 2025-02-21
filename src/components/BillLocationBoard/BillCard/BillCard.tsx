@@ -3,6 +3,7 @@ import useMeasureStore from '../../../store/MeasureStore';
 import './BillCard.css';
 import { useState } from 'react';
 import MeasureModal from '../../Accessories/MeasureModal/MeasureModal';
+import Typography from '@mui/material/Typography';
 
 interface BillProps {
   billId: string;
@@ -29,11 +30,17 @@ const Bill = ({ billId }: BillProps) => {
     <>
       <Button
         sx={{
-          borderLeft: `6px solid ${measureColor}`,
+          borderLeft: `8px solid ${measureColor}`,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
           backgroundColor: '#fff',
+          borderRadius: '6px',
+          padding: 1.5,
+          gap: 1.5,
+          width: '100%',
+          boxSizing: 'border-box',
+          boxShadow: '2px 2px 4px 0px rgba(127, 127, 132, 0.2)',
           '&:hover': {
             outline: '2px solid #aaa',
             borderColor: measureColor,
@@ -42,27 +49,20 @@ const Bill = ({ billId }: BillProps) => {
             outline: '2px solid #aaa',
           },
         }}
-        className="bill"
         onClick={(e) => setAnchorEl(e.currentTarget)}
-        //   href={measureDocURL}
-        //   target="_blank"
         key={billId}
       >
-        <div className="bill-title">{billTitle}</div>
-        {committeeCode && <div className="bill-committee">{committeeCode}</div>}
+        <Typography variant="body1" className="bill-title">
+          {billTitle}
+        </Typography>
+        {committeeCode && (
+          <Typography variant="body2" className="bill-committee">
+            {committeeCode}
+          </Typography>
+        )}
         <div className="bill-additonal-info">
-          <div className="bill-position">
-            {position === 'Support' ? '🌍' : '🚨'}
-          </div>
-          <div
-            className={`bill-number ${
-              position === 'Support'
-                ? 'bill-number-green'
-                : 'bill-number-orange'
-            }`}
-          >
-            {billId}
-          </div>
+          <div>{position === 'Support' ? '🌍' : '🚨'}</div>
+          <Typography variant="h5">{billId}</Typography>
         </div>
       </Button>
       <MeasureModal

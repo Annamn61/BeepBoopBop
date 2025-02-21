@@ -60,7 +60,7 @@ export const AddTrackedBill = () => {
             alignItems: 'flex-end',
           }}
         >
-          <Typography sx={{ fontWeight: 600, width: '100%' }} variant="h6">
+          <Typography variant="h2" sx={{ width: '100%' }}>
             Add Bill to Track
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
@@ -141,6 +141,8 @@ export const AddTrackedBill = () => {
               backgroundColor: '#3E753B',
               borderRadius: '100px',
               padding: '8px 24px',
+              color: '#fff',
+              textTransform: 'none',
             }}
             variant="contained"
             onClick={() => {

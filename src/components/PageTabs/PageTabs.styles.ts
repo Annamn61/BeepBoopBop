@@ -11,7 +11,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         paddingBottom: 1,
         paddingLeft: 3,
         paddingRight: 3,
-        color: '#A7A7A7',
+        color: '#A7A7A7 !important',
         backgroundColor: '#f7f7f7',
         boxShadow: 'none',
         '&:hover': {
@@ -24,7 +24,4 @@ export const styles: Record<string, SxProps<Theme>> = {
         color: '#3E753B',
         backgroundColor: '#D4ECD4',
     },
-    buttonText: {
-        fontWeight: 600,
-    }
 }

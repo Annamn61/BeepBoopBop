@@ -15,7 +15,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         width: `${DRAWER_WIDTH}`,
         boxSizing: 'border-box',
         flexShrink: 0,
-        backgroundColor: '#F8F7F7',
+        backgroundColor: '#F7F7F7',
         padding: '24px 24px',
         color: 'black',
         textAlign: 'left',
@@ -39,9 +39,6 @@ export const styles: Record<string, SxProps<Theme>> = {
         justifyContent: 'space-between',
         fontSize: '20px',
         alignItems: 'center'
-    },
-    sectionHeaderTitle: {
-        fontWeight: 600,
     },
     closeArrows: {
         width: '40',
