@@ -31,14 +31,17 @@ export const styles: Record<string, SxProps<Theme>> = {
     section: {
         display: 'flex',
         flexDirection: 'column',
-        gap: '24px',
+        gap: 0.5,
     }, 
     sectionHeader: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        fontWeight: 600,
         fontSize: '20px',
+        alignItems: 'center'
+    },
+    sectionHeaderTitle: {
+        fontWeight: 600,
     },
     closeArrows: {
         width: '40',

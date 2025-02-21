@@ -3,6 +3,11 @@
   box-sizing: border-box;
 }
 
+* {
+    text-decoration: none;
+    text-transform: none;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

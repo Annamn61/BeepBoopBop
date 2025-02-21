@@ -15,6 +15,26 @@ export interface Measure {
     id: string,
     MeasureDocuments: MeasureDocument[],
     MeasureHistoryActions: MeasureHistoryItem[],
+    AtTheRequestOf: string,
+    CatchLine: string,
+    ChapterNumber: number, 
+    CreatedDate: string,
+    CurrentSubCommittee: string,
+    CurrentVersion: any, // TODO FiX
+    EffectiveDate: string,
+    EmergencyClause: boolean, // TODO Fix
+    FiscalAnalyst: string,
+    FiscalImpact: string,
+    LCNumber: number,
+    MeasureSummary: string,
+    MinorityCatchLine: string | null,
+    ModifiedDate: string,
+    PrefixMeaning: string,
+    RelatingToFull: "Relating to sustainable investing.\n\t",
+    RevenueEconomist: string,
+    RevenueImpact: string,
+    SessionKey: string,
+    Vetoed: boolean,
 }
 
 export interface UserTrackedMeasure {
