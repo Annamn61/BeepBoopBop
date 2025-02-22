@@ -6,7 +6,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
     },
     drawer: {
         transition: '0.3s all ease-in-out',
@@ -14,6 +14,7 @@ export const styles: Record<string, SxProps<Theme>> = {
     container: {
         width: `${DRAWER_WIDTH}`,
         boxSizing: 'border-box',
+        minHeight: '100vh',
         flexShrink: 0,
         backgroundColor: '#F7F7F7',
         padding: '24px 24px',

@@ -4,6 +4,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './App.css';
 import { BillLocationBoard } from './components/BillLocationBoard/BillLocationBoard';
+import { SnackbarProvider } from './components/Accessories/Snackbar/Snackbar';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { SimpleAuth } from './components/SimpleAuth/SimpleAuth';
 import { useSimpleAuth } from './components/SimpleAuth/SimpleAuth.helpers';
@@ -42,6 +43,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <SnackbarProvider />
       {isLoggedIn ? (
         <div className="app-container">
           <Sidebar open={sidebarIsOpen} setOpen={setSidebarIsOpen} />
