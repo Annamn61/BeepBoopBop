@@ -1,26 +1,23 @@
 import Button from '@mui/material/Button';
 import useMeasureStore from '../../../store/MeasureStore';
 import './BillCard.css';
-import { useState } from 'react';
 import MeasureModal from '../../Accessories/MeasureModal/MeasureModal';
 import Typography from '@mui/material/Typography';
+import { useModal } from '../../../utils/modal';
 
 interface BillProps {
   billId: string;
 }
 
 const Bill = ({ billId }: BillProps) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { anchorEl, setModalOpen, setModalClosed } = useModal();
 
   const committeeCode = useMeasureStore
     .getState()
-    .getMeasureCommitteeNameById(billId);
+    .getMeasureCommitteeCodeById(billId);
   const position = useMeasureStore
     .getState()
     .getUserTrackedMeasurePositionById(billId);
-  const measureDocURL = useMeasureStore
-    .getState()
-    .getMeasureDocumentUrlById(billId);
   const billTitle = useMeasureStore.getState().getMeasureTitleById(billId);
   const measureColor = useMeasureStore
     .getState()
@@ -49,7 +46,7 @@ const Bill = ({ billId }: BillProps) => {
             outline: '2px solid #aaa',
           },
         }}
-        onClick={(e) => setAnchorEl(e.currentTarget)}
+        onClick={setModalOpen}
         key={billId}
       >
         <Typography variant="body1" className="bill-title">
@@ -67,7 +64,7 @@ const Bill = ({ billId }: BillProps) => {
       </Button>
       <MeasureModal
         anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
+        onClose={setModalClosed}
         measureId={billId}
       />
     </>

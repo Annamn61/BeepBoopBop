@@ -1,8 +1,13 @@
 import { create } from 'zustand';
+import { useMeasureStore } from './MeasureStore';
+import { Measure } from '../types/MeasureTypes';
+import { getMeasureId } from '../utils/measure';
+// useMeasureStore.getState().filteredMeasures;
 
 interface HistoryState {
-  unfilteredHistory: {ActionDate: string}[]; //Todo: update any
+  unfilteredHistory: {ActionDate: string, MeasurePrefix: string, MeasureNumber: number}[]; //Todo: update any
   setUnfilteredHistory: (history: any[]) => void;
+  getFilteredHistory: () => {ActionDate: string}[];
 //   activeHistoryItems: any[]; //Todo: update any
   getFilteredHistorySortedByDate: () => any[];
 }
@@ -10,12 +15,24 @@ interface HistoryState {
 export const useHistoryStore = create<HistoryState>((set, get) => ({
     unfilteredHistory: [],
     setUnfilteredHistory: (historyObjects) => set({ unfilteredHistory: historyObjects }),
+    getFilteredHistory: () => filterHistoryToFilteredMeasures(get().unfilteredHistory, useMeasureStore.getState().getFilteredMeasureIds()),
 //   filteredHistoryItemsByFilteredMeasures: [],
-    getFilteredHistorySortedByDate: () => getHistorySortedIntoDates(get().unfilteredHistory), //TODO actually use a filtered history 
+    getFilteredHistorySortedByDate: () => getHistorySortedIntoDates(get().getFilteredHistory()), //TODO actually use a filtered history 
 }));
 
 
 export default useHistoryStore;
+
+const filterHistoryToFilteredMeasures = (history: {MeasurePrefix: string, MeasureNumber: number, ActionDate: string}[], filteredIds: Measure['id'][]) => {
+    
+    console.log('ON items', filteredIds);
+
+    return history.filter((historyItem) => {
+        const id = getMeasureId(historyItem.MeasurePrefix, historyItem.MeasureNumber);
+        return filteredIds.includes(id);
+    })
+    
+}
 
 const sortAndGroupHistory = (history: any[]) => {
     return history

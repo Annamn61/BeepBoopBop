@@ -17,6 +17,7 @@ const HistoryItemLine = ({ action }: HistoryItemProps) => {
       </Typography>
       <MeasurePill
         id={getMeasureId(action.MeasurePrefix, action.MeasureNumber)}
+        withModal={true}
       />
       <Typography variant="body1">{action.ActionText}</Typography>
     </Box>

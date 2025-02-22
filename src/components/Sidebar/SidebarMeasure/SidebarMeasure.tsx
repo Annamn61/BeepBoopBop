@@ -5,18 +5,22 @@ import { styles } from './SidebarMeasure.styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ConfirmationModal from '../../Accessories/ConfirmationModal/ConfirmationModal';
+import { useModal } from '../../../utils/modal';
 
 interface SidebarMeasureProps {
   userTrackedMeasure: UserTrackedMeasure;
 }
 
 const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
+  const { anchorEl, setModalClosed, setModalOpen } = useModal();
   const {
     getMeasureTitleById,
     setUserTrackedMeasureFilterStatusById,
     getUserMeasureColorById,
     toggleAllUserTrackedFilterStatusesBasedOnAnId,
+    removeTrackedMeasureById,
   } = useMeasureStore();
 
   const { isDisplayed, id } = userTrackedMeasure;
@@ -29,37 +33,47 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
   };
 
   return (
-    <Box
-      sx={styles.measureFilterContainer}
-      onClick={() => toggleAllUserTrackedFilterStatusesBasedOnAnId(id)}
-      role="button"
-    >
-      <Button
-        sx={{ ...styles.checkbox, ...checkboxStyles }}
-        onClick={(e) => {
-          e.stopPropagation();
-          setUserTrackedMeasureFilterStatusById(id, !isDisplayed);
-        }}
-      />
-      <Box sx={styles.infoArea}>
-        <Box sx={styles.infoTopline}>
-          <Typography variant="h5" sx={styles.measureId}>
-            {id}
-          </Typography>
-          <IconButton
-            id="moreIcon"
-            sx={styles.moreIcon}
-            size="small"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <MoreHorizIcon />
-          </IconButton>
+    <>
+      <Box
+        sx={styles.measureFilterContainer}
+        onClick={() => toggleAllUserTrackedFilterStatusesBasedOnAnId(id)}
+        role="button"
+      >
+        <Button
+          sx={{ ...styles.checkbox, ...checkboxStyles }}
+          onClick={(e) => {
+            e.stopPropagation();
+            setUserTrackedMeasureFilterStatusById(id, !isDisplayed);
+          }}
+        />
+        <Box sx={styles.infoArea}>
+          <Box sx={styles.infoTopline}>
+            <Typography variant="h5" sx={styles.measureId}>
+              {id}
+            </Typography>
+            <IconButton
+              id="moreIcon"
+              sx={styles.moreIcon}
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                setModalOpen(e);
+              }}
+            >
+              <CloseRoundedIcon />
+            </IconButton>
+          </Box>
+          <Typography variant="body1">{title}</Typography>
         </Box>
-        <Typography variant="body1">{title}</Typography>
       </Box>
-    </Box>
+      <ConfirmationModal
+        anchorEl={anchorEl}
+        onClose={setModalClosed}
+        handleAction={() => removeTrackedMeasureById(id)}
+        message={`Delete ${id}?`}
+        subtitle="Are you sure you want to remove this measure from your tracked measures? This action cannot be undone."
+      />
+    </>
   );
 };
 

@@ -2,34 +2,53 @@ import { create } from 'zustand';
 import { Measure, MeasureObject, UserTrackedMeasure } from '../types/MeasureTypes';
 import { userTrackedMeasures } from '../data/userMeasureData';
 import { getKanbanLocationFromBilLocation } from '../components/BillLocationBoard/Locations/Locations.helpers';
-import { getMeasureId } from '../utils/measure';
 
 interface MeasureState {
+/** Metadata about the measures a user is tracking */
   userTrackedMeasures: UserTrackedMeasure[];
+  /** set the metadata about the measures a user is tracking */
   setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[]) => void;
+  /** Add a single measure's metadata for tracking  */
   addUserTrackedMeasure: (newUserTrackedMeasure: UserTrackedMeasure) => void;
+  /** remove a measure's metadata from the list of what to track */
+  removeTrackedMeasureById: (id: string) => void;
+  /**  Get the users position on a bill by its id */
   getUserTrackedMeasurePositionById: (id: string) => UserTrackedMeasure['position'] | undefined;
+  /** Get an array of the ids of measures filtered as 'on' by the user */
+  getFilteredMeasureIds: () => Measure['id'][];
+  /** The total set of measures  a user is tracking */
   unfilteredMeasures: Measure[];
+  /** Update whether a measure is filtered or not by id */
   setUserTrackedMeasureFilterStatusById: (id: string, isDisplayed: boolean) => void;
+  /**  Toggle all measures as filtered on or off except for this id */
   toggleAllUserTrackedFilterStatusesBasedOnAnId: (id: string) => void;
+  /** Get all the measures filtered 'on' */
   getMeasures: () => Measure[];
+  /** Gets the measures in groupings of where they live in the location kanban */
   getMeasuresSortedIntoKanbanLocations: () => any,
+  /** Trus if any bill gives an error to the kanban sorting, false otherwise */
   getHasKanbanSortingError: () => boolean,
+  /** Set the measure data for all of the measures a user is tracking */
   setUnfilteredMeasures: (measures: MeasureObject[]) => void;
+  /** Get a single measure's data by id */
   getMeasureById: (id?: string) => Measure | undefined;
+  /** Get the user tracked measure metadata for a user's measure by id */
   getUserMeasureMetadataById: (id: string) => UserTrackedMeasure | undefined;
-  getMeasureCommitteeNameById: (id: string) => string | undefined;
+  /**  Get the committee code for the committee a measure is currently in, by id */
+  getMeasureCommitteeCodeById: (id: string) => string | undefined;
+  /** Get the title of the measure by its id */
   getMeasureTitleById: (id: string) => string | undefined;
-  getMeasureDocumentUrlById: (id: string) => string | undefined;
+  /** Gets the user defined color of a measure by its id */
   getUserMeasureColorById: (id: string) => string | undefined;
-  getUnfilteredMeasures: any;
 }
 
 export const useMeasureStore = create<MeasureState>((set, get) => ({
   userTrackedMeasures,
   setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[]) => set({userTrackedMeasures}),
   addUserTrackedMeasure: (newUserTrackedMeasure: UserTrackedMeasure) => set({userTrackedMeasures: [...get().userTrackedMeasures, newUserTrackedMeasure]}),
+  removeTrackedMeasureById: (id) => set({userTrackedMeasures: userTrackedMeasures.filter((measure) => measure.id != id)}),
   getUserTrackedMeasurePositionById: (id) => get().userTrackedMeasures.find((utm: UserTrackedMeasure) => utm.id === id)?.position,
+  getFilteredMeasureIds: () => get().userTrackedMeasures.filter((m) =>m.isDisplayed).map((measure) => measure.id),
   unfilteredMeasures: [],
   setUserTrackedMeasureFilterStatusById: (id, isDisplayed) => set({userTrackedMeasures: getUserTrackedMeasuresWithNewFilterStatus(get().userTrackedMeasures, id, isDisplayed)}),
   toggleAllUserTrackedFilterStatusesBasedOnAnId: (id) => set({userTrackedMeasures: getToggledFilters(get().userTrackedMeasures, id)}),
@@ -39,11 +58,9 @@ export const useMeasureStore = create<MeasureState>((set, get) => ({
   setUnfilteredMeasures: (measureObjects) => set({ unfilteredMeasures: getMeasuresFromMeasureObjects(measureObjects) }),
   getMeasureById: (id) => get().unfilteredMeasures.find((measure: Measure) =>  measure.id === id),
   getUserMeasureMetadataById: (id) => get().userTrackedMeasures.find((measure: UserTrackedMeasure) => measure.id === id),
-  getMeasureCommitteeNameById: (id) => get().getMeasureById(id)?.CurrentCommitteeCode,
+  getMeasureCommitteeCodeById: (id) => get().getMeasureById(id)?.CurrentCommitteeCode,
   getMeasureTitleById: (id) => get().getMeasureById(id)?.RelatingTo,
-  getMeasureDocumentUrlById: (id) => get().getMeasureById(id)?.MeasureDocuments?.[0]?.DocumentUrl,
   getUserMeasureColorById: (id) => get().getUserMeasureMetadataById(id)?.color,
-  getUnfilteredMeasures: () => get().unfilteredMeasures,
 }));
 
 const getToggledFilters = (userTrackedMeasures: UserTrackedMeasure[], id: string) => {
@@ -67,7 +84,6 @@ const getToggledFilters = (userTrackedMeasures: UserTrackedMeasure[], id: string
     
     return newTrackedMeasures
 }
-
 
 const getMeasuresFromFiltersAndUnfilteredMeasures = (unfilteredMeasures: Measure[], userTrackedMeasures: UserTrackedMeasure[]) => {
   return unfilteredMeasures.filter(unfilteredMeasure => {

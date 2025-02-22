@@ -37,7 +37,7 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
           </IconButton>
         </Box>
         <Box sx={styles.modalContent}>
-          <MeasurePill id={measureId} />
+          <MeasurePill id={measureId} withModal={false} />
           <Typography variant="h1" sx={styles.title}>
             {CatchLine}
           </Typography>
@@ -67,6 +67,10 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
             <Box sx={styles.lineItem}>
               <Typography variant="subtitle2">Catchline</Typography>
               <Typography variant="body1">{CatchLine}</Typography>
+            </Box>
+            <Box sx={styles.lineItem}>
+              <Typography variant="subtitle2">Relating to</Typography>
+              <Typography variant="body1">{RelatingTo}</Typography>
             </Box>
             <Box sx={styles.lineItem}>
               <Typography variant="subtitle1">Location</Typography>
