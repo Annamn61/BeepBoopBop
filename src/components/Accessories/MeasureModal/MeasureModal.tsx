@@ -66,7 +66,7 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
           </Box>
           <Box sx={styles.history}>
             <Typography variant="h3">History</Typography>
-            <Box>
+            <Box sx={styles.historyItemsContainer}>
               {getHistoryById(measureId).map((historyItem) => (
                 <HistoryItemLine
                   key={historyItem.MeasureHistoryId}
