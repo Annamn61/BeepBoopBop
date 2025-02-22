@@ -1,10 +1,6 @@
 export interface MeasureObject {
     value: [Measure]
   }
-
-export interface HistoryObject {
-    value: [History]
-}
   
 export interface Measure {
     MeasureNumber: number,
@@ -73,5 +69,9 @@ export interface MeasureHistoryItem {
     PublicNotification: boolean;
     SessionKey: string;
     VoteText: string | null;
+}
+
+export interface DateGroupedHistory {
+    [date: string]: MeasureHistoryItem[]
 }
 
