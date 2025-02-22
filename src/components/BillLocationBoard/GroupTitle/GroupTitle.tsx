@@ -1,16 +1,18 @@
-import './GroupTitle.css'
+import Box from '@mui/material/Box';
+import { styles } from './GroupTitle.styles';
+import { Typography } from '@mui/material';
 
 interface GroupTitleProps {
-    group: any, //TODO: Fix any
+  group: any; //TODO: Fix any
 }
 
-const GroupTitle = ({group}: GroupTitleProps) => {
-    return (
-        <div className="group-title-container">
-        <div className="group-title">{group.group}</div>
-        <div className="group-name-divider"/>
-    </div>
-    );
-}
+const GroupTitle = ({ group }: GroupTitleProps) => {
+  return (
+    <Box sx={styles.container}>
+      <Typography variant="h6">{group.group}</Typography>
+      <Box sx={styles.divider} />
+    </Box>
+  );
+};
 
 export default GroupTitle;

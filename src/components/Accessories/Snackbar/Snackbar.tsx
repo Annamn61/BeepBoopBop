@@ -1,6 +1,7 @@
 import Snackbar from '@mui/material/Snackbar';
 import { useSnackbarStore } from '../../../store/SnackbarStore';
 import Alert from '@mui/material/Alert';
+import { styles } from './Snackbar.styles';
 
 export const SnackbarProvider = () => {
   const { queue, closeSnackbar } = useSnackbarStore();
@@ -20,7 +21,7 @@ export const SnackbarProvider = () => {
             variant="filled"
             onClose={() => closeSnackbar()}
             severity={snackbar.severity}
-            sx={{ width: '100%' }}
+            sx={styles.alert}
           >
             {snackbar.message}
           </Alert>

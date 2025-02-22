@@ -10,12 +10,15 @@ import { MEASURE_COLORS } from '../../../utils/colors';
 import ColorSquare from '../../Accessories/ColorSquare/ColorSquare';
 import useMeasureStore from '../../../store/MeasureStore';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import { styles } from './AddTrackedBill.styles';
+import ColorSelectorPopover from './ColorSelectorPopover/ColorSelectorPopover';
 
 export const AddTrackedBill = () => {
   const { addUserTrackedMeasure } = useMeasureStore();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>();
-  const [colorAnchorEl, setColorAnchorEl] =
-    useState<HTMLButtonElement | null>();
+  const [colorAnchorEl, setColorAnchorEl] = useState<HTMLButtonElement | null>(
+    null
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [measureId, setMeasureId] = useState('');
@@ -50,100 +53,41 @@ export const AddTrackedBill = () => {
         }}
         onAnimationEnd={() => inputRef.current?.focus()}
       >
-        <Box
-          sx={{
-            padding: 3,
-            borderRadius: '8px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-            alignItems: 'flex-end',
-          }}
-        >
-          <Typography variant="h2" sx={{ width: '100%' }}>
+        <Box sx={styles.container}>
+          <Typography variant="h2" sx={styles.title}>
             Add Bill to Track
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+          <Box sx={styles.form}>
             <TextField
               // Steals focus back after second popover is closed by clicking on first popover ?????
-              sx={{ width: '140px' }}
+              sx={styles.billNumber}
               placeholder="Bill Number"
               value={measureId}
               inputRef={inputRef}
               onChange={(e) => setMeasureId(e.target.value)}
             />
             <Button
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                padding: '0px 16px',
-                backgroundColor: '#EFEFEF',
-                gap: 2,
-                alignItems: 'center',
-                borderRadius: '8px',
-                position: 'relative',
-              }}
+              sx={styles.color}
               onClick={(e) => setColorAnchorEl(e.currentTarget)}
             >
               <ColorSquare color={measureColor} />
               {/* TODO: Up/down when open/closed */}
               <KeyboardArrowDownRoundedIcon />
-              <Popover
-                open={!!colorAnchorEl}
+              <ColorSelectorPopover
                 anchorEl={colorAnchorEl}
-                sx={{
-                  marginTop: 1,
-                }}
-                onClose={() => {
-                  setTimeout(() => setColorAnchorEl(null), 0); // !! forces a rerender, something to do with double popovers?
-                }}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-              >
-                <Box
-                  sx={{
-                    padding: 2,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    width: '144px',
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  {Object.values(MEASURE_COLORS).map((hex) => (
-                    <IconButton
-                      onClick={() => {
-                        setMeasureColor(hex);
-                        setTimeout(() => setColorAnchorEl(null), 0);
-                      }}
-                    >
-                      <ColorSquare color={hex} />
-                    </IconButton>
-                  ))}
-                </Box>
-              </Popover>
+                onClose={() => setColorAnchorEl(null)}
+                updateColor={setMeasureColor}
+              />
             </Button>
           </Box>
           <TextField
-            sx={{ width: '100%' }}
+            sx={styles.sessionKey}
             placeholder="Session Key"
             value={sessionKey}
             onChange={(e) => setSessionKey(e.target.value)}
           />
           <Button
-            sx={{
-              width: 'fit-content',
-              backgroundColor: '#3E753B',
-              borderRadius: '100px',
-              padding: '8px 24px',
-              color: '#fff',
-              textTransform: 'none',
-            }}
+            sx={styles.addButton}
             variant="contained"
             onClick={() => {
               setAnchorEl(null);

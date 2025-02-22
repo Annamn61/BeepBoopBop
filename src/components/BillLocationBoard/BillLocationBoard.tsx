@@ -21,8 +21,8 @@ export const BillLocationBoard = ({
     .getHasKanbanSortingError();
 
   return (
-    <div className="kanban-container">
-      <div className="kanban-content">
+    <Box className="kanban-container">
+      <Box className="kanban-content">
         <Box
           sx={{
             paddingLeft: sidebarIsOpen ? 6 : 12,
@@ -35,7 +35,7 @@ export const BillLocationBoard = ({
             ...renderedKanbanLocations,
           ].map((group) => {
             return (
-              <div className="group" key={group.group}>
+              <Box className="group" key={group.group}>
                 <GroupTitle group={group} />
                 <Box sx={styles.sectionsContainer}>
                   {group.data.map((section) => (
@@ -47,11 +47,11 @@ export const BillLocationBoard = ({
                     />
                   ))}
                 </Box>
-              </div>
+              </Box>
             );
           })}
         </Box>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };

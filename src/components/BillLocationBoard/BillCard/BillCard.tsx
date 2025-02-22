@@ -1,9 +1,11 @@
 import Button from '@mui/material/Button';
 import useMeasureStore from '../../../store/MeasureStore';
-import './BillCard.css';
 import MeasureModal from '../../Accessories/MeasureModal/MeasureModal';
 import Typography from '@mui/material/Typography';
 import { useModal } from '../../../utils/modal';
+import Box from '@mui/material/Box';
+import { styles } from './BillCard.styles';
+import { globalStyles } from '../../../utils/styleHelpers';
 
 interface BillProps {
   billId: string;
@@ -23,44 +25,32 @@ const Bill = ({ billId }: BillProps) => {
     .getState()
     .getUserMeasureColorById(billId);
 
+  const colorStyles = {
+    borderLeft: `8px solid ${measureColor}`,
+  };
+
   return (
     <>
       <Button
         sx={{
-          borderLeft: `8px solid ${measureColor}`,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          backgroundColor: '#fff',
-          borderRadius: '6px',
-          padding: 1.5,
-          gap: 1.5,
-          width: '100%',
-          boxSizing: 'border-box',
-          boxShadow: '2px 2px 4px 0px rgba(127, 127, 132, 0.2)',
-          '&:hover': {
-            outline: '2px solid #aaa',
-            borderColor: measureColor,
-          },
-          '&:focus': {
-            outline: '2px solid #aaa',
-          },
+          ...colorStyles,
+          ...styles.billCard,
         }}
         onClick={setModalOpen}
         key={billId}
       >
-        <Typography variant="body1" className="bill-title">
+        <Typography variant="body1" sx={{ ...globalStyles.twoLineEllipses }}>
           {billTitle}
         </Typography>
         {committeeCode && (
-          <Typography variant="body2" className="bill-committee">
+          <Typography variant="body2" sx={styles.committeeCode}>
             {committeeCode}
           </Typography>
         )}
-        <div className="bill-additonal-info">
-          <div>{position === 'Support' ? '🌍' : '🚨'}</div>
+        <Box sx={styles.info}>
+          <Box>{position === 'Support' ? '🌍' : '🚨'}</Box>
           <Typography variant="h5">{billId}</Typography>
-        </div>
+        </Box>
       </Button>
       <MeasureModal
         anchorEl={anchorEl}
