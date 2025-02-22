@@ -25,6 +25,19 @@ export const styles: Record<string, SxProps<Theme>> = {
         display: 'flex',
         flexDirection: 'column'
     },
+    history: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 3,
+        padding: 3,
+        backgroundColor: '#f7f7f7',
+        borderRadius: '8px',
+    },
+    historyItemsContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+    },
     measureDocument: {
         padding: '8px 16px',
         backgroundColor: '#EFEFEF',

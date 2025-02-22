@@ -1,10 +1,10 @@
 import useHistoryStore from '../../store/HistoryStore';
 import DateTitle from './DateTitle/DateTitle';
-import HistoryItemLine from './HistoryItemLine/HistoryItemLine';
 import Box from '@mui/material/Box';
 import EmptyObject from '../Accessories/EmptyObject/EmptyObject';
 import { MeasureHistoryItem } from '../../types/MeasureTypes';
 import { styles } from './MeasureHistory.styles';
+import HistoryItemLine from '../Accessories/HistoryItemLine/HistoryItemLine';
 
 export const MeasureHistory = () => {
   const { getFilteredHistorySortedByDate } = useHistoryStore();
@@ -28,7 +28,11 @@ export const MeasureHistory = () => {
           <DateTitle dateString={dateString} />
           <Box sx={styles.item}>
             {actions.map((action: MeasureHistoryItem) => (
-              <HistoryItemLine key={action.MeasureHistoryId} action={action} />
+              <HistoryItemLine
+                key={action.MeasureHistoryId}
+                historyItem={action}
+                variant="full"
+              />
             ))}
           </Box>
         </Box>

@@ -9,6 +9,8 @@ import useMeasureStore from '../../../store/MeasureStore';
 import Link from '@mui/material/Link';
 import LaunchRoundedIcon from '@mui/icons-material/LaunchRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import useHistoryStore from '../../../store/HistoryStore';
+import HistoryItemLine from '../HistoryItemLine/HistoryItemLine';
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -18,6 +20,7 @@ interface Props {
 
 const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
   const { getMeasureById } = useMeasureStore();
+  const { getHistoryById } = useHistoryStore();
   const measure = getMeasureById(measureId);
 
   if (!measureId || !measure) {
@@ -61,6 +64,19 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
           <Box sx={styles.quicklook}>
             <Typography variant="h3">Quicklook</Typography>
           </Box>
+          <Box sx={styles.history}>
+            <Typography variant="h3">History</Typography>
+            <Box>
+              {getHistoryById(measureId).map((historyItem) => (
+                <HistoryItemLine
+                  key={historyItem.MeasureHistoryId}
+                  historyItem={historyItem}
+                  variant="light"
+                />
+              ))}
+            </Box>
+          </Box>
+
           <Box sx={styles.summary}>
             <Typography variant="h3">Summary</Typography>
             <Box sx={styles.lineItem}>

@@ -5,18 +5,18 @@ import { getMeasureId } from '../utils/measure';
 // useMeasureStore.getState().filteredMeasures;
 
 interface HistoryState {
-  unfilteredHistory: MeasureHistoryItem[]; //Todo: update any
+  unfilteredHistory: MeasureHistoryItem[];
   setUnfilteredHistory: (history: MeasureHistoryItem[]) => void;
+  getHistoryById: (id: Measure['id']) => MeasureHistoryItem[];
   getFilteredHistory: () => MeasureHistoryItem[];
-//   activeHistoryItems: any[]; //Todo: update any
   getFilteredHistorySortedByDate: () => DateGroupedHistory;
 }
 
 export const useHistoryStore = create<HistoryState>((set, get) => ({
     unfilteredHistory: [],
     setUnfilteredHistory: (historyObjects) => set({ unfilteredHistory: historyObjects }),
+    getHistoryById: (id) => sortDates(get().unfilteredHistory.filter((item) => getMeasureId(item.MeasurePrefix, item.MeasureNumber) === id)),
     getFilteredHistory: () => filterHistoryToFilteredMeasures(get().unfilteredHistory, useMeasureStore.getState().getFilteredMeasureIds()),
-//   filteredHistoryItemsByFilteredMeasures: [],
     getFilteredHistorySortedByDate: () => getHistorySortedIntoDates(get().getFilteredHistory()), //TODO actually use a filtered history 
 }));
 
@@ -32,9 +32,13 @@ const filterHistoryToFilteredMeasures = (history: MeasureHistoryItem[], filtered
     
 }
 
+// Sort by full datetime (ascending)
+const sortDates = (history: MeasureHistoryItem[]) => {
+    return history.sort((a, b) => new Date(b.ActionDate).getTime() - new Date(a.ActionDate).getTime())
+}
+
 const sortAndGroupHistory = (history: MeasureHistoryItem[]) => {
-    return history
-      .sort((a, b) => new Date(b.ActionDate).getTime() - new Date(a.ActionDate).getTime()) // Sort by full datetime (ascending)
+    return sortDates(history) 
       .reduce((acc: DateGroupedHistory, entry) => {
         const dateKey = new Date(entry.ActionDate).toISOString().split("T")[0]; // Extract YYYY-MM-DD
   

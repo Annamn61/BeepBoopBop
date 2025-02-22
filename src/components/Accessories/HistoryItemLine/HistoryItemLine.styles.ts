@@ -7,4 +7,5 @@ export const styles: Record<string, SxProps<Theme>> = {
         gap: 1,
     },
     time: { width: '70px', flexShrink: 0 },
+    longTime: { width: '150px', flexShrink: 0}
 };
