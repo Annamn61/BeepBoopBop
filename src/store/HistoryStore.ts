@@ -25,8 +25,6 @@ export default useHistoryStore;
 
 const filterHistoryToFilteredMeasures = (history: {MeasurePrefix: string, MeasureNumber: number, ActionDate: string}[], filteredIds: Measure['id'][]) => {
     
-    console.log('ON items', filteredIds);
-
     return history.filter((historyItem) => {
         const id = getMeasureId(historyItem.MeasurePrefix, historyItem.MeasureNumber);
         return filteredIds.includes(id);

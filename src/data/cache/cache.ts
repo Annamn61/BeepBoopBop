@@ -76,7 +76,6 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
     const agendaItems = Object.keys(cache).filter((uniqueMeasureId: UniqueMeasureIdentifier) => cache[uniqueMeasureId]?.CommitteeAgendaItems?.value).flatMap((uniqueMeasureId: UniqueMeasureIdentifier) => {
         return cache[uniqueMeasureId].CommitteeAgendaItems.value;
     })
-    console.log('agendaItems', agendaItems);
     return agendaItems;
   }
 

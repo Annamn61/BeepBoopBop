@@ -18,7 +18,6 @@ export const MeasureHistory = () => {
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       {Object.entries(getFilteredHistorySortedByDate()).map(
         ([dateString, actions]) => {
-          console.log('history', unfilteredHistory);
           return (
             <Box
               sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}

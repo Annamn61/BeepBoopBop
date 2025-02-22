@@ -52,7 +52,6 @@ export const useFetchMeasureInfoFromApi = async () => {
   useEffect(() => {
     userTrackedMeasures.forEach(
       async ({ id, sessionKey }: UserTrackedMeasure) => {
-        console.log('checking', id);
         const uniqueMeasureId = getUniqueMeasureIdentifier(id, sessionKey);
 
         if (isCacheOutOfDateById(id, sessionKey)) {

@@ -32,8 +32,6 @@ const EventDetailModal = ({
   const { getMeasureById } = useMeasureStore();
   const measure = getMeasureById(measureId);
 
-  console.log('hereeee', measureId);
-
   // Get details about the event
 
   return (

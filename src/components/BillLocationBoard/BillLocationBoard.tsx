@@ -7,6 +7,7 @@ import GroupTitle from './GroupTitle/GroupTitle';
 import Section from './Section/Section';
 import useMeasureStore from '../../store/MeasureStore';
 import Box from '@mui/material/Box';
+import { styles } from './BillLocationBoard.styles';
 
 interface BillLocationBoardProps {
   sidebarIsOpen: boolean;
@@ -36,7 +37,7 @@ export const BillLocationBoard = ({
             return (
               <div className="group" key={group.group}>
                 <GroupTitle group={group} />
-                <div className="sections-container">
+                <Box sx={styles.sectionsContainer}>
                   {group.data.map((section) => (
                     <Section
                       key={`${group.group}-${section.section}`}
@@ -45,7 +46,7 @@ export const BillLocationBoard = ({
                       sectionTitle={section.section}
                     />
                   ))}
-                </div>
+                </Box>
               </div>
             );
           })}

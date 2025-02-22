@@ -25,7 +25,6 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
   }
 
   const { RelatingTo, CatchLine, MeasureDocuments, CurrentLocation } = measure;
-  console.log('Measure Docs', MeasureDocuments);
 
   return (
     <Dialog maxWidth="lg" open={!!anchorEl} onClose={onClose}>

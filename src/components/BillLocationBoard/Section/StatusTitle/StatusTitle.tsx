@@ -1,16 +1,18 @@
-import './StatusTitle.css'
+import Box from '@mui/material/Box';
+import { styles } from './StatusTitle.styles';
+import { Typography } from '@mui/material';
 
 interface StatusTitleProps {
-    title: string,
+  title: string;
 }
 
-const StatusTitle = ({title}: StatusTitleProps) => {
-    return (
-        <div className="status-title-container">
-            <div className="status-title">{title}</div>
-            <div className="status-divider" />
-        </div>
-    );
-}
+const StatusTitle = ({ title }: StatusTitleProps) => {
+  return (
+    <Box sx={styles.container}>
+      <Typography variant="h6">{title}</Typography>
+      <Box sx={styles.divider} />
+    </Box>
+  );
+};
 
 export default StatusTitle;
