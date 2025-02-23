@@ -5,5 +5,6 @@ export const styles: Record<string, SxProps<Theme>> = {
         width: '20px',
         height: '20px',
         borderRadius: '4px',
+        boxSizing: 'border-box'
     }
 };

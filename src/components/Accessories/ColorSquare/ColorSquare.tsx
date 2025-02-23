@@ -2,12 +2,14 @@ import Box from '@mui/material/Box';
 import { styles } from './ColorSquare.styles';
 
 interface ColorSquareProps {
-  color: string;
+  color: string | undefined;
+  filled?: boolean;
 }
 
-const ColorSquare = ({ color }: ColorSquareProps) => {
+const ColorSquare = ({ color = '#fff', filled = true }: ColorSquareProps) => {
   const bgColor = {
-    backgroundColor: color,
+    backgroundColor: filled ? color : 'transparent',
+    border: `2px solid ${color}`,
   };
 
   return <Box sx={{ ...styles.square, ...bgColor }} />;
