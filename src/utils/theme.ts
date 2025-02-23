@@ -120,10 +120,30 @@ const theme = createTheme({
     MuiPopover: {
         styleOverrides: {
           paper: {
-            borderRadius: "8px", // Apply rounded corners globally
+            borderRadius: "8px",
           },
         },
       },
+      MuiTooltip: {
+        defaultProps: {
+            arrow: true,
+            enterDelay: 250,
+            enterNextDelay: 250,
+            slotProps: {
+                tooltip: {
+                    sx: {
+                      fontSize: '1rem',
+                      backgroundColor: '#333',
+                    },
+                  },
+                  arrow: {
+                    sx: {
+                      color: "#333",
+                    },
+                  },
+            },
+        },
+      }
   },
 });
 

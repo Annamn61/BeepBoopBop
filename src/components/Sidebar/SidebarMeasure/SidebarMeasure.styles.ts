@@ -12,7 +12,7 @@ export const styles: Record<string, SxProps<Theme>> = {
             backgroundColor: '#EDEDED',
             cursor: 'pointer',
         },
-        '&:hover #moreIcon': {
+        '&:hover #deleteIcon': {
             visibility: 'visible',
         }
     },
@@ -44,7 +44,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         justifyContent: 'space-between',
         alignItems: 'center'
     },
-    moreIcon: {
+    deleteIcon: {
         visibility: 'hidden',
     },
 }

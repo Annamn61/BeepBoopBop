@@ -12,6 +12,7 @@ import useMeasureStore from '../../../store/MeasureStore';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { styles } from './AddTrackedBill.styles';
 import ColorSelectorPopover from './ColorSelectorPopover/ColorSelectorPopover';
+import Tooltip from '@mui/material/Tooltip';
 
 export const AddTrackedBill = () => {
   const { addUserTrackedMeasure } = useMeasureStore();
@@ -37,9 +38,11 @@ export const AddTrackedBill = () => {
 
   return (
     <>
-      <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-        <AddRoundedIcon />
-      </IconButton>
+      <Tooltip title="Add bill to track">
+        <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+          <AddRoundedIcon />
+        </IconButton>
+      </Tooltip>
       <Popover
         open={!!anchorEl}
         anchorEl={anchorEl}

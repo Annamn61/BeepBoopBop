@@ -8,6 +8,7 @@ import KeyboardDoubleArrowLeftRoundedIcon from '@mui/icons-material/KeyboardDoub
 import IconButton from '@mui/material/IconButton';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import Drawer from '@mui/material/Drawer';
+import Tooltip from '@mui/material/Tooltip';
 
 interface SidebarProps {
   open: boolean;
@@ -27,13 +28,15 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
         onClose={() => setOpen(false)}
       >
         <Box sx={styles.container}>
-          <IconButton
-            id="closeIcon"
-            sx={styles.closeArrows}
-            onClick={() => setOpen(false)}
-          >
-            <KeyboardDoubleArrowLeftRoundedIcon />
-          </IconButton>
+          <Tooltip title="Close Sidebar">
+            <IconButton
+              id="closeIcon"
+              sx={styles.closeArrows}
+              onClick={() => setOpen(false)}
+            >
+              <KeyboardDoubleArrowLeftRoundedIcon />
+            </IconButton>
+          </Tooltip>
           <Box sx={styles.section}>
             <Box sx={styles.sectionHeader}>
               <Typography variant="h2">Tracked Bills</Typography>

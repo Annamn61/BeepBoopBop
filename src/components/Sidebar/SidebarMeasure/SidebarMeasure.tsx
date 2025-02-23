@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ConfirmationModal from '../../Accessories/ConfirmationModal/ConfirmationModal';
 import { useModal } from '../../../utils/modal';
+import Tooltip from '@mui/material/Tooltip';
 
 interface SidebarMeasureProps {
   userTrackedMeasure: UserTrackedMeasure;
@@ -51,17 +52,19 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
             <Typography variant="h5" sx={styles.measureId}>
               {id}
             </Typography>
-            <IconButton
-              id="moreIcon"
-              sx={styles.moreIcon}
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                setModalOpen(e);
-              }}
-            >
-              <CloseRoundedIcon />
-            </IconButton>
+            <Tooltip title="Remove bill from tracking">
+              <IconButton
+                id="deleteIcon"
+                sx={styles.deleteIcon}
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setModalOpen(e);
+                }}
+              >
+                <CloseRoundedIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
           <Typography variant="body1">{title}</Typography>
         </Box>
