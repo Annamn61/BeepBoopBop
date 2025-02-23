@@ -9,6 +9,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ConfirmationModal from '../../Accessories/ConfirmationModal/ConfirmationModal';
 import { useModal } from '../../../utils/modal';
 import Tooltip from '@mui/material/Tooltip';
+import MeasureModal from '../../Accessories/MeasureModal/MeasureModal';
 
 interface SidebarMeasureProps {
   userTrackedMeasure: UserTrackedMeasure;
@@ -17,10 +18,14 @@ interface SidebarMeasureProps {
 const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
   const { anchorEl, setModalClosed, setModalOpen } = useModal();
   const {
+    anchorEl: measureAnchorEl,
+    setModalClosed: closeMeasureModal,
+    setModalOpen: openMeasureModal,
+  } = useModal();
+  const {
     getMeasureTitleById,
     setUserTrackedMeasureFilterStatusById,
     getUserMeasureColorById,
-    toggleAllUserTrackedFilterStatusesBasedOnAnId,
     removeTrackedMeasureById,
   } = useMeasureStore();
 
@@ -37,7 +42,7 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
     <>
       <Box
         sx={styles.measureFilterContainer}
-        onClick={() => toggleAllUserTrackedFilterStatusesBasedOnAnId(id)}
+        onClick={(e) => openMeasureModal(e)}
         role="button"
       >
         <Button
@@ -75,6 +80,11 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
         handleAction={() => removeTrackedMeasureById(id)}
         message={`Delete ${id}?`}
         subtitle="Are you sure you want to remove this measure from your tracked measures? This action cannot be undone."
+      />
+      <MeasureModal
+        anchorEl={measureAnchorEl}
+        onClose={closeMeasureModal}
+        measureId={id}
       />
     </>
   );

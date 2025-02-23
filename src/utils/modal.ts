@@ -3,7 +3,7 @@ import { useState } from "react"
 export const useModal = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-    const setModalOpen = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const setModalOpen = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         setAnchorEl(e.currentTarget);
     }
 
