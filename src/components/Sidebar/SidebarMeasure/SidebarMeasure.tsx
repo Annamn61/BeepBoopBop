@@ -10,6 +10,7 @@ import ConfirmationModal from '../../Accessories/ConfirmationModal/ConfirmationM
 import { useModal } from '../../../utils/modal';
 import Tooltip from '@mui/material/Tooltip';
 import MeasureModal from '../../Accessories/MeasureModal/MeasureModal';
+import { TOOLTIP_MESSAGES } from '../../../utils/constants';
 
 interface SidebarMeasureProps {
   userTrackedMeasure: UserTrackedMeasure;
@@ -40,40 +41,44 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
 
   return (
     <>
-      <Box
-        sx={styles.measureFilterContainer}
-        onClick={(e) => openMeasureModal(e)}
-        role="button"
-      >
-        <Button
-          sx={{ ...styles.checkbox, ...checkboxStyles }}
-          onClick={(e) => {
-            e.stopPropagation();
-            setUserTrackedMeasureFilterStatusById(id, !isDisplayed);
-          }}
-        />
-        <Box sx={styles.infoArea}>
-          <Box sx={styles.infoTopline}>
-            <Typography variant="h5" sx={styles.measureId}>
-              {id}
-            </Typography>
-            <Tooltip title="Remove bill from tracking">
-              <IconButton
-                id="deleteIcon"
-                sx={styles.deleteIcon}
-                size="small"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setModalOpen(e);
-                }}
-              >
-                <CloseRoundedIcon />
-              </IconButton>
-            </Tooltip>
+      <Tooltip title={TOOLTIP_MESSAGES.MeasureModal}>
+        <Box
+          sx={styles.measureFilterContainer}
+          onClick={(e) => openMeasureModal(e)}
+          role="button"
+        >
+          <Tooltip title={TOOLTIP_MESSAGES.ToggleVisibility}>
+            <Button
+              sx={{ ...styles.checkbox, ...checkboxStyles }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setUserTrackedMeasureFilterStatusById(id, !isDisplayed);
+              }}
+            />
+          </Tooltip>
+          <Box sx={styles.infoArea}>
+            <Box sx={styles.infoTopline}>
+              <Typography variant="h5" sx={styles.measureId}>
+                {id}
+              </Typography>
+              <Tooltip title={TOOLTIP_MESSAGES.DeleteMeasure}>
+                <IconButton
+                  id="deleteIcon"
+                  sx={styles.deleteIcon}
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModalOpen(e);
+                  }}
+                >
+                  <CloseRoundedIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+            <Typography variant="body1">{title}</Typography>
           </Box>
-          <Typography variant="body1">{title}</Typography>
         </Box>
-      </Box>
+      </Tooltip>
       <ConfirmationModal
         anchorEl={anchorEl}
         onClose={setModalClosed}

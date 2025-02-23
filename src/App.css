@@ -58,3 +58,13 @@
   /* flex-grow: 1; */
   overflow: hidden;
 }
+
+/* Only display the latest tooltip available, maybe only works without disablePortal */
+.MuiTooltip-popper {
+    visibility: hidden !important;
+}
+
+body .MuiTooltip-popper:last-child {
+    visibility: visible !important;
+}
+/* END */

@@ -12,11 +12,9 @@ export const styles: Record<string, SxProps<Theme>> = {
         width: '100%',
         boxSizing: 'border-box',
         boxShadow: '2px 2px 4px 0px rgba(127, 127, 132, 0.2)',
-        '&:hover': {
-          outline: '2px solid #aaa',
-        },
-        '&:focus': {
-          outline: '2px solid #aaa',
+        '&:hover, :focus' : {
+          backgroundColor: '#ededed',
+          boxShadow: '2px 2px 4px 0px rgba(127, 127, 132, 0.4)',
         },
     },
     committeeCode: {

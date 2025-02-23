@@ -6,6 +6,8 @@ import { useModal } from '../../../utils/modal';
 import Box from '@mui/material/Box';
 import { styles } from './BillCard.styles';
 import { globalStyles } from '../../../utils/styleHelpers';
+import { TOOLTIP_MESSAGES } from '../../../utils/constants';
+import Tooltip from '@mui/material/Tooltip';
 
 interface BillProps {
   billId: string;
@@ -31,27 +33,29 @@ const Bill = ({ billId }: BillProps) => {
 
   return (
     <>
-      <Button
-        sx={{
-          ...colorStyles,
-          ...styles.billCard,
-        }}
-        onClick={setModalOpen}
-        key={billId}
-      >
-        <Typography variant="body1" sx={{ ...globalStyles.twoLineEllipses }}>
-          {billTitle}
-        </Typography>
-        {committeeCode && (
-          <Typography variant="body2" sx={styles.committeeCode}>
-            {committeeCode}
+      <Tooltip title={TOOLTIP_MESSAGES.MeasureModal}>
+        <Button
+          sx={{
+            ...colorStyles,
+            ...styles.billCard,
+          }}
+          onClick={setModalOpen}
+          key={billId}
+        >
+          <Typography variant="body1" sx={{ ...globalStyles.twoLineEllipses }}>
+            {billTitle}
           </Typography>
-        )}
-        <Box sx={styles.info}>
-          <Box>{position === 'Support' ? '🌍' : '🚨'}</Box>
-          <Typography variant="h5">{billId}</Typography>
-        </Box>
-      </Button>
+          {committeeCode && (
+            <Typography variant="body2" sx={styles.committeeCode}>
+              {committeeCode}
+            </Typography>
+          )}
+          <Box sx={styles.info}>
+            <Box>{position === 'Support' ? '🌍' : '🚨'}</Box>
+            <Typography variant="h5">{billId}</Typography>
+          </Box>
+        </Button>
+      </Tooltip>
       <MeasureModal
         anchorEl={anchorEl}
         onClose={setModalClosed}
