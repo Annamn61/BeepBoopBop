@@ -12,5 +12,3 @@ export const MEASURE_COLORS = {
     BLUE: '#57A5BB',
     VIOLET: '#A391B7',
 }
-
-const color = MEASURE_COLORS.BLUE
