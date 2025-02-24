@@ -33,8 +33,13 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
     <Dialog maxWidth="lg" open={!!anchorEl} onClose={onClose}>
       <Box sx={styles.modalContainer}>
         <Box sx={styles.header}>
-          <Button href={getMeasureUrlById(measureId)} target="_blank">
+          <Button
+            variant="outlined"
+            href={getMeasureUrlById(measureId)}
+            target="_blank"
+          >
             View in OLIS
+            <LaunchRoundedIcon sx={styles.launchIcon} fontSize="small" />
           </Button>
           <IconButton onClick={onClose}>
             <CloseRoundedIcon />
@@ -63,10 +68,10 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
               ))}
             </Box>
           </Box>
-          <Box sx={styles.quicklook}>
+          <Box sx={{ ...styles.quicklook, ...(styles.infoSection as any) }}>
             <Typography variant="h3">Quicklook</Typography>
           </Box>
-          <Box sx={styles.summary}>
+          <Box sx={styles.infoSection}>
             <Typography variant="h3">Summary</Typography>
             <Box sx={styles.lineItem}>
               <Typography variant="subtitle2">Catchline</Typography>
@@ -77,11 +82,11 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
               <Typography variant="body1">{RelatingTo}</Typography>
             </Box>
             <Box sx={styles.lineItem}>
-              <Typography variant="subtitle1">Location</Typography>
+              <Typography variant="subtitle2">Location</Typography>
               <Typography variant="body1">{CurrentLocation}</Typography>
             </Box>
           </Box>
-          <Box sx={styles.history}>
+          <Box sx={{ ...styles.history, ...(styles.infoSection as any) }}>
             <Typography variant="h3">History</Typography>
             <Box sx={styles.historyItemsContainer}>
               {getHistoryById(measureId).map((historyItem) => (
@@ -91,6 +96,13 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
                   variant="light"
                 />
               ))}
+            </Box>
+          </Box>
+          <Box sx={styles.infoSection}>
+            <Typography variant="h3">Upcoming Events</Typography>
+            <Box sx={styles.lineItem}>
+              <Typography variant="subtitle2">Catchline</Typography>
+              <Typography variant="body1">{CatchLine}</Typography>
             </Box>
           </Box>
         </Box>

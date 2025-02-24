@@ -5,11 +5,13 @@ const black = '#000';
 const grey = '#585858';
 const mediumGrey = '#a7a7a7';
 const white = '#fff';
+const boxShadow = '2px 2px 4px 0px rgba(127, 127, 132, 0.2)';
+const lightGreen = "#EFFAEF"
 
 const theme = createTheme({
     palette: {
         primary: {
-            light: "#EFFAEF",
+            light: lightGreen,
             main: "#D4ECD4",
             dark: darkGreen,
         },
@@ -87,6 +89,27 @@ const theme = createTheme({
         }
     },
   components: {
+    MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: "8px",
+            textTransform: "none",
+          },
+          outlined: {
+            border: "2px solid #ccc",
+            color: '#000',
+            fontWeight: 600,
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '8px',
+            boxShadow,
+            "&:hover": {
+              backgroundColor: '#f7f7f7',
+              boxShadow: 'none',
+            },
+          },
+        },
+      },
     MuiTextField: {
       defaultProps: {
         variant: "outlined",

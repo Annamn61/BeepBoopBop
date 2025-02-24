@@ -17,18 +17,18 @@ export const styles: Record<string, SxProps<Theme>> = {
     title: {
         fontWeight: 600,
     }, 
+    infoSection: {
+        gap: 3,
+        display: 'flex',
+        flexDirection: 'column'
+    },
     quicklook: {
         backgroundColor: '#E5EFE5',
         border: '2px solid darkgreen',
         borderRadius: '8px',
         padding: 2,
-        display: 'flex',
-        flexDirection: 'column'
     },
     history: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 3,
         padding: 3,
         backgroundColor: '#f7f7f7',
         borderRadius: '8px',
@@ -71,6 +71,9 @@ export const styles: Record<string, SxProps<Theme>> = {
         display: 'flex',
         flexDirection: 'row',
         gap: 2,
+        '& *:first-child': {
+            minWidth: '100px',
+        },
     },
     header: {
         width: '100%',

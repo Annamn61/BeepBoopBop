@@ -25,7 +25,11 @@ const MeasurePill = ({ id, withModal }: MeasurePillProps) => {
     <>
       <Tooltip title={TOOLTIP_MESSAGES.MeasureModal}>
         <Button
-          sx={{ ...styles.pill, ...backgroundColor }}
+          sx={{
+            ...styles.pill,
+            ...backgroundColor,
+            ...(styles.pillHover as any),
+          }}
           onClick={setModalOpen}
         >
           <Typography variant="overline">{id}</Typography>

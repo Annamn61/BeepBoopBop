@@ -12,4 +12,9 @@ export const styles: Record<string, SxProps<Theme>> = {
         flexShrink: 0,
         flexWrap: 'nowrap',
     },
+    pillHover: {
+        '&:hover': {
+            filter: 'brightness(80%)',
+        }
+    }
 };
