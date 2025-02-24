@@ -7,7 +7,6 @@ export const styles: Record<string, SxProps<Theme>> = {
     container: {
         display: 'flex',
         flexDirection: 'column',
-        gap: 6
     },
     dateSection: {
         display: 'flex',
@@ -19,4 +18,14 @@ export const styles: Record<string, SxProps<Theme>> = {
         flexDirection: 'column',
         gap: 3,
     }, 
+    dateSectionContainer: {
+        padding: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 6,
+        borderRadius: '8px',
+    },
+    future: {
+        backgroundColor: '#f7f7f7'
+    }
 };

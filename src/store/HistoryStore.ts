@@ -8,6 +8,7 @@ interface HistoryState {
   unfilteredHistory: MeasureHistoryItem[];
   setUnfilteredHistory: (history: MeasureHistoryItem[]) => void;
   getHistoryById: (id: Measure['id']) => MeasureHistoryItem[];
+//   getFutureHistoryById: (id: Measure['id']) => MeasureHistoryItem[];
   getFilteredHistory: () => MeasureHistoryItem[];
   getFilteredHistorySortedByDate: () => DateGroupedHistory;
 }
@@ -16,8 +17,9 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
     unfilteredHistory: [],
     setUnfilteredHistory: (historyObjects) => set({ unfilteredHistory: historyObjects }),
     getHistoryById: (id) => sortDates(get().unfilteredHistory.filter((item) => getMeasureId(item.MeasurePrefix, item.MeasureNumber) === id)),
+    // getFutureHistoryById: (id) => get().getHistoryById(id).filter(history => new Date(history.ActionDate) > new Date()),
     getFilteredHistory: () => filterHistoryToFilteredMeasures(get().unfilteredHistory, useMeasureStore.getState().getFilteredMeasureIds()),
-    getFilteredHistorySortedByDate: () => getHistorySortedIntoDates(get().getFilteredHistory()), //TODO actually use a filtered history 
+    getFilteredHistorySortedByDate: () => getHistorySortedIntoDates(get().getFilteredHistory()),
 }));
 
 

@@ -71,6 +71,14 @@ export interface MeasureHistoryItem {
     VoteText: string | null;
 }
 
+export interface GenericHistoryItem {
+    Text: string;
+    Date: string;
+    MeasurePrefix: string;
+    MeasureNumber: number;
+    SessionKey: string;
+}
+
 export interface DateGroupedHistory {
     [date: string]: MeasureHistoryItem[]
 }

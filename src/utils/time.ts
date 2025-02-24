@@ -8,7 +8,7 @@ export const getMMHHFromDate = (date: Date) => {
     return `${hours}:${minutes}${ampm}`;
   };
 
-  export const getFullFormattedDate = (date: Date) => {
+  export const getShortFormatDateWithTime = (date: Date) => {
     const month = date.toLocaleString("en-US", { month: "short" }); // "Jan", "Feb", etc.
     const day = date.getDate(); // Day of the month
     let hours = date.getHours(); // Get hours (24-hour format)
@@ -21,7 +21,28 @@ export const getMMHHFromDate = (date: Date) => {
     return `${month}. ${day}, ${hours}:${minutes}${amPm}`;
   };
 
-  export const getDaysAgo = (date: Date) => {
+  const weekdays: any = {
+    [0]: 'Sunday',
+    [1]: 'Monday',
+    [2]: 'Tuesday',
+    [3]: 'Wednesday',
+    [4]: 'Thursday',
+    [5]: 'Friday',
+    [6]: 'Saturday',
+  }
+
+  // Thursday, February 16, 2025
+  export const getLongFormatDate = (date: Date) => {
+    const month = date.toLocaleString("en-US", { month: "long" });
+    const day = date.getDate(); // Day of the month
+    const year = date.getFullYear();
+    const weekday = date.getDay();    
+  
+    return `${month} ${day}, ${year}, ${weekdays[weekday]}`;
+  };
+
+
+  export const getDaysAway = (date: Date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Normalize to midnight to compare only dates
     const inputDate = new Date(date);
@@ -29,6 +50,8 @@ export const getMMHHFromDate = (date: Date) => {
   
     const diffTime = today.getTime() - inputDate.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // Convert to days
+
+    if(diffDays < 0) return `in ${Math.abs(diffDays)} days`;
   
     if (diffDays === 0) return "today";
     return `${diffDays} days ago`;

@@ -1,4 +1,4 @@
-import { getDaysAgo } from '../../../utils/time';
+import { getDaysAway, getLongFormatDate } from '../../../utils/time';
 import Box from '@mui/material/Box';
 import { styles } from './DateTitle.styles';
 
@@ -12,8 +12,8 @@ const DateTitle = ({ dateString }: DateTitleProps) => {
   return (
     <Box sx={styles.container}>
       <Box sx={styles.dateAndDaysAgo}>
-        <Box sx={styles.date}>{date.toLocaleDateString()}</Box>
-        <Box sx={styles.daysAgo}>{getDaysAgo(date)}</Box>
+        <Box sx={styles.date}>{getLongFormatDate(date)}</Box>
+        <Box sx={styles.daysAgo}>{getDaysAway(date)}</Box>
       </Box>
       <Box sx={styles.divider} />
     </Box>

@@ -29,12 +29,12 @@ const PageTabs = ({ selectedPage, setSelectedPage }: PageTabProps) => {
         sx={
           [
             styles.tabButton,
-            ...(selectedPage === 'history' ? [styles.activeTabButton] : []),
+            ...(selectedPage === 'updates' ? [styles.activeTabButton] : []),
           ] as SxProps<Theme>
         }
-        onClick={() => setSelectedPage('history')}
+        onClick={() => setSelectedPage('updates')}
       >
-        <Typography variant="button">History</Typography>
+        <Typography variant="button">Updates</Typography>
       </Button>
       <Button
         variant="contained"

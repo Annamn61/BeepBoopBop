@@ -11,6 +11,7 @@ import LaunchRoundedIcon from '@mui/icons-material/LaunchRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import useHistoryStore from '../../../store/HistoryStore';
 import HistoryItemLine from '../HistoryItemLine/HistoryItemLine';
+import useCommitteeAgendaStore from '../../../store/CommitteeAgendaStore';
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -21,7 +22,11 @@ interface Props {
 const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
   const { getMeasureById, getMeasureUrlById } = useMeasureStore();
   const { getHistoryById } = useHistoryStore();
+  const { getUpcomingAgendaItemsById } = useCommitteeAgendaStore();
   const measure = getMeasureById(measureId);
+  const agendaItems = getUpcomingAgendaItemsById(measureId);
+
+  console.log('ai', agendaItems);
 
   if (!measureId || !measure) {
     return null;
@@ -100,10 +105,12 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
           </Box>
           <Box sx={styles.infoSection}>
             <Typography variant="h3">Upcoming Events</Typography>
-            <Box sx={styles.lineItem}>
-              <Typography variant="subtitle2">Catchline</Typography>
-              <Typography variant="body1">{CatchLine}</Typography>
-            </Box>
+            {agendaItems.map((item) => (
+              <Box sx={styles.lineItem}>
+                <Typography variant="subtitle2">{item.MeetingDate}</Typography>
+                <Typography variant="body1">{item.MeetingType}</Typography>
+              </Box>
+            ))}
           </Box>
         </Box>
       </Box>

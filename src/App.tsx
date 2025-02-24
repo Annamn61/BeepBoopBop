@@ -72,7 +72,7 @@ function App() {
                 setSelectedPage={setSelectedPage}
               />
 
-              {selectedPage === 'history' && <MeasureHistory />}
+              {selectedPage === 'updates' && <MeasureHistory />}
               {selectedPage === 'calendar' && (
                 <Calendar
                   localizer={localizer}

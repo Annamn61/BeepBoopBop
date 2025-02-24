@@ -92,10 +92,11 @@ const theme = createTheme({
     MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: "8px",
+            borderRadius: "4px",
             textTransform: "none",
           },
           outlined: {
+            borderRadius: "8px",
             border: "2px solid #ccc",
             color: '#000',
             fontWeight: 600,

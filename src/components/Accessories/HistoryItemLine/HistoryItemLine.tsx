@@ -1,6 +1,9 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { getFullFormattedDate, getMMHHFromDate } from '../../../utils/time';
+import {
+  getShortFormatDateWithTime,
+  getMMHHFromDate,
+} from '../../../utils/time';
 import { getMeasureId } from '../../../utils/measure';
 import MeasurePill from '../../Measure/MeasurePill/MeasurePill';
 import { MeasureHistoryItem } from '../../../types/MeasureTypes';
@@ -32,7 +35,7 @@ export const HistoryItemLine = ({ historyItem, variant }: HistoryItemProps) => {
     return (
       <Box sx={styles.container}>
         <Typography variant="body2" sx={styles.longTime}>
-          {getFullFormattedDate(new Date(historyItem.ActionDate))}
+          {getShortFormatDateWithTime(new Date(historyItem.ActionDate))}
         </Typography>
         <Typography variant="body1">{historyItem.ActionText}</Typography>
       </Box>

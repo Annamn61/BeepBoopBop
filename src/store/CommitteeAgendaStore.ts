@@ -2,12 +2,14 @@ import { create } from 'zustand';
 import { AgendaItem } from '../types/CommitteeAgendaTypes';
 import { userTrackedMeasures } from '../data/userMeasureData';
 import { getMeasureId } from '../utils/measure';
+import { Measure } from '../types/MeasureTypes';
 
 interface CommitteeAgendaState {
   unfilteredCommitteeAgenda: AgendaItem[];
   setUnfilteredCommitteeAgenda: (agendaItems: AgendaItem[]) => void;
   getCommitteeAgendaItems: () => AgendaItem[];
   getCalendarEvents: () => { title: string; start: Date; end: Date; id: string; comments: string; color: string }[];
+  getUpcomingAgendaItemsById: (id: Measure['id'] | undefined) => AgendaItem[];
 };
 
 export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) => ({
@@ -30,6 +32,7 @@ export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) =
           color: trackedMeasure ? trackedMeasure.color : "#000000" // Use tracked color or default
         };
       }),
+      getUpcomingAgendaItemsById: (id) => get().unfilteredCommitteeAgenda.filter(item => getMeasureId(item.MeasurePrefix, item.MeasureNumber) === id).filter(item => new Date(item.MeetingDate) > new Date())
 }));
 
 export default useCommitteeAgendaStore;
