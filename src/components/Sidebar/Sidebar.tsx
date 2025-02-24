@@ -49,9 +49,11 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
         </Box>
       </Drawer>
       <Box sx={styles.menuIconContainer}>
-        <IconButton onClick={() => setOpen(true)}>
-          <MenuRoundedIcon />
-        </IconButton>
+        <Tooltip title="Open Sidebar">
+          <IconButton onClick={() => setOpen(true)}>
+            <MenuRoundedIcon />
+          </IconButton>
+        </Tooltip>
       </Box>
     </Box>
   );

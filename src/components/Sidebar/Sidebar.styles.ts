@@ -49,6 +49,6 @@ export const styles: Record<string, SxProps<Theme>> = {
     },
     menuIconContainer: {
         padding: '24px',
-        position: 'absolute',
+        position: 'fixed',
     }
 };

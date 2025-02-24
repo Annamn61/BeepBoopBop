@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { Measure, MeasureObject, UserTrackedMeasure } from '../types/MeasureTypes';
 import { userTrackedMeasures } from '../data/userMeasureData';
 import { getKanbanLocationFromBilLocation } from '../components/BillLocationBoard/Locations/Locations.helpers';
+import { getUniqueMeasureIdentifier } from '../data/cache/cache';
 
 interface MeasureState {
 /** Metadata about the measures a user is tracking */
@@ -10,6 +11,8 @@ interface MeasureState {
   setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[]) => void;
   /** Add a single measure's metadata for tracking  */
   addUserTrackedMeasure: (newUserTrackedMeasure: UserTrackedMeasure) => void;
+  /** Returns a string array of the ids of the user tracked measures */
+  getUserTrackedMeasureUniqueIds: () => string[];
   /** remove a measure's metadata from the list of what to track */
   removeTrackedMeasureById: (id: string) => void;
   /**  Get the users position on a bill by its id */
@@ -32,6 +35,8 @@ interface MeasureState {
   setUnfilteredMeasures: (measures: MeasureObject[]) => void;
   /** Get a single measure's data by id */
   getMeasureById: (id?: string) => Measure | undefined;
+  /** Returns the link to the measure in OLIS */
+  getMeasureUrlById: (id?: string) => string;
   /** Get the user tracked measure metadata for a user's measure by id */
   getUserMeasureMetadataById: (id: string) => UserTrackedMeasure | undefined;
   /**  Get the committee code for the committee a measure is currently in, by id */
@@ -46,6 +51,7 @@ export const useMeasureStore = create<MeasureState>((set, get) => ({
   userTrackedMeasures,
   setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[]) => set({userTrackedMeasures}),
   addUserTrackedMeasure: (newUserTrackedMeasure: UserTrackedMeasure) => set({userTrackedMeasures: [...get().userTrackedMeasures, newUserTrackedMeasure]}),
+  getUserTrackedMeasureUniqueIds: () => get().userTrackedMeasures.map((measure) => getUniqueMeasureIdentifier(measure.id, measure.sessionKey)),
   removeTrackedMeasureById: (id) => set({userTrackedMeasures: userTrackedMeasures.filter((measure) => measure.id != id)}),
   getUserTrackedMeasurePositionById: (id) => get().userTrackedMeasures.find((utm: UserTrackedMeasure) => utm.id === id)?.position,
   getFilteredMeasureIds: () => get().userTrackedMeasures.filter((m) =>m.isDisplayed).map((measure) => measure.id),
@@ -57,9 +63,10 @@ export const useMeasureStore = create<MeasureState>((set, get) => ({
   getHasKanbanSortingError: () => getHasSortingError(get().getMeasuresSortedIntoKanbanLocations()),
   setUnfilteredMeasures: (measureObjects) => set({ unfilteredMeasures: getMeasuresFromMeasureObjects(measureObjects) }),
   getMeasureById: (id) => get().unfilteredMeasures.find((measure: Measure) =>  measure.id === id),
+  getMeasureUrlById:  (id) => getMeasureUrl(get().getMeasureById(id)),
   getUserMeasureMetadataById: (id) => get().userTrackedMeasures.find((measure: UserTrackedMeasure) => measure.id === id),
   getMeasureCommitteeCodeById: (id) => get().getMeasureById(id)?.CurrentCommitteeCode,
-  getMeasureTitleById: (id) => get().getMeasureById(id)?.RelatingTo,
+  getMeasureTitleById: (id) => get().getMeasureById(id)?.CatchLine,
   getUserMeasureColorById: (id) => get().getUserMeasureMetadataById(id)?.color,
 }));
 
@@ -83,6 +90,12 @@ const getToggledFilters = (userTrackedMeasures: UserTrackedMeasure[], id: string
     }
     
     return newTrackedMeasures
+}
+
+const getMeasureUrl = (measure?: Measure) => {
+    if(!measure) return '';
+
+    return `https://olis.oregonlegislature.gov/liz/${measure.SessionKey}/Measures/Overview/${measure.MeasurePrefix}${measure.MeasureNumber}`
 }
 
 const getMeasuresFromFiltersAndUnfilteredMeasures = (unfilteredMeasures: Measure[], userTrackedMeasures: UserTrackedMeasure[]) => {

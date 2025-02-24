@@ -116,7 +116,7 @@ export const getKanbanLocationFromBilLocation = (location: string, xxx: Measure[
         var chamberLocation = {} as chamberKanban;
 
         // TODO: Fix for joint Measures (HJM) + LC
-        const billAndChamberMatch = (location.includes('Senate') && xxx === 'SB') || (location.includes('House') && xxx === 'HB');
+        const billAndChamberMatch = (location.includes('Senate') && xxx === 'SB') || (location.includes('House') && xxx === 'HB') || (location.includes('House') && xxx === 'HJM');
         const inCommittee = location.includes('Committee');
 
         chamberLocation.group = billAndChamberMatch ? 'First Chamber' : 'Second Chamber'

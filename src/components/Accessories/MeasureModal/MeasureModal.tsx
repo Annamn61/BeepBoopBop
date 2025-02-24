@@ -19,7 +19,7 @@ interface Props {
 }
 
 const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
-  const { getMeasureById } = useMeasureStore();
+  const { getMeasureById, getMeasureUrlById } = useMeasureStore();
   const { getHistoryById } = useHistoryStore();
   const measure = getMeasureById(measureId);
 
@@ -33,7 +33,9 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
     <Dialog maxWidth="lg" open={!!anchorEl} onClose={onClose}>
       <Box sx={styles.modalContainer}>
         <Box sx={styles.header}>
-          <Button>View in OLIS</Button>
+          <Button href={getMeasureUrlById(measureId)} target="_blank">
+            View in OLIS
+          </Button>
           <IconButton onClick={onClose}>
             <CloseRoundedIcon />
           </IconButton>
@@ -64,19 +66,6 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
           <Box sx={styles.quicklook}>
             <Typography variant="h3">Quicklook</Typography>
           </Box>
-          <Box sx={styles.history}>
-            <Typography variant="h3">History</Typography>
-            <Box sx={styles.historyItemsContainer}>
-              {getHistoryById(measureId).map((historyItem) => (
-                <HistoryItemLine
-                  key={historyItem.MeasureHistoryId}
-                  historyItem={historyItem}
-                  variant="light"
-                />
-              ))}
-            </Box>
-          </Box>
-
           <Box sx={styles.summary}>
             <Typography variant="h3">Summary</Typography>
             <Box sx={styles.lineItem}>
@@ -90,6 +79,18 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
             <Box sx={styles.lineItem}>
               <Typography variant="subtitle1">Location</Typography>
               <Typography variant="body1">{CurrentLocation}</Typography>
+            </Box>
+          </Box>
+          <Box sx={styles.history}>
+            <Typography variant="h3">History</Typography>
+            <Box sx={styles.historyItemsContainer}>
+              {getHistoryById(measureId).map((historyItem) => (
+                <HistoryItemLine
+                  key={historyItem.MeasureHistoryId}
+                  historyItem={historyItem}
+                  variant="light"
+                />
+              ))}
             </Box>
           </Box>
         </Box>

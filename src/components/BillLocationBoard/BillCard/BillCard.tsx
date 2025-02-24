@@ -51,7 +51,7 @@ const Bill = ({ billId }: BillProps) => {
             </Typography>
           )}
           <Box sx={styles.info}>
-            <Box>{position === 'Support' ? '🌍' : '🚨'}</Box>
+            {/* <Box>{position === 'Support' ? '🌍' : '🚨'}</Box> */}
             <Typography variant="h5">{billId}</Typography>
           </Box>
         </Button>

@@ -5,6 +5,8 @@ import MeasureModal from '../../Accessories/MeasureModal/MeasureModal';
 import { useModal } from '../../../utils/modal';
 import Button from '@mui/material/Button';
 import { styles } from './MeasurePill.styles';
+import { TOOLTIP_MESSAGES } from '../../../utils/constants';
+import Tooltip from '@mui/material/Tooltip';
 
 interface MeasurePillProps {
   id: string;
@@ -21,12 +23,15 @@ const MeasurePill = ({ id, withModal }: MeasurePillProps) => {
 
   return withModal ? (
     <>
-      <Button
-        sx={{ ...styles.pill, ...backgroundColor }}
-        onClick={setModalOpen}
-      >
-        <Typography variant="overline">{id}</Typography>
-      </Button>
+      <Tooltip title={TOOLTIP_MESSAGES.MeasureModal}>
+        <Button
+          sx={{ ...styles.pill, ...backgroundColor }}
+          onClick={setModalOpen}
+        >
+          <Typography variant="overline">{id}</Typography>
+        </Button>
+      </Tooltip>
+
       <MeasureModal
         measureId={id}
         anchorEl={anchorEl}

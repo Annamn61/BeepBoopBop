@@ -22,7 +22,7 @@ export const fetchMeasure = async (
 
   try {
     const response = await axios.get(
-      `${baseURL}/Measures?$filter=${filters}&$expand=MeasureDocuments,MeasureHistoryActions`
+      `${baseURL}/Measures?$filter=${filters}&$expand=CommitteeMeetingDocuments,MeasureDocuments,MeasureHistoryActions,MeasureSponsors`
     );
     if (!response?.data?.value?.length) {
       onNoBill();
@@ -58,8 +58,13 @@ export const fetchAgendaItems = async (sessionKey: string, id: string) => {
  * This resets localstorage if it is stale
  */
 export const useFetchMeasureInfoFromApi = async () => {
-  const { userTrackedMeasures, removeTrackedMeasureById } = useMeasureStore();
-  const { updateMeasureItemInCache } = useLocalStorage();
+  const {
+    userTrackedMeasures,
+    removeTrackedMeasureById,
+    getUserTrackedMeasureUniqueIds,
+  } = useMeasureStore();
+  const { updateMeasureItemInCache, syncTrackedItemsWithCache } =
+    useLocalStorage();
   const { showSnackbar } = useSnackbarStore();
 
   useEffect(() => {
@@ -83,5 +88,7 @@ export const useFetchMeasureInfoFromApi = async () => {
         }
       }
     );
+    syncTrackedItemsWithCache(getUserTrackedMeasureUniqueIds());
+    // TODO: also ensure that all the localstorage objects are in sync with what user tracked measures there are
   }, [userTrackedMeasures]);
 };
