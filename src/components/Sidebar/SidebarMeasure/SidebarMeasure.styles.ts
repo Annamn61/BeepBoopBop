@@ -18,14 +18,8 @@ export const styles: Record<string, SxProps<Theme>> = {
     },
     checkbox: {
         marginTop: '6px',
-        height: '20px',
-        width: '20px',
         minWidth: 'unset',
         padding: 0,
-        borderWidth: '2px',
-        borderStyle: 'solid',
-        borderRadius: '4px',
-        flexShrink: 0,
         '&:hover': {
             filter: 'brightness(80%)',
         }

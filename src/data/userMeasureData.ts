@@ -22,5 +22,6 @@ export const userTrackedMeasures: UserTrackedMeasure[] = [
   { id: "HB 3336", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.SAGE, sessionKey: '2025R1' },
   { id: "HB 2978", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.PEACH, sessionKey: '2023R1' },
   { id: "HJM 10", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.LIME, sessionKey: '2025R1' },
-  { id: "HB 4024", position: 'Oppose', isDisplayed: true, color: MEASURE_COLORS.TEAL, sessionKey: '2024R1'}
+  { id: "HB 4024", position: 'Oppose', isDisplayed: true, color: MEASURE_COLORS.TEAL, sessionKey: '2024R1'},
+  { id: "HB 3565", position: 'Oppose', isDisplayed: true, color: MEASURE_COLORS.PURPLE, sessionKey: '2025R1' },
 ];

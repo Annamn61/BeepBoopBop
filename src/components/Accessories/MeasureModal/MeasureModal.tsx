@@ -21,7 +21,7 @@ interface Props {
 
 const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
   const { getMeasureById, getMeasureUrlById } = useMeasureStore();
-  const { getHistoryById } = useHistoryStore();
+  const { getUpdatesById } = useHistoryStore();
   const { getUpcomingAgendaItemsById } = useCommitteeAgendaStore();
   const measure = getMeasureById(measureId);
   const agendaItems = getUpcomingAgendaItemsById(measureId);
@@ -94,10 +94,10 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
           <Box sx={{ ...styles.history, ...(styles.infoSection as any) }}>
             <Typography variant="h3">History</Typography>
             <Box sx={styles.historyItemsContainer}>
-              {getHistoryById(measureId).map((historyItem) => (
+              {getUpdatesById(measureId).map((updateItem) => (
                 <HistoryItemLine
-                  key={historyItem.MeasureHistoryId}
-                  historyItem={historyItem}
+                  key={updateItem.Key}
+                  updateItem={updateItem}
                   variant="light"
                 />
               ))}

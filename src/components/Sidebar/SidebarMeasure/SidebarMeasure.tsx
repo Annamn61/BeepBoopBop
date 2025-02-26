@@ -11,6 +11,7 @@ import { useModal } from '../../../utils/modal';
 import Tooltip from '@mui/material/Tooltip';
 import MeasureModal from '../../Accessories/MeasureModal/MeasureModal';
 import { TOOLTIP_MESSAGES } from '../../../utils/constants';
+import ColorSquare from '../../Accessories/ColorSquare/ColorSquare';
 
 interface SidebarMeasureProps {
   userTrackedMeasure: UserTrackedMeasure;
@@ -34,11 +35,6 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
   const title = getMeasureTitleById(id);
   const measureColor = getUserMeasureColorById(id);
 
-  const checkboxStyles = {
-    backgroundColor: isDisplayed ? measureColor : 'transparent',
-    borderColor: measureColor,
-  };
-
   return (
     <>
       <Tooltip title={TOOLTIP_MESSAGES.MeasureModal}>
@@ -49,12 +45,14 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
         >
           <Tooltip title={TOOLTIP_MESSAGES.ToggleVisibility}>
             <Button
-              sx={{ ...styles.checkbox, ...checkboxStyles }}
+              sx={{ ...styles.checkbox }}
               onClick={(e) => {
                 e.stopPropagation();
                 setUserTrackedMeasureFilterStatusById(id, !isDisplayed);
               }}
-            />
+            >
+              <ColorSquare color={measureColor} filled={isDisplayed} />
+            </Button>
           </Tooltip>
           <Box sx={styles.infoArea}>
             <Box sx={styles.infoTopline}>

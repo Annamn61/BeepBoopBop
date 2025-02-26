@@ -22,7 +22,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         padding: 4,
         display: 'flex',
         flexDirection: 'column',
-        gap: 6,
+        gap: 3,
         borderRadius: '8px',
     },
     future: {

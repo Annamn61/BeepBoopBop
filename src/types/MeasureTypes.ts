@@ -71,15 +71,23 @@ export interface MeasureHistoryItem {
     VoteText: string | null;
 }
 
-export interface GenericHistoryItem {
+export interface GenericUpdateItem {
     Text: string;
     Date: string;
     MeasurePrefix: string;
     MeasureNumber: number;
     SessionKey: string;
+    Link: string | null;
+    Key: string;
+    Type: string;
 }
 
 export interface DateGroupedHistory {
     [date: string]: MeasureHistoryItem[]
 }
+
+export interface DateGroupedUpdates {
+    [date: string]: GenericUpdateItem[]
+}
+
 
