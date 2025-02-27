@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import Drawer from '@mui/material/Drawer';
 import Tooltip from '@mui/material/Tooltip';
-import SearchBar from '../Accessories/SearchBar/SearchBar';
+// import SearchBar from '../Accessories/SearchBar/SearchBar';
 
 interface SidebarProps {
   open: boolean;

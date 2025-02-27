@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { useMeasureStore } from './MeasureStore';
-import { DateGroupedHistory, DateGroupedUpdates, GenericUpdateItem, Measure, MeasureDocument, MeasureHistoryItem } from '../types/MeasureTypes';
+import { DateGroupedUpdates, GenericUpdateItem, Measure, MeasureDocument, MeasureHistoryItem } from '../types/MeasureTypes';
 import { getMeasureId } from '../utils/measure';
 // useMeasureStore.getState().filteredMeasures;
 

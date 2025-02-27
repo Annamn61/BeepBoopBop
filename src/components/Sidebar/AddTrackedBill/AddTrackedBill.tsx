@@ -100,6 +100,7 @@ export const AddTrackedBill = () => {
                 id: measureId,
                 isDisplayed: true,
                 sessionKey,
+                nickname: '',
               });
             }}
           >
