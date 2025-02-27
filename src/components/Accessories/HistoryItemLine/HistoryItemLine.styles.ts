@@ -4,9 +4,18 @@ export const styles: Record<string, SxProps<Theme>> = {
     container: {
         display: 'flex', 
         flexDirection: 'row',
-        gap: 1,
-        alignItems: 'center'
+        gap: 2,
     },
-    time: { width: '70px', flexShrink: 0 },
-    longTime: { width: '150px', flexShrink: 0}
+    time: { minWidth: '65px', flexShrink: 0 },
+    longTime: { width: '150px', flexShrink: 0},
+    content: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    documentLine: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 1.5,
+    }
 };

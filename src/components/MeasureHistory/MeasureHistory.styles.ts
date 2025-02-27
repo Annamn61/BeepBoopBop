@@ -13,10 +13,10 @@ export const styles: Record<string, SxProps<Theme>> = {
         flexDirection: 'column',
         gap: 3,
     }, 
-    item: {
+    items: {
         display: 'flex',
         flexDirection: 'column',
-        gap: 3,
+        gap: 2,
     }, 
     dateSectionContainer: {
         padding: 4,

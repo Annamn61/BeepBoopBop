@@ -32,11 +32,14 @@ const convertHistoryToUpdates = (histories: MeasureHistoryItem[]) => {
     return histories.map((history) => {
         const {ActionDate, ActionText, MeasurePrefix, MeasureNumber, SessionKey, MeasureHistoryId} = history;
 
+        const MeasureName =useMeasureStore.getState().getMeasureNicknameById(getMeasureId(MeasurePrefix, MeasureNumber));
+
         return {
            Text: ActionText,
            Date: ActionDate,
            MeasurePrefix,
            MeasureNumber,
+           MeasureName,
            SessionKey,
            Link: null,
            Key: MeasureHistoryId.toString(),
@@ -50,11 +53,14 @@ const convertDocumentsToUpdates = (documents: MeasureDocument[] | undefined) => 
     return documents.map((doc) => {
         const {CreatedDate, DocumentUrl, VersionDescription, MeasurePrefix, MeasureNumber, SessionKey} = doc;
 
+        const MeasureName = useMeasureStore.getState().getMeasureNicknameById(getMeasureId(MeasurePrefix, MeasureNumber));
+
         return {
            Text: VersionDescription,
            Date: CreatedDate,
            MeasurePrefix,
            MeasureNumber,
+           MeasureName,
            SessionKey,
            Link: DocumentUrl,
            Key: DocumentUrl,

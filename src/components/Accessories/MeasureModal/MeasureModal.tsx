@@ -21,11 +21,18 @@ interface Props {
 }
 
 const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
-  const { getMeasureById, getMeasureUrlById } = useMeasureStore();
+  const {
+    getMeasureById,
+    getMeasureUrlById,
+    getSortedMeasureSponsorsById,
+    getSortedMeasureChiefSponsorsById,
+  } = useMeasureStore();
   const { getUpdatesById } = useHistoryStore();
   const { getUpcomingAgendaItemsById } = useCommitteeAgendaStore();
   const measure = getMeasureById(measureId);
   const agendaItems = getUpcomingAgendaItemsById(measureId);
+  const sponsors = getSortedMeasureSponsorsById(measureId);
+  const chiefSponsors = getSortedMeasureChiefSponsorsById(measureId);
 
   if (!measureId || !measure) {
     return null;
@@ -89,6 +96,20 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
             <Box sx={styles.lineItem}>
               <Typography variant="subtitle2">Location</Typography>
               <Typography variant="body1">{CurrentLocation}</Typography>
+            </Box>
+            <Box sx={styles.lineItem}>
+              <Typography sx={{ maxWidth: '100px' }} variant="subtitle2">
+                Chief Sponsors
+              </Typography>
+              <Typography variant="body1">
+                {chiefSponsors.map((s) => s.LegislatoreCode + ', ')}
+              </Typography>
+            </Box>
+            <Box sx={styles.lineItem}>
+              <Typography variant="subtitle2">Sponsors</Typography>
+              <Typography variant="body1">
+                {sponsors.map((s) => s.LegislatoreCode + ', ')}
+              </Typography>
             </Box>
           </Box>
           <Box sx={{ ...styles.history, ...(styles.infoSection as any) }}>

@@ -1,18 +1,21 @@
 export const getMMHHFromDate = (date: Date) => {
     let hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, "0");
+    console.log(date, date.getMinutes());
+    const roundedMinutes = date.getMinutes() === 1 ? 0 : date.getMinutes();
+    const minutes = roundedMinutes.toString().padStart(2, "0");
     const ampm = hours >= 12 ? "pm" : "am";
     
     hours = hours % 12 || 12; // Convert 0 (midnight) and 12 (noon) correctly
     
-    return `${hours}:${minutes}${ampm}`;
+    return `${hours}:${minutes} ${ampm}`;
   };
 
   export const getShortFormatDateWithTime = (date: Date) => {
     const month = date.toLocaleString("en-US", { month: "short" }); // "Jan", "Feb", etc.
     const day = date.getDate(); // Day of the month
     let hours = date.getHours(); // Get hours (24-hour format)
-    const minutes = date.getMinutes().toString().padStart(2, "0"); // Ensure two digits
+    const roundedMinutes = date.getMinutes() === 1 ? 0 : date.getMinutes();
+    const minutes = roundedMinutes.toString().padStart(2, "0"); // Ensure two digits
     const amPm = hours >= 12 ? "pm" : "am"; // Determine AM/PM
   
     // Convert 24-hour time to 12-hour format

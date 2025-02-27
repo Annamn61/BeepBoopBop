@@ -22,7 +22,15 @@ const PageTabs = ({ selectedPage, setSelectedPage }: PageTabProps) => {
         }
         onClick={() => setSelectedPage('location')}
       >
-        <Typography variant="button">Location</Typography>
+        <Typography
+          sx={{
+            ...styles.tabText,
+            ...((selectedPage === 'location' ? styles.activeText : {}) as any),
+          }}
+          variant="button"
+        >
+          Location
+        </Typography>
       </Button>
       <Button
         variant="contained"
@@ -34,7 +42,15 @@ const PageTabs = ({ selectedPage, setSelectedPage }: PageTabProps) => {
         }
         onClick={() => setSelectedPage('updates')}
       >
-        <Typography variant="button">Updates</Typography>
+        <Typography
+          sx={{
+            ...styles.tabText,
+            ...((selectedPage === 'updates' ? styles.activeText : {}) as any),
+          }}
+          variant="button"
+        >
+          Updates
+        </Typography>
       </Button>
       <Button
         variant="contained"
@@ -46,7 +62,15 @@ const PageTabs = ({ selectedPage, setSelectedPage }: PageTabProps) => {
         }
         onClick={() => setSelectedPage('calendar')}
       >
-        <Typography variant="button">Calendar</Typography>
+        <Typography
+          sx={{
+            ...styles.tabText,
+            ...((selectedPage === 'calendar' ? styles.activeText : {}) as any),
+          }}
+          variant="button"
+        >
+          Calendar
+        </Typography>
       </Button>
     </Box>
   );

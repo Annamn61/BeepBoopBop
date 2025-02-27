@@ -10,6 +10,7 @@ export interface Measure {
     RelatingTo: string,
     id: string,
     MeasureDocuments: MeasureDocument[],
+    MeasureSponsors: MeasureSponsors[],
     MeasureHistoryActions: MeasureHistoryItem[],
     AtTheRequestOf: string,
     CatchLine: string,
@@ -33,12 +34,28 @@ export interface Measure {
     Vetoed: boolean,
 }
 
+export interface MeasureSponsors {
+    CommitteeCode: null | string,
+    CreatedDate: string,
+    LegislatoreCode: string,
+    MeasureNumber: Measure['MeasureNumber'],
+    MeasurePrefix: Measure['MeasurePrefix'],
+    MeasureSponsorId: string,
+    ModifiedDate: string | null,
+    PresessionFiledMessage: any, // FIX
+    PrintOrder: string, // ??
+    SessionKey: string,
+    SponsorLevel: string,
+    SponsorType: string,
+}
+
 export interface UserTrackedMeasure {
     id: string, 
     position: 'Support' | 'Oppose' | '?',
     sessionKey: string,
     isDisplayed: boolean,
     color: string,
+    nickname: string,
 }
 
 export interface MeasureLocalStorage {
@@ -76,6 +93,7 @@ export interface GenericUpdateItem {
     Date: string;
     MeasurePrefix: string;
     MeasureNumber: number;
+    MeasureName: string | undefined;
     SessionKey: string;
     Link: string | null;
     Key: string;

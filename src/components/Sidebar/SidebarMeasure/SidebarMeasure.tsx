@@ -25,14 +25,14 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
     setModalOpen: openMeasureModal,
   } = useModal();
   const {
-    getMeasureTitleById,
     setUserTrackedMeasureFilterStatusById,
     getUserMeasureColorById,
     removeTrackedMeasureById,
+    getMeasureNicknameById,
   } = useMeasureStore();
 
   const { isDisplayed, id } = userTrackedMeasure;
-  const title = getMeasureTitleById(id);
+  const title = getMeasureNicknameById(id);
   const measureColor = getUserMeasureColorById(id);
 
   return (

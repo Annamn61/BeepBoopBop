@@ -26,7 +26,7 @@ export const HistoryItemLine = ({ updateItem, variant }: HistoryItemProps) => {
   const documentLink =
     isDocument && updateItem.Link ? (
       <IconButton href={updateItem.Link} target="_blank" size="small">
-        <DescriptionRoundedIcon />
+        <DescriptionRoundedIcon fontSize="small" />
       </IconButton>
     ) : null;
 
@@ -40,8 +40,13 @@ export const HistoryItemLine = ({ updateItem, variant }: HistoryItemProps) => {
           id={getMeasureId(updateItem.MeasurePrefix, updateItem.MeasureNumber)}
           withModal={true}
         />
-        <Typography variant="body1">{updateItem.Text}</Typography>
-        {documentLink}
+        <Box sx={styles.content}>
+          <Typography variant="caption">{updateItem.MeasureName}</Typography>
+          <Box sx={styles.documentLine}>
+            <Typography variant="body1">{updateItem.Text}</Typography>{' '}
+            {documentLink}
+          </Box>
+        </Box>
       </Box>
     );
   } else {
@@ -50,8 +55,10 @@ export const HistoryItemLine = ({ updateItem, variant }: HistoryItemProps) => {
         <Typography variant="body2" sx={styles.longTime}>
           {getShortFormatDateWithTime(new Date(updateItem.Date))}
         </Typography>
-        <Typography variant="body1">{updateItem.Text}</Typography>
-        {documentLink}
+        <Box sx={styles.documentLine}>
+          <Typography variant="body1">{updateItem.Text}</Typography>{' '}
+          {documentLink}
+        </Box>
       </Box>
     );
   }

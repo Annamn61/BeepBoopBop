@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Measure, MeasureDocument, MeasureObject, UserTrackedMeasure } from '../types/MeasureTypes';
+import { Measure, MeasureDocument, MeasureObject, MeasureSponsors, UserTrackedMeasure } from '../types/MeasureTypes';
 import { userTrackedMeasures } from '../data/userMeasureData';
 import { getKanbanLocationFromBilLocation } from '../components/BillLocationBoard/Locations/Locations.helpers';
 import { getUniqueMeasureIdentifier } from '../data/cache/cache';
@@ -49,6 +49,12 @@ interface MeasureState {
   getMeasureTitleById: (id: string) => string | undefined;
   /** Gets the user defined color of a measure by its id */
   getUserMeasureColorById: (id: string) => string | undefined;
+  /** gets the user definied nickname of an id, catchline otherwise */
+  getMeasureNicknameById: (id: string) => string | undefined;
+  /** gets the sponsors that are members, sorted by print order */
+  getSortedMeasureSponsorsById: (id: string | undefined) => MeasureSponsors[]
+  /** gets the sponsors that are members, sorted by print order */
+  getSortedMeasureChiefSponsorsById: (id: string | undefined) => MeasureSponsors[]
 }
 
 export const useMeasureStore = create<MeasureState>((set, get) => ({
@@ -74,7 +80,23 @@ export const useMeasureStore = create<MeasureState>((set, get) => ({
   getMeasureDocumentsById: (id) => get().getMeasureById(id)?.MeasureDocuments,
   getMeasureTitleById: (id) => get().getMeasureById(id)?.CatchLine,
   getUserMeasureColorById: (id) => get().getUserMeasureMetadataById(id)?.color,
+  getMeasureNicknameById: (id) => get().getUserMeasureMetadataById(id)?.nickname || get().getMeasureById(id)?.CatchLine || undefined,
+  getSortedMeasureSponsorsById: (id) => sortSponsors(get().getMeasureById(id)?.MeasureSponsors),
+  getSortedMeasureChiefSponsorsById: (id) => sortChiefSponsors(get().getMeasureById(id)?.MeasureSponsors)
 }));
+
+const sortChiefSponsors = (sponsors: MeasureSponsors[] | undefined) => {
+    if(!sponsors) return []
+
+    return sponsors.filter((s) => s.SponsorType === 'Member' && s.SponsorLevel === 'Chief').sort((a, b) => Number(b.PrintOrder) - Number(a.PrintOrder) )
+}
+
+
+const sortSponsors = (sponsors: MeasureSponsors[] | undefined) => {
+    if(!sponsors) return []
+
+    return sponsors.filter((s) => s.SponsorType === 'Member' && s.SponsorLevel === 'Regular').sort((a, b) => Number(b.PrintOrder) - Number(a.PrintOrder) )
+}
 
 const getToggledFilters = (userTrackedMeasures: UserTrackedMeasure[], id: string) => {
     let newTrackedMeasures: UserTrackedMeasure[] = [];

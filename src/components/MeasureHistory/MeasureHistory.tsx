@@ -44,7 +44,7 @@ export const MeasureHistory = () => {
           .map(([dateString, updates]) => (
             <Box sx={styles.dateSection} key={dateString}>
               <DateTitle dateString={dateString} />
-              <Box sx={styles.item}>
+              <Box sx={styles.items}>
                 {updates.map((update: GenericUpdateItem) => (
                   <HistoryItemLine
                     key={update.Key}
@@ -61,7 +61,7 @@ export const MeasureHistory = () => {
         {Object.entries(pastHistory).map(([dateString, updates]) => (
           <Box sx={styles.dateSection} key={dateString}>
             <DateTitle dateString={dateString} />
-            <Box sx={styles.item}>
+            <Box sx={styles.items}>
               {updates.map((update: GenericUpdateItem) => (
                 <HistoryItemLine
                   key={update.Key}

@@ -11,17 +11,21 @@ export const styles: Record<string, SxProps<Theme>> = {
         paddingBottom: 1,
         paddingLeft: 3,
         paddingRight: 3,
-        color: '#A7A7A7 !important',
         backgroundColor: '#f7f7f7',
         boxShadow: 'none',
         '&:hover': {
-            backgroundColor: '#e7e7e7',
+            filter: 'brightness(80%)',
             boxShadow: 'none',
-            color: '#878787',
         }
     },
     activeTabButton: {
         color: '#3E753B',
         backgroundColor: '#D4ECD4',
     },
+    tabText: {
+        color: '#A7A7A7 !important',
+    },
+    activeText: {
+         color: '#3E753B !important',
+    }
 }
