@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import { styles } from './MeasureModal.styles';
 import Typography from '@mui/material/Typography';
-import MeasurePill from '../../Measure/MeasurePill/MeasurePill';
+import MeasurePill from '../MeasurePill/MeasurePill';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import useMeasureStore from '../../../store/MeasureStore';

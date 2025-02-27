@@ -4,6 +4,8 @@ import { MEASURE_COLORS } from "../utils/colors";
 export const userTrackedMeasures: UserTrackedMeasure[] = [
     //HB
     { id: "HB 2038", position: '?', isDisplayed: true, color: MEASURE_COLORS.SAGE, sessionKey: '2025R1' }, //350
+    { id: "HB 2151", position: '?', isDisplayed: true, color: MEASURE_COLORS.ORANGE, sessionKey: '2025R1' }, //DO
+    { id: "HB 2152", position: '?', isDisplayed: true, color: MEASURE_COLORS.ORANGE, sessionKey: '2025R1' }, //DO
     { id: "HB 2200", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.ORANGE, sessionKey: '2025R1' }, //DO
     { id: "HB 2410", position: '?', isDisplayed: true, color: MEASURE_COLORS.SAGE, sessionKey: '2025R1' }, //350
     { id: "HB 2426", position: '?', isDisplayed: true, color: MEASURE_COLORS.SAGE, sessionKey: '2025R1' }, //350
@@ -16,6 +18,7 @@ export const userTrackedMeasures: UserTrackedMeasure[] = [
     { id: "HB 3103", position: 'Oppose', isDisplayed: true, color: MEASURE_COLORS.SALMON, sessionKey: '2025R1' }, //350
     { id: "HB 3119", position: 'Oppose', isDisplayed: true, color: MEASURE_COLORS.RED, sessionKey: '2025R1' }, //MOF
     { id: "HB 3170", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.GOLD, sessionKey: '2025R1' }, //BR
+    { id: "HB 3172", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.GOLD, sessionKey: '2025R1' }, //BR
     { id: "HB 3179", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.GOLD, sessionKey: '2025R1' }, //BR
     { id: "HB 3193", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.ORANGE, sessionKey: '2025R1' }, //BR
     { id: "HB 3336", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.SAGE, sessionKey: '2025R1' }, //350
@@ -24,6 +27,7 @@ export const userTrackedMeasures: UserTrackedMeasure[] = [
     { id: "HB 3546", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.PURPLE, sessionKey: '2025R1' }, //BR
     { id: "HB 3548", position: '?', isDisplayed: true, color: MEASURE_COLORS.SAGE, sessionKey: '2025R1' }, //350
     { id: "HB 3565", position: 'Oppose', isDisplayed: true, color: MEASURE_COLORS.PURPLE, sessionKey: '2025R1' }, //350
+    { id: "HB 3628", position: '?', isDisplayed: true, color: MEASURE_COLORS.PURPLE, sessionKey: '2025R1' }, //350
     { id: "HB 4024", position: 'Oppose', isDisplayed: true, color: MEASURE_COLORS.TEAL, sessionKey: '2024R1'},
 
     // HJM
@@ -51,3 +55,5 @@ export const userTrackedMeasures: UserTrackedMeasure[] = [
 
 //   { id: "LC 1440", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.PINK, sessionKey: '2025R1' },
 
+
+// Im interested in 2879 

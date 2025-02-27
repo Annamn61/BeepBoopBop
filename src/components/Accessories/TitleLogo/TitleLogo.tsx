@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { styles } from './TitleLogo.styles';
-import logo from '../../assets/OreganoLogo.svg';
+import logo from '../../../assets/OreganoLogo.svg';
 
 const TitleLogo = () => {
   return (

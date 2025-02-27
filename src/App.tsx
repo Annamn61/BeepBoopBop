@@ -11,7 +11,7 @@ import { useSimpleAuth } from './components/SimpleAuth/SimpleAuth.helpers';
 import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
 import { useFetchMeasureInfoFromApi } from './utils/ODataRquests';
 import { MeasureHistory } from './components/MeasureHistory/MeasureHistory';
-import TitleLogo from './components/TitleLogo/TitleLogo';
+import TitleLogo from './components/Accessories/TitleLogo/TitleLogo';
 import Box from '@mui/material/Box';
 import PageTabs from './components/PageTabs/PageTabs';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';

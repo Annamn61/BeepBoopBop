@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import useMeasureStore from '../../../store/MeasureStore';
-import MeasureModal from '../../Accessories/MeasureModal/MeasureModal';
+import MeasureModal from '../MeasureModal/MeasureModal';
 import { useModal } from '../../../utils/modal';
 import Button from '@mui/material/Button';
 import { styles } from './MeasurePill.styles';

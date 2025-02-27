@@ -37,8 +37,9 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
 
     const now = new Date();
     const lastUpdated = new Date(measures[uniqueMeasureId].lastUpdate)
-    const oneDayInMilliseconds = 24 * 60 * 60 * 1000;    
-    const dateToUpdateData = new Date(lastUpdated.getTime() + oneDayInMilliseconds)
+    const oneHourInMilliseconds = 60 * 60 * 1000;
+    // const oneDayInMilliseconds = 24 * oneHourInMilliseconds;    
+    const dateToUpdateData = new Date(lastUpdated.getTime() + oneHourInMilliseconds)
     return now > dateToUpdateData;
 }
 

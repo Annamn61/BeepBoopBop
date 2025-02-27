@@ -5,7 +5,7 @@ import {
   getMMHHFromDate,
 } from '../../../utils/time';
 import { getMeasureId } from '../../../utils/measure';
-import MeasurePill from '../../Measure/MeasurePill/MeasurePill';
+import MeasurePill from '../MeasurePill/MeasurePill';
 import { GenericUpdateItem } from '../../../types/MeasureTypes';
 import { styles } from './HistoryItemLine.styles';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
