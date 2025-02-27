@@ -19,9 +19,9 @@ const Bill = ({ billId }: BillProps) => {
   const committeeCode = useMeasureStore
     .getState()
     .getMeasureCommitteeCodeById(billId);
-  //   const position = useMeasureStore
-  //     .getState()
-  //     .getUserTrackedMeasurePositionById(billId);
+  const position = useMeasureStore
+    .getState()
+    .getUserTrackedMeasurePositionById(billId);
   const billTitle = useMeasureStore.getState().getMeasureTitleById(billId);
   const measureColor = useMeasureStore
     .getState()
@@ -51,7 +51,10 @@ const Bill = ({ billId }: BillProps) => {
             </Typography>
           )}
           <Box sx={styles.info}>
-            {/* <Box>{position === 'Support' ? '🌍' : '🚨'}</Box> */}
+            <Box>
+              {position === 'Support' && '🌍'}
+              {position === 'Oppose' && '🚨'}
+            </Box>
             <Typography variant="h5">{billId}</Typography>
           </Box>
         </Button>

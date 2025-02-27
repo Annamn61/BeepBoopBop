@@ -108,7 +108,6 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
 
     const syncTrackedItemsWithCache = (userTrackedIds: string[]) => {
         const newCache: LocalStoreageCache = {};
-        console.log(userTrackedIds, cacheObject);
         userTrackedIds.forEach(id => {
             if (cacheObject[id]) {
                 newCache[id] = cacheObject[id];

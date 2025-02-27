@@ -51,8 +51,9 @@ export const getMMHHFromDate = (date: Date) => {
     const diffTime = today.getTime() - inputDate.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // Convert to days
 
+    if(diffDays === -1) return `in 1 day`;
     if(diffDays < 0) return `in ${Math.abs(diffDays)} days`;
-  
-    if (diffDays === 0) return "today";
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "1 day ago";
     return `${diffDays} days ago`;
   };

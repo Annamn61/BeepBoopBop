@@ -12,6 +12,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import useHistoryStore from '../../../store/HistoryStore';
 import HistoryItemLine from '../HistoryItemLine/HistoryItemLine';
 import useCommitteeAgendaStore from '../../../store/CommitteeAgendaStore';
+import { getShortFormatDateWithTime } from '../../../utils/time';
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -25,8 +26,6 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
   const { getUpcomingAgendaItemsById } = useCommitteeAgendaStore();
   const measure = getMeasureById(measureId);
   const agendaItems = getUpcomingAgendaItemsById(measureId);
-
-  console.log('ai', agendaItems);
 
   if (!measureId || !measure) {
     return null;
@@ -64,6 +63,7 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
                   sx={styles.measureDocument}
                   href={doc.DocumentUrl}
                   target="_blank"
+                  key={doc.DocumentUrl}
                 >
                   <Typography variant="body1">
                     {doc.VersionDescription}
@@ -78,10 +78,10 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
           </Box>
           <Box sx={styles.infoSection}>
             <Typography variant="h3">Summary</Typography>
-            <Box sx={styles.lineItem}>
+            {/* <Box sx={styles.lineItem}>
               <Typography variant="subtitle2">Catchline</Typography>
               <Typography variant="body1">{CatchLine}</Typography>
-            </Box>
+            </Box> */}
             <Box sx={styles.lineItem}>
               <Typography variant="subtitle2">Relating to</Typography>
               <Typography variant="body1">{RelatingTo}</Typography>
@@ -105,12 +105,18 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
           </Box>
           <Box sx={styles.infoSection}>
             <Typography variant="h3">Upcoming Events</Typography>
-            {agendaItems.map((item) => (
-              <Box sx={styles.lineItem}>
-                <Typography variant="subtitle2">{item.MeetingDate}</Typography>
-                <Typography variant="body1">{item.MeetingType}</Typography>
-              </Box>
-            ))}
+            {!!agendaItems.length ? (
+              agendaItems.map((item) => (
+                <Box sx={styles.lineItem} key={item.CommitteeAgendaItemId}>
+                  <Typography variant="subtitle2">
+                    {getShortFormatDateWithTime(new Date(item.MeetingDate))}
+                  </Typography>
+                  <Typography variant="body1">{item.MeetingType}</Typography>
+                </Box>
+              ))
+            ) : (
+              <Typography variant="subtitle2">No Upcoming Events</Typography>
+            )}
           </Box>
         </Box>
       </Box>

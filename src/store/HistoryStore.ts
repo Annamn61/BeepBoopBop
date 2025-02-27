@@ -124,7 +124,6 @@ const sortUpdateDates = (history: GenericUpdateItem[]) => {
 
     // Usage: Reverse sorting within each day
     const getUpdatesSortedIntoDates = (updates: GenericUpdateItem[]) => {
-        console.log('updates', updates);
         const groupedHistory = sortAndGroupUpdates(updates);
       
         Object.keys(groupedHistory).forEach((date) => {

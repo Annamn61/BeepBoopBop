@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material/styles";
 const darkGreen = "#3E753B";
 const black = '#000';
 const grey = '#585858';
-const mediumGrey = '#a7a7a7';
+const mediumGrey = '#757575';
 const white = '#fff';
 const boxShadow = '2px 2px 4px 0px rgba(127, 127, 132, 0.2)';
 const lightGreen = "#EFFAEF"

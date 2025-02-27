@@ -35,7 +35,7 @@ export interface Measure {
 
 export interface UserTrackedMeasure {
     id: string, 
-    position: 'Support' | 'Oppose',
+    position: 'Support' | 'Oppose' | '?',
     sessionKey: string,
     isDisplayed: boolean,
     color: string,
