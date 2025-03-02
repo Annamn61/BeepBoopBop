@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { AgendaItem, CommitteeMeetingWithUserAgendaItems, TestimonyLinks } from '../types/CommitteeAgendaTypes';
-import { userTrackedMeasures } from '../data/userMeasureData';
 import { getMeasureId } from '../utils/measure';
 import { Measure } from '../types/MeasureTypes';
 import { CommitteeMeeting } from '../types/CommitteeMeetingsTypes';

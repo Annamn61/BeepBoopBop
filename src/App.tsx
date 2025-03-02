@@ -1,21 +1,21 @@
+import Box from '@mui/material/Box';
+import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import moment from 'moment';
 import { useState } from 'react';
-import { Calendar, WorkWeek, momentLocalizer } from 'react-big-calendar';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './App.css';
-import { BillLocationBoard } from './components/BillLocationBoard/BillLocationBoard';
+import { styles } from './App.styles';
+import CommiteeMeetingModal from './components/Accessories/CommiteeMeetingModal/CommiteeMeetingModal';
 import { SnackbarProvider } from './components/Accessories/Snackbar/Snackbar';
+import TitleLogo from './components/Accessories/TitleLogo/TitleLogo';
+import { BillLocationBoard } from './components/BillLocationBoard/BillLocationBoard';
+import { MeasureHistory } from './components/MeasureHistory/MeasureHistory';
+import PageTabs from './components/PageTabs/PageTabs';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
 import { useFetchMeasureInfoFromApi } from './utils/ODataRquests';
-import { MeasureHistory } from './components/MeasureHistory/MeasureHistory';
-import TitleLogo from './components/Accessories/TitleLogo/TitleLogo';
-import Box from '@mui/material/Box';
-import PageTabs from './components/PageTabs/PageTabs';
-import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import theme from './utils/theme';
-import { styles } from './App.styles';
-import CommiteeMeetingModal from './components/Accessories/CommiteeMeetingModal/CommiteeMeetingModal';
 
 const localizer = momentLocalizer(moment);
 
