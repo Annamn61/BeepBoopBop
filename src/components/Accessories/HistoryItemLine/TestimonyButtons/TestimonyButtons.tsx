@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
@@ -11,7 +10,7 @@ interface Props {
 
 const TestimonyButtons = ({ testimonyLinks }: Props) => {
   return (
-    <Box>
+    <>
       <Tooltip title={'Register to Testify Live'}>
         <IconButton size="small" href={testimonyLinks.inPerson} target="_blank">
           <InterpreterModeRoundedIcon />
@@ -22,7 +21,7 @@ const TestimonyButtons = ({ testimonyLinks }: Props) => {
           <CommentRoundedIcon />
         </IconButton>
       </Tooltip>
-    </Box>
+    </>
   );
 };
 

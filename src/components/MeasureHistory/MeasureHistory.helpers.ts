@@ -1,3 +1,4 @@
+import { importantDates } from "../../data/ImportantLegistlativeDates";
 import { DateGroupedUpdates, GenericUpdateItem } from "../../types/MeasureTypes";
 
 const getLocalDateObject = (dateString: string) => {
@@ -17,7 +18,9 @@ export const getFutureHistoryFromHistory = (history: DateGroupedUpdates) => {
       return new Date(updateItem.Date) >= new Date();
     });
 
-    return date >= today && hasFutureItem;
+    const hasImportantDate = !!Object.keys(importantDates).includes(dateString);
+
+    return date >= today && (hasFutureItem || hasImportantDate);
   });
 
   futureKeys.forEach((dateString) => {

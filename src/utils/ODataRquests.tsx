@@ -43,7 +43,7 @@ export const fetchAgendaItems = async (sessionKey: string, id: string) => {
 
   try {
     const response = await axios.get(
-      `${baseURL}/CommitteeAgendaItems?$filter=${filters}`
+      `${baseURL}/CommitteeAgendaItems?$filter=${filters}&$expand=CommitteeMeeting`
     );
     return response.data;
   } catch (error) {
@@ -95,15 +95,14 @@ export const useFetchMeasureInfoFromApi = async () => {
 
 // https://olis.oregonlegislature.gov/liz/2025R1/Testimony/SEE/SB/88/0000-00-00-00-00?area=Measures
 
-export const fetchTestimony = async () => {
-  try {
-    const response = await axios.get(
-      `https://olis.oregonlegislature.gov/liz/2025R1/Testimony/SEE/SB/88/0000-00-00-00-00?area=Measures`
-    );
-    console.log('response', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching testimony', error);
-    throw error;
-  }
-};
+// export const fetchTestimony = async () => {
+//   try {
+//     const response = await axios.get(
+//       `https://olis.oregonlegislature.gov/liz/2025R1/Testimony/SEE/SB/88/0000-00-00-00-00?area=Measures`
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error fetching testimony', error);
+//     throw error;
+//   }
+// };

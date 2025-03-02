@@ -25,10 +25,10 @@ export const BillLocationBoard = ({
       <Box className="kanban-content">
         <Box
           sx={{
+            ...styles.groupsContainer,
             paddingLeft: sidebarIsOpen ? 6 : 12,
             transition: '0.3s all ease-in-out',
           }}
-          className="groups-container"
         >
           {[
             ...(hasErrantMeasures ? errorColumn : []),

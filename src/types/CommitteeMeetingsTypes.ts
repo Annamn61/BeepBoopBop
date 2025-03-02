@@ -1,0 +1,15 @@
+export interface CommitteeMeeting {
+    AgendaRevisionNumber: number, 
+    AgendaUrl: string,
+    AlternateLocation: string,
+    CommitteeCode: string,
+    CreatedDate: string,
+    Location: string, 
+    MeetingDate: string,
+    MeetingGuid: string,
+    MeetingStatus: string,
+    MeetingStatusCode: string,
+    ModifiedDate: string,
+    PostedDate: string,
+    SessionKey: string,
+}

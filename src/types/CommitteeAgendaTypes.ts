@@ -1,3 +1,5 @@
+import { CommitteeMeeting } from "./CommitteeMeetingsTypes";
+
 export interface AgendaItem {
   Action: string;
   BoardName: string;
@@ -5,6 +7,7 @@ export interface AgendaItem {
   CommitteCode: string;
   CommitteeAgendaItemId: number;
   CreatedDate: string;
+  CommitteeMeeting: CommitteeMeeting,
   ExecutiveAppointee: string;
   MeasureNumber: number;
   MeasurePrefix: string;

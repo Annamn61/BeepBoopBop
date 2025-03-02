@@ -1,6 +1,5 @@
 export const getMMHHFromDate = (date: Date) => {
     let hours = date.getHours();
-    console.log(date, date.getMinutes());
     const roundedMinutes = date.getMinutes() === 1 ? 0 : date.getMinutes();
     const minutes = roundedMinutes.toString().padStart(2, "0");
     const ampm = hours >= 12 ? "pm" : "am";
@@ -60,3 +59,12 @@ export const getMMHHFromDate = (date: Date) => {
     if (diffDays === 1) return "1 day ago";
     return `${diffDays} days ago`;
   };
+
+  export const getTwoDigits = (number: number) => {
+    return number.toString().padStart(2, '0');
+  };
+
+  export const getYYYYMMDD = (date: Date) => {
+    return `${date.getFullYear()}-${getTwoDigits(date.getMonth() + 1)}-${getTwoDigits(date.getDate())}`
+  }
+  

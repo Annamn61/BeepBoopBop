@@ -48,7 +48,13 @@ export const styles: Record<string, SxProps<Theme>> = {
         transition: 'opacity 0.2s ease-in-out, visibility 0.2s',
     },
     menuIconContainer: {
-        padding: '24px',
-        position: 'fixed',
+        padding: {
+            xs: 2,
+            md: 3,
+        },
+        position: {
+            xs: 'absolute',
+            md: 'fixed',
+        },
     }
 };

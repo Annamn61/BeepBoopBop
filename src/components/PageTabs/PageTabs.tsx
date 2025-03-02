@@ -17,26 +17,6 @@ const PageTabs = ({ selectedPage, setSelectedPage }: PageTabProps) => {
         sx={
           [
             styles.tabButton,
-            ...(selectedPage === 'location' ? [styles.activeTabButton] : []),
-          ] as SxProps<Theme>
-        }
-        onClick={() => setSelectedPage('location')}
-      >
-        <Typography
-          sx={{
-            ...styles.tabText,
-            ...((selectedPage === 'location' ? styles.activeText : {}) as any),
-          }}
-          variant="button"
-        >
-          Location
-        </Typography>
-      </Button>
-      <Button
-        variant="contained"
-        sx={
-          [
-            styles.tabButton,
             ...(selectedPage === 'updates' ? [styles.activeTabButton] : []),
           ] as SxProps<Theme>
         }
@@ -50,6 +30,26 @@ const PageTabs = ({ selectedPage, setSelectedPage }: PageTabProps) => {
           variant="button"
         >
           Updates
+        </Typography>
+      </Button>
+      <Button
+        variant="contained"
+        sx={
+          [
+            styles.tabButton,
+            ...(selectedPage === 'location' ? [styles.activeTabButton] : []),
+          ] as SxProps<Theme>
+        }
+        onClick={() => setSelectedPage('location')}
+      >
+        <Typography
+          sx={{
+            ...styles.tabText,
+            ...((selectedPage === 'location' ? styles.activeText : {}) as any),
+          }}
+          variant="button"
+        >
+          Location
         </Typography>
       </Button>
       <Button

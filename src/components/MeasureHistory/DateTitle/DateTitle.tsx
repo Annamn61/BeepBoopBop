@@ -15,7 +15,6 @@ const DateTitle = ({ dateString }: DateTitleProps) => {
         <Box sx={styles.date}>{getLongFormatDate(date)}</Box>
         <Box sx={styles.daysAgo}>{getDaysAway(date)}</Box>
       </Box>
-      <Box sx={styles.divider} />
     </Box>
   );
 };

@@ -3,6 +3,7 @@ import { AgendaItem, TestimonyLinks } from '../types/CommitteeAgendaTypes';
 import { userTrackedMeasures } from '../data/userMeasureData';
 import { getMeasureId } from '../utils/measure';
 import { Measure } from '../types/MeasureTypes';
+import { CommitteeMeeting } from '../types/CommitteeMeetingsTypes';
 
 interface CommitteeAgendaState {
   unfilteredCommitteeAgenda: AgendaItem[];
@@ -11,6 +12,7 @@ interface CommitteeAgendaState {
   getCalendarEvents: () => { title: string; start: Date; end: Date; id: string; comments: string; color: string }[];
   getUpcomingAgendaItemsById: (id: Measure['id'] | undefined) => AgendaItem[];
   getTestimonyLinkByIdAndDate: (id: Measure['id'], date: Date) => TestimonyLinks | null;
+  getCommitteeMeetingByIdAndDate: (id: Measure['id'], date: Date) => CommitteeMeeting | undefined;
 };
 
 export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) => ({
@@ -34,7 +36,8 @@ export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) =
         };
       }),
       getUpcomingAgendaItemsById: (id) => get().unfilteredCommitteeAgenda.filter(item => getMeasureId(item.MeasurePrefix, item.MeasureNumber) === id).filter(item => new Date(item.MeetingDate) > new Date()),
-    getTestimonyLinkByIdAndDate: (id, date) => getTestimonyLinksFromAgendaItem(findPublicHearingItem(get().unfilteredCommitteeAgenda, id, date))
+    getTestimonyLinkByIdAndDate: (id, date) => getTestimonyLinksFromAgendaItem(findPublicHearingItem(get().unfilteredCommitteeAgenda, id, date)),
+    getCommitteeMeetingByIdAndDate: (id, date) => findPublicHearingItem(get().unfilteredCommitteeAgenda, id, date)?.CommitteeMeeting
 }));
 
 const findPublicHearingItem = (items: AgendaItem[], id: Measure['id'], date: Date) => {

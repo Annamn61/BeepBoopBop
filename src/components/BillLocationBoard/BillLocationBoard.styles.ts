@@ -6,4 +6,11 @@ export const styles: Record<string, SxProps<Theme>> = {
         flexDirection: 'row',
         gap: 2,
     },
+    groupsContainer: {
+        paddingRight: 2,
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 2,
+        width: 'fit-content'
+    },
 };

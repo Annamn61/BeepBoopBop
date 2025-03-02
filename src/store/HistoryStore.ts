@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { useMeasureStore } from './MeasureStore';
 import { DateGroupedUpdates, GenericUpdateItem, Measure, MeasureDocument, MeasureHistoryItem } from '../types/MeasureTypes';
 import { getMeasureId } from '../utils/measure';
+import { importantDates } from '../data/ImportantLegistlativeDates';
+import { getYYYYMMDD } from '../utils/time';
 // useMeasureStore.getState().filteredMeasures;
 
 interface HistoryState {
@@ -13,7 +15,9 @@ interface HistoryState {
 //   getFilteredHistorySortedByDate: () => DateGroupedHistory;
 getUpdatesById: (id: string) => GenericUpdateItem[];
   getFilteredUpdatesSortedByDate: () => DateGroupedUpdates;
+  getFilteredUpdatesLength: () => number;
   getFilteredLatestUpdatesOnlyByDate: () => DateGroupedUpdates;
+  getFilteredLatestUpdatesLength: () => number;
 }
 
 export const useHistoryStore = create<HistoryState>((set, get) => ({
@@ -25,7 +29,9 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
     // getFilteredHistorySortedByDate: () => getHistorySortedIntoDates(get().getFilteredHistory()),
     getUpdatesById: (id) => [...convertHistoryToUpdates(get().getHistoryById(id)), ...convertDocumentsToUpdates(useMeasureStore.getState().getMeasureDocumentsById(id))],
     getFilteredUpdatesSortedByDate: () => getUpdatesSortedIntoDates(getAllUpdatesFiltered()),
-    getFilteredLatestUpdatesOnlyByDate: () => getUpdatesSortedIntoDates(getMeasuresLatestUpdateOnly(getAllUpdatesFiltered()))
+    getFilteredUpdatesLength: () => getAllUpdatesFiltered().length,
+    getFilteredLatestUpdatesOnlyByDate: () => getUpdatesSortedIntoDates(getMeasuresLatestUpdateOnly(getAllUpdatesFiltered())),
+    getFilteredLatestUpdatesLength: () => getMeasuresLatestUpdateOnly(getAllUpdatesFiltered()).length,
 }));
 
 export default useHistoryStore;
@@ -36,6 +42,9 @@ const convertHistoryToUpdates = (histories: MeasureHistoryItem[]) => {
 
         const MeasureName = useMeasureStore.getState().getMeasureNicknameById(getMeasureId(MeasurePrefix, MeasureNumber));
 
+        const text = history.ActionText.toLowerCase()
+        const isMeeting = text.includes('public hearing') || text.includes('work session');
+
         return {
            Text: ActionText,
            Date: ActionDate,
@@ -45,8 +54,7 @@ const convertHistoryToUpdates = (histories: MeasureHistoryItem[]) => {
            SessionKey,
            Link: null,
            Key: MeasureHistoryId.toString(),
-           Type: 'MeasureHistoryItem' as "MeasureHistoryItem",
-        //    CommitteeCode: 
+           Type: isMeeting ? 'CommitteeMeeting' as "CommitteeMeeting" : 'MeasureHistoryItem' as "MeasureHistoryItem",
         }
     })
 }
@@ -88,7 +96,7 @@ const sortDates = (history: MeasureHistoryItem[]) => {
 }
 
 const getAllUpdatesFiltered = (): GenericUpdateItem[] => {
-    return [...convertHistoryToUpdates(useHistoryStore.getState().getFilteredHistory()), ...convertDocumentsToUpdates(useMeasureStore.getState().getFilteredMeasureDocuments())]
+    return [...convertHistoryToUpdates(useHistoryStore.getState().getFilteredHistory()), ...convertDocumentsToUpdates(useMeasureStore.getState().getFilteredMeasureDocuments())];
 }
 
 const getMeasuresLatestUpdateOnly = (updates: GenericUpdateItem[]) => {
@@ -123,13 +131,27 @@ const sortUpdateDates = (history: GenericUpdateItem[]) => {
       }, {}); // Group by date
   };
 
-    // Usage: Reverse sorting within each day
-    const getUpdatesSortedIntoDates = (updates: GenericUpdateItem[]) => {
-        const groupedHistory = sortAndGroupUpdates(updates);
-      
-        Object.keys(groupedHistory).forEach((date) => {
-          groupedHistory[date].sort((a: GenericUpdateItem, b: GenericUpdateItem) => new Date(b.Date).getTime() - new Date(a.Date).getTime()); // Sort time descending
-        });
-      
-        return groupedHistory;
-      };
+const addUpcomingImportantDate = (futureHistory: DateGroupedUpdates) => {
+    const nextImportantDate = Object.keys(importantDates).find(date => {
+        const today = getYYYYMMDD(new Date());
+        return date >= today;
+    })
+
+    if(!nextImportantDate) return;
+    if(futureHistory[nextImportantDate]) return;
+    futureHistory[nextImportantDate] = [];
+};
+
+// Usage: Reverse sorting within each day
+const getUpdatesSortedIntoDates = (updates: GenericUpdateItem[]) => {
+    const groupedHistory = sortAndGroupUpdates(updates);
+
+    addUpcomingImportantDate(groupedHistory);
+
+    Object.keys(groupedHistory).forEach((date) => {
+        groupedHistory[date].sort((a: GenericUpdateItem, b: GenericUpdateItem) => new Date(b.Date).getTime() - new Date(a.Date).getTime()); // Sort time descending
+    });
+    
+    return groupedHistory;
+};
+

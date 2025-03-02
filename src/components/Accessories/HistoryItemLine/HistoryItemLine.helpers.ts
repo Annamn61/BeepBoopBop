@@ -1,7 +1,7 @@
 import { GenericUpdateItem } from "../../../types/MeasureTypes";
 
 export const shouldGetTestimonyLink = (update: GenericUpdateItem) => {
-    if(!update || !(update.Type === 'MeasureHistoryItem')) {
+    if(!update || !(update.Type === 'CommitteeMeeting')) {
         return null
     }
     const isPublicHearing = update.Text.toLowerCase().includes('public hearing');
