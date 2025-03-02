@@ -117,6 +117,8 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
             <Box sx={styles.historyItemsContainer}>
               {getUpdatesById(measureId).map((updateItem) => (
                 <HistoryItemLine
+                  selected={false}
+                  toggleSelected={() => console.log('TODO: IMPLEMENT')}
                   key={updateItem.Key}
                   updateItem={updateItem}
                   variant="light"
