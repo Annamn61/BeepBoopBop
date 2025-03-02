@@ -6,8 +6,6 @@ import './App.css';
 import { BillLocationBoard } from './components/BillLocationBoard/BillLocationBoard';
 import { SnackbarProvider } from './components/Accessories/Snackbar/Snackbar';
 import { Sidebar } from './components/Sidebar/Sidebar';
-import { SimpleAuth } from './components/SimpleAuth/SimpleAuth';
-import { useSimpleAuth } from './components/SimpleAuth/SimpleAuth.helpers';
 import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
 import { useFetchMeasureInfoFromApi } from './utils/ODataRquests';
 import { MeasureHistory } from './components/MeasureHistory/MeasureHistory';
