@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './App.css';
@@ -9,7 +9,10 @@ import { Sidebar } from './components/Sidebar/Sidebar';
 import { SimpleAuth } from './components/SimpleAuth/SimpleAuth';
 import { useSimpleAuth } from './components/SimpleAuth/SimpleAuth.helpers';
 import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
-import { useFetchMeasureInfoFromApi } from './utils/ODataRquests';
+import {
+  fetchTestimony,
+  useFetchMeasureInfoFromApi,
+} from './utils/ODataRquests';
 import { MeasureHistory } from './components/MeasureHistory/MeasureHistory';
 import TitleLogo from './components/Accessories/TitleLogo/TitleLogo';
 import Box from '@mui/material/Box';
@@ -27,6 +30,10 @@ function App() {
 
   const { getCalendarEvents } = useCommitteeAgendaStore();
   useFetchMeasureInfoFromApi();
+
+  useEffect(() => {
+    fetchTestimony();
+  }, []);
 
   // Modal States
   const [open, setOpen] = useState(false);

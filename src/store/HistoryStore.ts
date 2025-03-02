@@ -13,6 +13,7 @@ interface HistoryState {
 //   getFilteredHistorySortedByDate: () => DateGroupedHistory;
 getUpdatesById: (id: string) => GenericUpdateItem[];
   getFilteredUpdatesSortedByDate: () => DateGroupedUpdates;
+  getFilteredLatestUpdatesOnlyByDate: () => DateGroupedUpdates;
 }
 
 export const useHistoryStore = create<HistoryState>((set, get) => ({
@@ -23,7 +24,8 @@ export const useHistoryStore = create<HistoryState>((set, get) => ({
     getFilteredHistory: () => filterHistoryToFilteredMeasures(get().unfilteredHistory, useMeasureStore.getState().getFilteredMeasureIds()),
     // getFilteredHistorySortedByDate: () => getHistorySortedIntoDates(get().getFilteredHistory()),
     getUpdatesById: (id) => [...convertHistoryToUpdates(get().getHistoryById(id)), ...convertDocumentsToUpdates(useMeasureStore.getState().getMeasureDocumentsById(id))],
-    getFilteredUpdatesSortedByDate: () => getUpdatesSortedIntoDates([...convertHistoryToUpdates(get().getFilteredHistory()), ...convertDocumentsToUpdates(useMeasureStore.getState().getFilteredMeasureDocuments())])
+    getFilteredUpdatesSortedByDate: () => getUpdatesSortedIntoDates(getAllUpdatesFiltered()),
+    getFilteredLatestUpdatesOnlyByDate: () => getUpdatesSortedIntoDates(getMeasuresLatestUpdateOnly(getAllUpdatesFiltered()))
 }));
 
 export default useHistoryStore;
@@ -32,7 +34,7 @@ const convertHistoryToUpdates = (histories: MeasureHistoryItem[]) => {
     return histories.map((history) => {
         const {ActionDate, ActionText, MeasurePrefix, MeasureNumber, SessionKey, MeasureHistoryId} = history;
 
-        const MeasureName =useMeasureStore.getState().getMeasureNicknameById(getMeasureId(MeasurePrefix, MeasureNumber));
+        const MeasureName = useMeasureStore.getState().getMeasureNicknameById(getMeasureId(MeasurePrefix, MeasureNumber));
 
         return {
            Text: ActionText,
@@ -43,7 +45,8 @@ const convertHistoryToUpdates = (histories: MeasureHistoryItem[]) => {
            SessionKey,
            Link: null,
            Key: MeasureHistoryId.toString(),
-           Type: 'MeasureHistoryItem'
+           Type: 'MeasureHistoryItem' as "MeasureHistoryItem",
+        //    CommitteeCode: 
         }
     })
 }
@@ -64,7 +67,7 @@ const convertDocumentsToUpdates = (documents: MeasureDocument[] | undefined) => 
            SessionKey,
            Link: DocumentUrl,
            Key: DocumentUrl,
-           Type: 'MeasureDocument'
+           Type: 'MeasureDocument' as "MeasureDocument",
         }
     })
     
@@ -84,30 +87,22 @@ const sortDates = (history: MeasureHistoryItem[]) => {
     return history.sort((a, b) => new Date(b.ActionDate).getTime() - new Date(a.ActionDate).getTime())
 }
 
-// const sortAndGroupHistory = (history: MeasureHistoryItem[]) => {
-//     return sortDates(history) 
-//       .reduce((acc: DateGroupedHistory, entry) => {
-//         const dateKey = new Date(entry.ActionDate).toISOString().split("T")[0]; // Extract YYYY-MM-DD
-  
-//         if (!acc[dateKey]) {
-//           acc[dateKey] = [];
-//         }
-  
-//         acc[dateKey].push(entry);
-//         return acc;
-//       }, {}); // Group by date
-//   };
-  
-//   // Usage: Reverse sorting within each day
-//   const getHistorySortedIntoDates = (history: MeasureHistoryItem[]) => {
-//     const groupedHistory = sortAndGroupHistory(history);
-  
-//     Object.keys(groupedHistory).forEach((date) => {
-//       groupedHistory[date].sort((a: MeasureHistoryItem, b: MeasureHistoryItem) => new Date(b.ActionDate).getTime() - new Date(a.ActionDate).getTime()); // Sort time descending
-//     });
-  
-//     return groupedHistory;
-//   };
+const getAllUpdatesFiltered = (): GenericUpdateItem[] => {
+    return [...convertHistoryToUpdates(useHistoryStore.getState().getFilteredHistory()), ...convertDocumentsToUpdates(useMeasureStore.getState().getFilteredMeasureDocuments())]
+}
+
+const getMeasuresLatestUpdateOnly = (updates: GenericUpdateItem[]) => {
+    const latesDocuments: {[id: string] : GenericUpdateItem} = {};
+    updates.forEach((update) => {
+        const measureId = getMeasureId(update.MeasurePrefix, update.MeasureNumber);
+        const currentLatest = latesDocuments[measureId];
+        if(!currentLatest || new Date(currentLatest.Date) < new Date(update.Date)) {
+            latesDocuments[measureId] = update;
+        }
+    }) 
+
+    return Object.keys(latesDocuments).map((ldKey) => latesDocuments[ldKey])
+}
 
   // Sort by full datetime (ascending)
 const sortUpdateDates = (history: GenericUpdateItem[]) => {

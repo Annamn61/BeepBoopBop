@@ -14,3 +14,8 @@ export interface AgendaItem {
   PrintOrder: string;
   SessionKey: string;
 };
+
+export interface TestimonyLinks {
+    written: string,
+    inPerson: string,
+}

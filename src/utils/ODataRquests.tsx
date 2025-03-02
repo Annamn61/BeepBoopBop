@@ -92,3 +92,18 @@ export const useFetchMeasureInfoFromApi = async () => {
     // TODO: also ensure that all the localstorage objects are in sync with what user tracked measures there are
   }, [userTrackedMeasures]);
 };
+
+// https://olis.oregonlegislature.gov/liz/2025R1/Testimony/SEE/SB/88/0000-00-00-00-00?area=Measures
+
+export const fetchTestimony = async () => {
+  try {
+    const response = await axios.get(
+      `https://olis.oregonlegislature.gov/liz/2025R1/Testimony/SEE/SB/88/0000-00-00-00-00?area=Measures`
+    );
+    console.log('response', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching testimony', error);
+    throw error;
+  }
+};

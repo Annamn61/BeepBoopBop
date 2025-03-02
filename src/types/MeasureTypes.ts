@@ -97,7 +97,8 @@ export interface GenericUpdateItem {
     SessionKey: string;
     Link: string | null;
     Key: string;
-    Type: string;
+    Type: 'MeasureHistoryItem' | 'MeasureDocument';
+    CommitteeCode?: string,
 }
 
 export interface DateGroupedHistory {

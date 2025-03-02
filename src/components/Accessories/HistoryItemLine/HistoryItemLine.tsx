@@ -10,6 +10,9 @@ import { GenericUpdateItem } from '../../../types/MeasureTypes';
 import { styles } from './HistoryItemLine.styles';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import { IconButton } from '@mui/material';
+import useCommitteeAgendaStore from '../../../store/CommitteeAgendaStore';
+import { shouldGetTestimonyLink } from './HistoryItemLine.helpers';
+import TestimonyButtons from './TestimonyButtons/TestimonyButtons';
 
 interface HistoryItemProps {
   updateItem: GenericUpdateItem;
@@ -17,7 +20,15 @@ interface HistoryItemProps {
 }
 
 export const HistoryItemLine = ({ updateItem, variant }: HistoryItemProps) => {
+  const { getTestimonyLinkByIdAndDate } = useCommitteeAgendaStore();
+
   const isDocument = updateItem?.Type === 'MeasureDocument';
+  const id = getMeasureId(updateItem.MeasurePrefix, updateItem.MeasureNumber);
+  const displayedTestimony = shouldGetTestimonyLink(updateItem)
+    ? getTestimonyLinkByIdAndDate(id, new Date(updateItem.Date))
+    : null;
+
+  console.log('displayedTestimony', displayedTestimony);
 
   if (!updateItem) {
     return null;
@@ -45,6 +56,9 @@ export const HistoryItemLine = ({ updateItem, variant }: HistoryItemProps) => {
           <Box sx={styles.documentLine}>
             <Typography variant="body1">{updateItem.Text}</Typography>{' '}
             {documentLink}
+            {displayedTestimony && (
+              <TestimonyButtons testimonyLinks={displayedTestimony} />
+            )}
           </Box>
         </Box>
       </Box>

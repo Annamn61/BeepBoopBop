@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { AgendaItem } from '../types/CommitteeAgendaTypes';
+import { AgendaItem, TestimonyLinks } from '../types/CommitteeAgendaTypes';
 import { userTrackedMeasures } from '../data/userMeasureData';
 import { getMeasureId } from '../utils/measure';
 import { Measure } from '../types/MeasureTypes';
@@ -10,6 +10,7 @@ interface CommitteeAgendaState {
   getCommitteeAgendaItems: () => AgendaItem[];
   getCalendarEvents: () => { title: string; start: Date; end: Date; id: string; comments: string; color: string }[];
   getUpcomingAgendaItemsById: (id: Measure['id'] | undefined) => AgendaItem[];
+  getTestimonyLinkByIdAndDate: (id: Measure['id'], date: Date) => TestimonyLinks | null;
 };
 
 export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) => ({
@@ -32,7 +33,32 @@ export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) =
           color: trackedMeasure ? trackedMeasure.color : "#000000" // Use tracked color or default
         };
       }),
-      getUpcomingAgendaItemsById: (id) => get().unfilteredCommitteeAgenda.filter(item => getMeasureId(item.MeasurePrefix, item.MeasureNumber) === id).filter(item => new Date(item.MeetingDate) > new Date())
+      getUpcomingAgendaItemsById: (id) => get().unfilteredCommitteeAgenda.filter(item => getMeasureId(item.MeasurePrefix, item.MeasureNumber) === id).filter(item => new Date(item.MeetingDate) > new Date()),
+    getTestimonyLinkByIdAndDate: (id, date) => getTestimonyLinksFromAgendaItem(findPublicHearingItem(get().unfilteredCommitteeAgenda, id, date))
 }));
+
+const findPublicHearingItem = (items: AgendaItem[], id: Measure['id'], date: Date) => {
+    const item = items.find((item) => {
+        const sameMeasure = getMeasureId(item.MeasurePrefix, item.MeasureNumber) === id;
+        const meetingDate = new Date(item.MeetingDate);
+        const millisecondsIn5Minutes = 5 * 60 * 1000;
+        const within5Minutes = Math.abs(meetingDate.getTime() - date.getTime()) < millisecondsIn5Minutes;
+
+        return sameMeasure && within5Minutes;
+    });
+    return item;
+}
+
+
+const getTestimonyLinksFromAgendaItem = (item: AgendaItem | undefined) => {
+    if(!item) {
+        return null;
+    }
+
+    return {
+        written: `https://olis.oregonlegislature.gov/liz/${item.SessionKey}/Testimony/${item.CommitteCode}/${item.MeasurePrefix}/${item.MeasureNumber}/0000-00-00-00-00?area=Measures`,
+        inPerson: ``
+    }
+}
 
 export default useCommitteeAgendaStore;

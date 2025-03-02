@@ -13,9 +13,12 @@ import {
 } from './MeasureHistory.helpers';
 
 export const MeasureHistory = () => {
-  const { getFilteredUpdatesSortedByDate } = useHistoryStore();
+  const { getFilteredUpdatesSortedByDate, getFilteredLatestUpdatesOnlyByDate } =
+    useHistoryStore();
 
   const history = getFilteredUpdatesSortedByDate();
+  const latestHistoryOnly = getFilteredLatestUpdatesOnlyByDate();
+
   const futureHistory = useMemo(
     () => getFutureHistoryFromHistory(history),
     [history]
