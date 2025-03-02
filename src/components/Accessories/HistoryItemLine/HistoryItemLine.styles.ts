@@ -23,7 +23,6 @@ export const styles: Record<string, SxProps<Theme>> = {
     content: {
         display: 'flex',
         flexDirection: 'column',
-        gap: 0.5,
     },
     topLine: {
         display: 'flex',
@@ -33,6 +32,7 @@ export const styles: Record<string, SxProps<Theme>> = {
     },
     documentLine: {
         display: 'flex',
+        minHeight: '34px',
         flexDirection: {
             xs: 'column',
             sm: 'row',

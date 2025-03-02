@@ -16,7 +16,7 @@ const Deadline = ({ dateKey }: Props) => {
   const deadlineText = importantDates[dateKey];
   return (
     <Box sx={styles.container}>
-      <Typography>Upcoming Legislative Deadline: {deadlineText}</Typography>
+      <Typography>Next Legislative Deadline: {deadlineText}</Typography>
       <IconButton href={importantDateCalendarUrl} target="_blank">
         <LaunchRoundedIcon sx={styles.launchIcon} fontSize="small" />
       </IconButton>

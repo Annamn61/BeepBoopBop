@@ -39,14 +39,14 @@ export const styles: Record<string, SxProps<Theme>> = {
     dateSection: {
         display: 'flex',
         flexDirection: 'column',
-        gap: 3,
+        gap: 2,
     }, 
     items: {
         display: 'flex',
         flexDirection: 'column',
         gap: {
             xs: 3,
-            sm: 2,
+            sm: 1,
         },
     }, 
     dateSectionContainer: {
@@ -56,7 +56,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         },
         display: 'flex',
         flexDirection: 'column',
-        gap: 3,
+        gap: 2,
         borderRadius: '8px',
     },
     future: {

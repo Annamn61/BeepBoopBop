@@ -28,7 +28,7 @@ const MeetingButton = ({
 
   return (
     <Tooltip title="View Meeting in OLIS">
-      <IconButton href={url} target="_blank">
+      <IconButton href={url} target="_blank" size="small">
         <EventNoteRoundedIcon />
       </IconButton>
     </Tooltip>
