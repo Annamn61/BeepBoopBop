@@ -18,11 +18,18 @@ import MeetingButton from './MeetingButton/MeetingButton';
 import { useMediaQuery, useTheme } from '@mui/material';
 
 interface HistoryItemProps {
+  selected: boolean;
+  toggleSelected: () => void;
   updateItem: GenericUpdateItem;
   variant: 'full' | 'light';
 }
 
-export const HistoryItemLine = ({ updateItem, variant }: HistoryItemProps) => {
+export const HistoryItemLine = ({
+  updateItem,
+  variant,
+  selected,
+  toggleSelected,
+}: HistoryItemProps) => {
   const { getTestimonyLinkByIdAndDate, getCommitteeMeetingByIdAndDate } =
     useCommitteeAgendaStore();
   const theme = useTheme();
@@ -30,7 +37,6 @@ export const HistoryItemLine = ({ updateItem, variant }: HistoryItemProps) => {
   const isDocument = updateItem?.Type === 'MeasureDocument';
   const isMeeting = updateItem?.Type === 'CommitteeMeeting';
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  console.log('is mobile', isMobile);
   const id = getMeasureId(updateItem.MeasurePrefix, updateItem.MeasureNumber);
   const displayedTestimony = shouldGetTestimonyLink(updateItem)
     ? getTestimonyLinkByIdAndDate(id, new Date(updateItem.Date))
@@ -50,26 +56,46 @@ export const HistoryItemLine = ({ updateItem, variant }: HistoryItemProps) => {
       </IconButton>
     ) : null;
 
+  const canClick =
+    isMobile && (documentLink || committeeMeeting || displayedTestimony);
+
   return (
-    <Box sx={styles.container}>
-      <Box sx={styles.metaData}>
-        <Typography variant="subtitle2" sx={styles.time}>
-          {variant === 'full'
-            ? getMMHHFromDate(new Date(updateItem.Date))
-            : getShortFormatDateWithTime(new Date(updateItem.Date))}
-        </Typography>
-        {variant === 'full' && (
-          <MeasurePill
-            id={getMeasureId(
-              updateItem.MeasurePrefix,
-              updateItem.MeasureNumber
-            )}
-            withModal={true}
-          />
-        )}
-      </Box>
-      <Box sx={styles.content}>
+    <Box
+      sx={{ ...styles.container, ...(canClick ? { cursor: 'pointer' } : {}) }}
+      onClick={canClick ? toggleSelected : undefined}
+    >
+      <Typography variant="subtitle2" sx={styles.time}>
+        {variant === 'full'
+          ? getMMHHFromDate(new Date(updateItem.Date))
+          : getShortFormatDateWithTime(new Date(updateItem.Date))}
+      </Typography>
+      <Box sx={styles.contentContainer}>
         <Box sx={styles.topLine}>
+          {variant === 'full' && (
+            <MeasurePill
+              id={getMeasureId(
+                updateItem.MeasurePrefix,
+                updateItem.MeasureNumber
+              )}
+              withModal={true}
+            />
+          )}
+          {canClick && (
+            <IconButton
+              sx={styles.dropdownIcon}
+              size="small"
+              onClick={toggleSelected}
+            >
+              <KeyboardArrowDownRoundedIcon
+                sx={{
+                  transform: selected ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.3s',
+                }}
+              />
+            </IconButton>
+          )}
+        </Box>
+        <Box sx={styles.content}>
           {variant === 'full' && (
             <Box sx={styles.caption}>
               <Typography variant="caption">
@@ -77,28 +103,28 @@ export const HistoryItemLine = ({ updateItem, variant }: HistoryItemProps) => {
               </Typography>
             </Box>
           )}
-          {isMobile && (
-            <IconButton sx={styles.dropdownIcon} size="small">
-              <KeyboardArrowDownRoundedIcon />
-            </IconButton>
-          )}
-        </Box>
-        <Box sx={styles.documentLine}>
-          <Typography variant="body1">{updateItem.Text}</Typography>
-          <Box sx={styles.buttonContainer}>
-            {documentLink}
-            {committeeMeeting && (
-              <MeetingButton
-                committeeMeeting={committeeMeeting}
-                MeasureNumber={updateItem.MeasureNumber}
-                MeasurePrefix={
-                  updateItem.MeasurePrefix as Measure['MeasurePrefix']
-                }
-              />
-            )}
-            {displayedTestimony && (
-              <TestimonyButtons testimonyLinks={displayedTestimony} />
-            )}
+          <Box sx={styles.documentLine}>
+            <Typography variant="body1">{updateItem.Text}</Typography>
+            <Box
+              sx={{
+                ...styles.buttonContainer,
+                ...(selected ? { display: 'block' } : {}),
+              }}
+            >
+              {documentLink}
+              {committeeMeeting && (
+                <MeetingButton
+                  committeeMeeting={committeeMeeting}
+                  MeasureNumber={updateItem.MeasureNumber}
+                  MeasurePrefix={
+                    updateItem.MeasurePrefix as Measure['MeasurePrefix']
+                  }
+                />
+              )}
+              {displayedTestimony && (
+                <TestimonyButtons testimonyLinks={displayedTestimony} />
+              )}
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -6,47 +6,30 @@ export const styles: Record<string, SxProps<Theme>> = {
         flexDirection: 'row',
         gap: 2,
     },
-    metaData: {
-        display: 'flex',
-        flexDirection: {
-            xs: 'column-reverse',
-            md: 'row'
-        },
-        gap: {
-            xs: 0.5,
-            md: 2,
-        },
-        alignItems: {
-            xs: 'flex-end',
-            md: 'flex-start'
-        },
-        justifyContent: {
-            xs: 'flex-end'
-        }
-    },
     time: { minWidth: '65px', flexShrink: 0 },
     longTime: { width: '150px', flexShrink: 0},
+    contentContainer: {
+        display: 'flex',
+           flexDirection: {
+            xs: 'column',
+            sm: 'row',
+        },
+        width: '100%',
+       gap: {
+        xs: 0, 
+        sm: 2, 
+       }
+    },
     content: {
         display: 'flex',
         flexDirection: 'column',
-        width: '100%',
+        gap: 0.5,
     },
     topLine: {
         display: 'flex',
         flexDirection: 'row',
-        gap: 2,
-        alignItems: 'flex-start',
         justifyContent: 'space-between',
-        flexGrow: 1,
-    },
-    caption: {
-        minHeight: '34px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-    },
-    dropdownIcon: {
-        // height: '24px',
+        height: '34px',
     },
     documentLine: {
         display: 'flex',
@@ -61,7 +44,10 @@ export const styles: Record<string, SxProps<Theme>> = {
         gap: 1.5,
     },
     buttonContainer: {
-        display: 'flex',
         flexDirection: 'row',
+        display: {
+            xs: 'none',
+            sm: 'flex',
+        }
     }
 };

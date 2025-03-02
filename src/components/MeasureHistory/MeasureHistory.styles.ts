@@ -11,9 +11,26 @@ export const styles: Record<string, SxProps<Theme>> = {
     },
     header: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: {
+            xs: 'column',
+            sm: 'row',
+        },
         justifyContent: 'space-between',
         alignItems: 'flex-end',
+        gap: {
+            xs: 1,
+            sm: 'unset',
+        }
+    },
+    buttonGroup: {
+        width: {
+            xs: '100%',
+            sm: 'fit-content',
+        },
+        display: 'flex',
+    },
+    buttonInGroup: {
+        flexGrow: 1,
     },
     container: {
         display: 'flex',
@@ -27,7 +44,10 @@ export const styles: Record<string, SxProps<Theme>> = {
     items: {
         display: 'flex',
         flexDirection: 'column',
-        gap: 2,
+        gap: {
+            xs: 3,
+            sm: 2,
+        },
     }, 
     dateSectionContainer: {
         padding: {

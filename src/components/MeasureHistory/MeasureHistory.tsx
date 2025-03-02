@@ -18,6 +18,7 @@ import Deadline from './Deadline/Deadline';
 
 export const MeasureHistory = () => {
   const {
+    unfilteredHistory,
     getFilteredUpdatesSortedByDate,
     getFilteredLatestUpdatesOnlyByDate,
     getFilteredUpdatesLength,
@@ -25,16 +26,20 @@ export const MeasureHistory = () => {
   } = useHistoryStore();
 
   const [filterToggle, setFilterToggle] = useState('all');
+  const [selectedItem, setSelectedItem] = useState<string | undefined>(
+    undefined
+  );
+
   const history = useMemo(() => {
     return filterToggle === 'all'
       ? getFilteredUpdatesSortedByDate()
       : getFilteredLatestUpdatesOnlyByDate();
-  }, [filterToggle]);
+  }, [filterToggle, unfilteredHistory]);
   const length = useMemo(() => {
     return filterToggle === 'all'
       ? getFilteredUpdatesLength()
       : getFilteredLatestUpdatesLength();
-  }, [filterToggle]);
+  }, [filterToggle, unfilteredHistory]);
 
   const futureHistory = useMemo(
     () => getFutureHistoryFromHistory(history),
@@ -59,26 +64,22 @@ export const MeasureHistory = () => {
     );
   }
 
-  console.log(
-    'FUTURE',
-    futureHistory,
-    Object.entries(futureHistory),
-    '-',
-    Object.entries(futureHistory).reverse(),
-    Object.keys(futureHistory)
-  );
-
   return (
     <Box sx={styles.pageContainer}>
       <Box sx={styles.header}>
         <ToggleButtonGroup
+          sx={styles.buttonGroup}
           value={filterToggle}
           exclusive
           onChange={(_e, mode) => setFilterToggle(mode)}
           aria-label="update mode"
         >
-          <ToggleButton value="all">All Updates</ToggleButton>
-          <ToggleButton value="last">Last Update Only</ToggleButton>
+          <ToggleButton sx={styles.buttonInGroup} value="all">
+            All Updates
+          </ToggleButton>
+          <ToggleButton sx={styles.buttonInGroup} value="last">
+            Last Update Only
+          </ToggleButton>
         </ToggleButtonGroup>
         <Typography>{length} items</Typography>
       </Box>
@@ -95,6 +96,12 @@ export const MeasureHistory = () => {
 
                 {futureHistory[key].map((update: GenericUpdateItem) => (
                   <HistoryItemLine
+                    selected={selectedItem === update.Key}
+                    toggleSelected={() =>
+                      setSelectedItem(
+                        selectedItem === update.Key ? undefined : update.Key
+                      )
+                    }
                     key={update.Key}
                     updateItem={update}
                     variant="full"
@@ -112,6 +119,12 @@ export const MeasureHistory = () => {
               <Box sx={styles.items}>
                 {updates.map((update: GenericUpdateItem) => (
                   <HistoryItemLine
+                    selected={selectedItem === update.Key}
+                    toggleSelected={() =>
+                      setSelectedItem(
+                        selectedItem === update.Key ? undefined : update.Key
+                      )
+                    }
                     key={update.Key}
                     updateItem={update}
                     variant="full"
