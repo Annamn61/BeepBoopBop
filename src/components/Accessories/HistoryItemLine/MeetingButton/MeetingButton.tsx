@@ -3,7 +3,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { CommitteeMeeting } from '../../../../types/CommitteeMeetingsTypes';
 import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';
 import { Measure } from '../../../../types/MeasureTypes';
-import { getTwoDigits } from '../../../../utils/time';
+import { getYYYYMMDDHHString } from '../../../../utils/time';
 
 interface Props {
   committeeMeeting: CommitteeMeeting;
@@ -18,11 +18,7 @@ const MeetingButton = ({
 }: Props) => {
   const { SessionKey, CommitteeCode, MeetingDate } = committeeMeeting;
 
-  const date = new Date(MeetingDate);
-
-  const dateString = `${date.getFullYear()}-${getTwoDigits(
-    date.getMonth() + 1
-  )}-${getTwoDigits(date.getDate())}-${getTwoDigits(date.getHours())}-00`;
+  const dateString = getYYYYMMDDHHString(new Date(MeetingDate));
 
   const url = `https://olis.oregonlegislature.gov/liz/${SessionKey}/Committees/${CommitteeCode}/${dateString}/${MeasurePrefix}${MeasureNumber}/PUB/Details`;
 

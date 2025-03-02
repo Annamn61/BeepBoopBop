@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { useState } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar, WorkWeek, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './App.css';
 import { BillLocationBoard } from './components/BillLocationBoard/BillLocationBoard';
@@ -14,8 +14,8 @@ import Box from '@mui/material/Box';
 import PageTabs from './components/PageTabs/PageTabs';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import theme from './utils/theme';
-import EventDetailModal from './components/Calendar/EventDetailModal';
 import { styles } from './App.styles';
+import CommiteeMeetingModal from './components/Accessories/CommiteeMeetingModal/CommiteeMeetingModal';
 
 const localizer = momentLocalizer(moment);
 
@@ -27,13 +27,10 @@ function App() {
   useFetchMeasureInfoFromApi();
 
   const [open, setOpen] = useState(false);
-  const [currentMeasureId, setCurrentMeasureId] = useState<string | undefined>(
-    undefined
-  );
-  const [currentEvent, setCurrentEvent] = useState(undefined);
+
+  const [meetingId, setMeetingId] = useState<string | undefined>(undefined);
   const handleOpen = (event: any) => {
-    setCurrentEvent(event);
-    setCurrentMeasureId(event.id);
+    setMeetingId(event.id);
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
@@ -71,16 +68,21 @@ function App() {
                 events={getCalendarEvents()}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: 500, width: 800 }}
+                style={{ height: 700, width: '1400px' }}
                 onSelectEvent={(event) => {
                   handleOpen(event);
                 }}
+                defaultView="week"
+                step={15}
+                timeslots={4}
+                min={moment('7 am', 'h a').toDate()}
+                max={moment('6 pm', 'h a').toDate()}
                 eventPropGetter={(event) => {
                   const backgroundColor = event.color || 'green'; // Default color
                   return {
                     style: {
                       backgroundColor,
-                      color: 'white',
+                      color: 'black',
                       borderRadius: '4px',
                       padding: '5px',
                     },
@@ -94,12 +96,13 @@ function App() {
             <BillLocationBoard sidebarIsOpen={sidebarIsOpen} />
           )}
         </Box>
-        <EventDetailModal
-          open={open}
-          handleClose={handleClose}
-          measureId={currentMeasureId}
-          event={currentEvent}
-        />
+        {meetingId && (
+          <CommiteeMeetingModal
+            open={open}
+            onClose={handleClose}
+            committeeMeetingId={meetingId}
+          />
+        )}
       </div>
     </ThemeProvider>
   );

@@ -60,6 +60,15 @@ export const getMMHHFromDate = (date: Date) => {
     return `${diffDays} days ago`;
   };
 
+  // 2025-
+  export const getYYYYMMDDHHString = (date: Date) => {
+    const dateString = `${date.getFullYear()}-${getTwoDigits(
+        date.getMonth() + 1
+      )}-${getTwoDigits(date.getDate())}-${getTwoDigits(date.getHours())}-00`;
+
+    return dateString;
+  }
+
   export const getTwoDigits = (number: number) => {
     return number.toString().padStart(2, '0');
   };

@@ -4,15 +4,15 @@ import { styles } from './MeasureModal.styles';
 import Typography from '@mui/material/Typography';
 import MeasurePill from '../MeasurePill/MeasurePill';
 import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
 import useMeasureStore from '../../../store/MeasureStore';
 import Link from '@mui/material/Link';
-import LaunchRoundedIcon from '@mui/icons-material/LaunchRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import useHistoryStore from '../../../store/HistoryStore';
 import HistoryItemLine from '../HistoryItemLine/HistoryItemLine';
 import useCommitteeAgendaStore from '../../../store/CommitteeAgendaStore';
 import { getShortFormatDateWithTime } from '../../../utils/time';
+import ViewInOlisButton from '../ViewInOlisButton/ViewInOlisButton';
+import LaunchRoundedIcon from '@mui/icons-material/LaunchRounded';
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -44,14 +44,7 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
     <Dialog maxWidth="lg" open={!!anchorEl} onClose={onClose}>
       <Box sx={styles.modalContainer}>
         <Box sx={styles.header}>
-          <Button
-            variant="outlined"
-            href={getMeasureUrlById(measureId)}
-            target="_blank"
-          >
-            View in OLIS
-            <LaunchRoundedIcon sx={styles.launchIcon} fontSize="small" />
-          </Button>
+          <ViewInOlisButton url={getMeasureUrlById(measureId)} />
           <IconButton onClick={onClose}>
             <CloseRoundedIcon />
           </IconButton>

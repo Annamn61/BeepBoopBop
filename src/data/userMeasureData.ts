@@ -14,7 +14,7 @@ export const userTrackedMeasures: UserTrackedMeasure[] = [
     { id: "HB 2961", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.PURPLE, sessionKey: '2025R1', nickname: 'EV hookups in new multi-family construction' }, //MOF
     { id: "HB 2978", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.PEACH, sessionKey: '2023R1', nickname: '' },
     { id: "HB 3062", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.GOLD, sessionKey: '2025R1', nickname: '' }, //BR
-    { id: "HB 3081", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.PEACH, sessionKey: '2025R1', nickname: '' }, //BR
+    { id: "HB 3081", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.PEACH, sessionKey: '2025R1', nickname: 'One-stop Shop for Energy Rebates 2.0' }, //BR
     { id: "HB 3103", position: 'Oppose', isDisplayed: true, color: MEASURE_COLORS.SALMON, sessionKey: '2025R1', nickname: '"Sustainable" Harvest Levels' }, //350
     { id: "HB 3119", position: 'Oppose', isDisplayed: true, color: MEASURE_COLORS.RED, sessionKey: '2025R1', nickname: 'Delay of the Advanced Clean Trucks (ACT)' }, //MOF
     { id: "HB 3170", position: 'Support', isDisplayed: true, color: MEASURE_COLORS.GOLD, sessionKey: '2025R1', nickname: '' }, //BR

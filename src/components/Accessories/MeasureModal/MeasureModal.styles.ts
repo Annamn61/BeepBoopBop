@@ -54,9 +54,6 @@ export const styles: Record<string, SxProps<Theme>> = {
             color: 'black',
         }
     },
-    launchIcon: {
-        color: '#A7A7A7',
-    },
     measureDocumentSection: {
         display: 'flex',
         flexDirection: 'column',

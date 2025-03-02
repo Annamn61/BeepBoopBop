@@ -22,3 +22,10 @@ export interface TestimonyLinks {
     written: string,
     inPerson: string,
 }
+
+export interface CommitteeMeetingWithUserAgendaItems {
+    [meetingId: string]: {
+        CommitteeMeeting: CommitteeMeeting
+        AgendaItems: AgendaItem[]
+    }
+}
