@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { Measure, MeasureDocument, MeasureObject, MeasureSponsors, UserTrackedMeasure } from '../types/MeasureTypes';
 import { userTrackedMeasures } from '../data/userMeasureData';
-import { getKanbanLocationFromBilLocation } from '../components/BillLocationBoard/Locations/Locations.helpers';
+import { getKanbanLocationFromBilLocation } from '../components/Pages/BillLocationBoard/Locations/Locations.helpers';
 import { getUniqueMeasureIdentifier } from '../data/cache/cache';
 
 interface MeasureState {

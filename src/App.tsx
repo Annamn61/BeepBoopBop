@@ -9,13 +9,18 @@ import { styles } from './App.styles';
 import CommiteeMeetingModal from './components/Accessories/CommiteeMeetingModal/CommiteeMeetingModal';
 import { SnackbarProvider } from './components/Accessories/Snackbar/Snackbar';
 import TitleLogo from './components/Accessories/TitleLogo/TitleLogo';
-import { BillLocationBoard } from './components/BillLocationBoard/BillLocationBoard';
-import { MeasureHistory } from './components/MeasureHistory/MeasureHistory';
-import PageTabs from './components/PageTabs/PageTabs';
-import { Sidebar } from './components/Sidebar/Sidebar';
+import { BillLocationBoard } from './components/Pages/BillLocationBoard/BillLocationBoard';
+import { MeasureHistory } from './components/Pages/MeasureHistory/MeasureHistory';
+import PageTabs from './components/Things/PageTabs/PageTabs';
+import { Sidebar } from './components/Things/Sidebar/Sidebar';
 import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
 import { useFetchMeasureInfoFromApi } from './utils/ODataRquests';
 import theme from './utils/theme';
+import { Typography } from '@mui/material';
+import { auth } from './utils/firebaseAuth';
+import { User } from 'firebase/auth';
+import { Login } from './components/Accessories/Login';
+import Header from './components/Things/Header/Header';
 
 const localizer = momentLocalizer(moment);
 
@@ -34,6 +39,8 @@ function App() {
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
+
+  //   console.log('currentUser', currentUser);
 
   return (
     <ThemeProvider theme={theme}>
@@ -55,7 +62,7 @@ function App() {
               },
             }}
           >
-            <TitleLogo />
+            <Header />
             <PageTabs
               selectedPage={selectedPage}
               setSelectedPage={setSelectedPage}
@@ -63,32 +70,38 @@ function App() {
 
             {selectedPage === 'updates' && <MeasureHistory />}
             {selectedPage === 'calendar' && (
-              <Calendar
-                localizer={localizer}
-                events={getCalendarEvents()}
-                startAccessor="start"
-                endAccessor="end"
-                style={{ height: 700, width: '1400px' }}
-                onSelectEvent={(event) => {
-                  handleOpen(event);
-                }}
-                defaultView="week"
-                step={15}
-                timeslots={4}
-                min={moment('7 am', 'h a').toDate()}
-                max={moment('6 pm', 'h a').toDate()}
-                eventPropGetter={(event) => {
-                  const backgroundColor = event.color || 'green'; // Default color
-                  return {
-                    style: {
-                      backgroundColor,
-                      color: 'black',
-                      borderRadius: '4px',
-                      padding: '5px',
-                    },
-                  };
-                }}
-              />
+              <>
+                <Typography>
+                  The calendar currently shows the committe meetings with a
+                  public hearing or work session about bills you're tracking
+                </Typography>
+                <Calendar
+                  localizer={localizer}
+                  events={getCalendarEvents()}
+                  startAccessor="start"
+                  endAccessor="end"
+                  style={{ height: 600, width: '1100px' }}
+                  onSelectEvent={(event) => {
+                    handleOpen(event);
+                  }}
+                  defaultView="week"
+                  step={15}
+                  timeslots={4}
+                  min={moment('7 am', 'h a').toDate()}
+                  max={moment('6 pm', 'h a').toDate()}
+                  eventPropGetter={(event) => {
+                    const backgroundColor = event.color || 'green'; // Default color
+                    return {
+                      style: {
+                        backgroundColor,
+                        color: 'black',
+                        borderRadius: '4px',
+                        padding: '5px',
+                      },
+                    };
+                  }}
+                />
+              </>
             )}
           </Box>
 
