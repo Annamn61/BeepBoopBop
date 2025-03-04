@@ -8,18 +8,17 @@ import './App.css';
 import { styles } from './App.styles';
 import CommiteeMeetingModal from './components/Accessories/CommiteeMeetingModal/CommiteeMeetingModal';
 import { SnackbarProvider } from './components/Accessories/Snackbar/Snackbar';
-import TitleLogo from './components/Accessories/TitleLogo/TitleLogo';
 import { BillLocationBoard } from './components/Pages/BillLocationBoard/BillLocationBoard';
 import { MeasureHistory } from './components/Pages/MeasureHistory/MeasureHistory';
 import PageTabs from './components/Things/PageTabs/PageTabs';
 import { Sidebar } from './components/Things/Sidebar/Sidebar';
 import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
-import { useFetchMeasureInfoFromApi } from './utils/ODataRquests';
+import {
+  useFetchMeasureInfoFromApi,
+  useGetUserTrackedMeasures,
+} from './utils/ODataRquests';
 import theme from './utils/theme';
 import { Typography } from '@mui/material';
-import { auth } from './utils/firebaseAuth';
-import { User } from 'firebase/auth';
-import { Login } from './components/Accessories/Login';
 import Header from './components/Things/Header/Header';
 
 const localizer = momentLocalizer(moment);
@@ -30,6 +29,7 @@ function App() {
 
   const { getCalendarEvents } = useCommitteeAgendaStore();
   useFetchMeasureInfoFromApi();
+  useGetUserTrackedMeasures();
 
   const [open, setOpen] = useState(false);
 

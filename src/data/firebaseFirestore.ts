@@ -1,6 +1,8 @@
-import { doc, getFirestore, setDoc, writeBatch } from "firebase/firestore";
+import { collection, doc, getDocs, getFirestore, setDoc, writeBatch } from "firebase/firestore";
 import { UserTrackedMeasure } from "../types/MeasureTypes";
 import { firebaseApp } from "../utils/firebaseInit";
+import { useUser } from "../utils/user";
+import { User } from "firebase/auth";
 
 const db = getFirestore(firebaseApp);
 
@@ -18,7 +20,7 @@ const db = getFirestore(firebaseApp);
 // updateMeasure("user123", "measure456", { color: "#FF5733", sessionKey: "new-session-key" });
 
 // user.uid
-async function batchAddMeasures(userId: string, measures: UserTrackedMeasure[]) {
+export const batchAddMeasures = async (userId: string, measures: UserTrackedMeasure[]) => {
     const batch = writeBatch(db);
 
     measures.forEach((measure) => {
@@ -40,7 +42,7 @@ async function batchAddMeasures(userId: string, measures: UserTrackedMeasure[]) 
 //     { measureId: "measure102", measureData: { id: "measure102", color: "#00AA00" } }
 // ]);
 
-async function addMeasure(userId: string, measure: UserTrackedMeasure) {
+export const addMeasure = async (userId: string, measure: UserTrackedMeasure) => {
     try {
         const measureRef = doc(db, `users/${userId}/measure`, measure.id);
         await setDoc(measureRef, measure);
@@ -56,3 +58,20 @@ async function addMeasure(userId: string, measure: UserTrackedMeasure) {
 //     color: "#123456", 
 //     sessionKey: "abc123" 
 // });
+
+export const getRemoteUserTrackedMeasures = async (user: User) => {
+
+    const userId = user.uid;
+    const measuresRef = collection(db, `users/${userId}/measure`);
+
+    try {
+        const querySnapshot = await getDocs(measuresRef);
+        const measures = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        
+        console.log("User measures:", measures);
+        return measures;
+    } catch (error) {
+        console.error("Error fetching user measures:", error);
+        return [];
+    }
+}

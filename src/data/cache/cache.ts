@@ -89,18 +89,6 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
     const { setUnfilteredHistory } = useHistoryStore();
     const { setUnfilteredCommitteeAgenda } = useCommitteeAgendaStore();
 
-    const { currentUser } = useUser();
-
-    useEffect(() => {
-        if(!currentUser) {
-            setTrackedMeasures(userTrackedMeasures)
-            localStorage.setItem('UserTrackedMeasures', JSON.stringify(userTrackedMeasures))
-        } else {
-            // get the users actual data from the remote 
-            // set this
-        }
-    }, [currentUser]);
-
     useEffect(() => {
         setUserTrackedMeasures(trackedMeasures || []);
     }, [trackedMeasures]);
@@ -111,6 +99,11 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
         setUnfilteredHistory(getAllHistoryDataFromLocalStorage());
         setUnfilteredCommitteeAgenda(getAllCommitteeAgendaItemsFromStore());
     }, [cacheObject])
+
+    const setUserTrackedMeasuresInCache = (userTrackedMeasures: UserTrackedMeasure[]) => {
+        setTrackedMeasures(userTrackedMeasures)
+        localStorage.setItem('UserTrackedMeasures', JSON.stringify(userTrackedMeasures))
+    }
 
     const updateMeasureItemInCache = (measure: Measure, agendaItems: AgendaItem, uniqueMeasureId: UniqueMeasureIdentifier) => {
       const getNewCacheObject = (prev: LocalStoreageMeasureCache) => {
@@ -140,6 +133,7 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
     return {
         cacheObject,
         updateMeasureItemInCache,
+        setUserTrackedMeasuresInCache,
         syncTrackedItemsWithCache
     }
   }

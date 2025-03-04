@@ -27,16 +27,6 @@ const LoginPopup = ({ anchorEl, onClose }: Props) => {
     >
       <Box sx={styles.container}>
         <Login />
-        {/* {Object.values(MEASURE_COLORS).map((hex) => (
-          <IconButton
-            onClick={() => {
-              updateColor(hex);
-              setTimeout(onClose, 0);
-            }}
-          >
-            <ColorSquare color={hex} />
-          </IconButton>
-        ))} */}
       </Box>
     </Popover>
   );

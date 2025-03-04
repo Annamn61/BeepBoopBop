@@ -5,7 +5,6 @@ import {
   loginEmailPassword,
   createUser,
   signInWithGoogle,
-  guestSignIn,
 } from '../../../utils/firebaseAuth';
 // import logo from '../../assets/FF_Logo.svg';
 // import logo_large from '../../assets/FF_logo_large.svg';
@@ -103,10 +102,10 @@ export const Login: React.FC = () => {
   //   );
 
   const welcomeText = () => {
-    const welcome = signingUp ? 'We’re glad to have you.' : 'Welcome back.';
+    const welcome = signingUp ? 'Welcome,' : 'Welcome back.';
     const subtext = signingUp
-      ? 'Create an account to unlock your nutritional potential'
-      : 'Sign in to unlock your nutritional potential';
+      ? "Create an account to save the bills you're interested in"
+      : 'Sign in to see your saved bills';
     return (
       <>
         <h2 className="lowercase">{welcome}</h2>
@@ -141,11 +140,8 @@ export const Login: React.FC = () => {
 
   return (
     <div className="login">
-      {/* <img className="login-logo" src={logo} alt="food finder logo" /> */}
       <div className="login-container row">
-        <div className="login-container-logo row">
-          {/* <img src={logo_large} alt="food finder secondary logo" /> */}
-        </div>
+        <div className="login-container-logo row"></div>
         <div>
           <div className="login-functions col">
             <div className="login-functions-fields col">
@@ -161,7 +157,6 @@ export const Login: React.FC = () => {
                 <div className="login-functions-fields-line" />
               </div>
               {googleButton}
-              {/* {guestButton} */}
             </div>
             {switchButton()}
           </div>

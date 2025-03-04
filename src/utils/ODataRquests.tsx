@@ -10,6 +10,9 @@ import { AgendaItem } from '../types/CommitteeAgendaTypes';
 import { useEffect } from 'react';
 import { getMeasureIdentifierFilters } from './measure';
 import { useSnackbarStore } from '../store/SnackbarStore';
+import { useUser } from './user';
+import { userTrackedMeasures as defaultUserTrackedMeasures } from '../data/userMeasureData';
+import { getRemoteUserTrackedMeasures } from '../data/firebaseFirestore';
 
 const baseURL = 'https://api.oregonlegislature.gov/odata/odataservice.svc/';
 
@@ -50,6 +53,22 @@ export const fetchAgendaItems = async (sessionKey: string, id: string) => {
     console.error('Error fetching agenda items:', error);
     throw error;
   }
+};
+
+export const useGetUserTrackedMeasures = () => {
+  const { currentUser } = useUser();
+  const { setUserTrackedMeasuresInCache } = useLocalStorage();
+
+  useEffect(() => {
+    if (!currentUser) {
+      console.log('no current user');
+      setUserTrackedMeasuresInCache(defaultUserTrackedMeasures);
+    } else {
+      getRemoteUserTrackedMeasures(currentUser);
+      // get the users actual data from the remote
+      // set this
+    }
+  }, [currentUser]);
 };
 
 /**
