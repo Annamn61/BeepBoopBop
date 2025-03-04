@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { AgendaItem } from "../../types/CommitteeAgendaTypes";
-import { Measure } from "../../types/MeasureTypes";
+import { Measure, UserTrackedMeasure } from "../../types/MeasureTypes";
 import useCommitteeAgendaStore from "../../store/CommitteeAgendaStore";
 import { useMeasureStore } from "../../store/MeasureStore";
 import useHistoryStore from "../../store/HistoryStore";
+import { useUser } from "../../utils/user";
+import { userTrackedMeasures } from "../userMeasureData";
 
-export interface LocalStoreageCache {
+export interface LocalStoreageMeasureCache {
     [uniqueMeasureId: UniqueMeasureIdentifier] : MeasureCacheObject;
 }
 
@@ -46,7 +48,7 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
   export const getLocalStorageCache = () => {
     const result = localStorage.getItem('Measures');
     if(result) {
-      return  JSON.parse(result) as LocalStoreageCache;
+      return  JSON.parse(result) as LocalStoreageMeasureCache;
     }
     return {};
   }
@@ -81,10 +83,27 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
   }
 
   export const useLocalStorage = () => {
-    const [cacheObject, setCacheObject] = useState<LocalStoreageCache>(getLocalStorageCache());
-    const { setUnfilteredMeasures } = useMeasureStore();
+    const [cacheObject, setCacheObject] = useState<LocalStoreageMeasureCache>(getLocalStorageCache());
+    const [trackedMeasures, setTrackedMeasures] = useState<UserTrackedMeasure[]>();
+    const { setUnfilteredMeasures, setUserTrackedMeasures } = useMeasureStore();
     const { setUnfilteredHistory } = useHistoryStore();
     const { setUnfilteredCommitteeAgenda } = useCommitteeAgendaStore();
+
+    const { currentUser } = useUser();
+
+    useEffect(() => {
+        if(!currentUser) {
+            setTrackedMeasures(userTrackedMeasures)
+            localStorage.setItem('UserTrackedMeasures', JSON.stringify(userTrackedMeasures))
+        } else {
+            // get the users actual data from the remote 
+            // set this
+        }
+    }, [currentUser]);
+
+    useEffect(() => {
+        setUserTrackedMeasures(trackedMeasures || []);
+    }, [trackedMeasures]);
 
     useEffect(() => {
         localStorage.setItem('Measures', JSON.stringify(cacheObject));
@@ -94,7 +113,7 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
     }, [cacheObject])
 
     const updateMeasureItemInCache = (measure: Measure, agendaItems: AgendaItem, uniqueMeasureId: UniqueMeasureIdentifier) => {
-      const getNewCacheObject = (prev: LocalStoreageCache) => {
+      const getNewCacheObject = (prev: LocalStoreageMeasureCache) => {
         const tempCache = {...prev};
           tempCache[uniqueMeasureId] = {
           MeasureData: measure,
@@ -108,7 +127,7 @@ export const isCacheOutOfDateById = (id: string, sessionKey: SessionKey) => {
     }
 
     const syncTrackedItemsWithCache = (userTrackedIds: string[]) => {
-        const newCache: LocalStoreageCache = {};
+        const newCache: LocalStoreageMeasureCache = {};
         userTrackedIds.forEach(id => {
             if (cacheObject[id]) {
                 newCache[id] = cacheObject[id];

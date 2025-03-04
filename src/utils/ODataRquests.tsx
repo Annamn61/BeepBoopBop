@@ -68,6 +68,10 @@ export const useFetchMeasureInfoFromApi = async () => {
   const { showSnackbar } = useSnackbarStore();
 
   useEffect(() => {
+    console.log('userTrackedMeasures', userTrackedMeasures.length);
+  }, [userTrackedMeasures]);
+
+  useEffect(() => {
     userTrackedMeasures.forEach(
       async ({ id, sessionKey }: UserTrackedMeasure) => {
         const uniqueMeasureId = getUniqueMeasureIdentifier(id, sessionKey);

@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { Measure, MeasureDocument, MeasureObject, MeasureSponsors, UserTrackedMeasure } from '../types/MeasureTypes';
-import { userTrackedMeasures } from '../data/userMeasureData';
 import { getKanbanLocationFromBilLocation } from '../components/Pages/BillLocationBoard/Locations/Locations.helpers';
 import { getUniqueMeasureIdentifier } from '../data/cache/cache';
 
@@ -58,11 +57,11 @@ interface MeasureState {
 }
 
 export const useMeasureStore = create<MeasureState>((set, get) => ({
-  userTrackedMeasures,
+  userTrackedMeasures: [],
   setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[]) => set({userTrackedMeasures}),
   addUserTrackedMeasure: (newUserTrackedMeasure: UserTrackedMeasure) => set({userTrackedMeasures: [...get().userTrackedMeasures, newUserTrackedMeasure]}),
   getUserTrackedMeasureUniqueIds: () => get().userTrackedMeasures.map((measure) => getUniqueMeasureIdentifier(measure.id, measure.sessionKey)),
-  removeTrackedMeasureById: (id) => set({userTrackedMeasures: userTrackedMeasures.filter((measure) => measure.id != id)}),
+  removeTrackedMeasureById: (id) => set({userTrackedMeasures: get().userTrackedMeasures.filter((measure) => measure.id != id)}),
   getUserTrackedMeasurePositionById: (id) => get().userTrackedMeasures.find((utm: UserTrackedMeasure) => utm.id === id)?.position,
   getFilteredMeasureIds: () => get().userTrackedMeasures.filter((m) =>m.isDisplayed).map((measure) => measure.id),
   getFilteredMeasureDocuments: () => get().getMeasures().flatMap((measure) => measure.MeasureDocuments),

@@ -4,47 +4,20 @@ import Button from '@mui/material/Button';
 import { useModal } from '../../../utils/modal';
 import { styles } from './Header.styles';
 import LoginPopup from '../LoginPopup/LoginPopup';
-import { auth } from '../../../utils/firebaseAuth';
-import { useEffect, useState } from 'react';
-import { User } from 'firebase/auth';
+import { useEffect } from 'react';
+import { useUser } from '../../../utils/user';
+import LogoutPopup from '../LogoutPopup/LogoutPopup';
 
 interface Props {}
 
 const Header = ({}: Props) => {
   const { anchorEl, setModalOpen, setModalClosed } = useModal();
 
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setCurrentUser(user); // Update state only when necessary
-    });
-    return () => unsubscribe(); // Cleanup on unmount
-  }, []);
+  const { currentUser } = useUser();
 
   useEffect(() => {
     setModalClosed();
   }, [currentUser]);
-
-  //   useEffect(() => {
-  //     console.log('anchorEl', anchorEl);
-  //   }, [anchorEl]);
-
-  //   useEffect(() => {
-  //     console.log('setModalOpen', setModalOpen);
-  //   }, [setModalOpen]);
-
-  //   useEffect(() => {
-  //     console.log('setModalClosed', setModalClosed);
-  //   }, [setModalClosed]);
-
-  //   useEffect(() => {
-  //     console.log('currentUser', currentUser);
-  //   }, [currentUser]);
-
-  //   useEffect(() => {
-  //     console.log('setCurrentUser', setCurrentUser);
-  //   }, [setCurrentUser]);
 
   return (
     <Box sx={styles.container}>
@@ -52,7 +25,7 @@ const Header = ({}: Props) => {
       {currentUser && (
         <>
           <Button onClick={setModalOpen}>Logout</Button>
-          <LoginPopup anchorEl={anchorEl} onClose={setModalClosed} />
+          <LogoutPopup anchorEl={anchorEl} onClose={setModalClosed} />
         </>
       )}
       {!currentUser && (
