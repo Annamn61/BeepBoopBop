@@ -1,8 +1,7 @@
+import { User } from "firebase/auth";
 import { collection, doc, getDocs, getFirestore, setDoc, writeBatch } from "firebase/firestore";
 import { UserTrackedMeasure } from "../types/MeasureTypes";
 import { firebaseApp } from "../utils/firebaseInit";
-import { useUser } from "../utils/user";
-import { User } from "firebase/auth";
 
 const db = getFirestore(firebaseApp);
 

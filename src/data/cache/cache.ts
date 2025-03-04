@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
+import useCommitteeAgendaStore from "../../store/CommitteeAgendaStore";
+import useHistoryStore from "../../store/HistoryStore";
+import { useMeasureStore } from "../../store/MeasureStore";
 import { AgendaItem } from "../../types/CommitteeAgendaTypes";
 import { Measure, UserTrackedMeasure } from "../../types/MeasureTypes";
-import useCommitteeAgendaStore from "../../store/CommitteeAgendaStore";
-import { useMeasureStore } from "../../store/MeasureStore";
-import useHistoryStore from "../../store/HistoryStore";
-import { useUser } from "../../utils/user";
-import { userTrackedMeasures } from "../userMeasureData";
 
 export interface LocalStoreageMeasureCache {
     [uniqueMeasureId: UniqueMeasureIdentifier] : MeasureCacheObject;

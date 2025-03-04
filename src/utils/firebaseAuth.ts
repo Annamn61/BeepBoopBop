@@ -1,15 +1,14 @@
-import { firebaseApp } from "./firebaseInit";
 import {
-    Auth,
     AuthErrorCodes,
-    getAuth,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
     GoogleAuthProvider,
-    signInWithRedirect,
+    createUserWithEmailAndPassword,
+    getAuth,
     signInAnonymously,
-    signOut,
+    signInWithEmailAndPassword,
+    signInWithRedirect,
+    signOut
 } from 'firebase/auth';
+import { firebaseApp } from "./firebaseInit";
 
 export const auth = getAuth(firebaseApp);
 const provider = new GoogleAuthProvider();
@@ -21,7 +20,7 @@ export const guestSignIn = async () => signInAnonymously(auth);
 
 export const loginEmailPassword = async (email: string, password: string) => {
     try {
-        const userCredentials = await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
         console.log(error);
         return getErrorFieldAndMessage(error);
@@ -31,7 +30,7 @@ export const loginEmailPassword = async (email: string, password: string) => {
 
 export const createUser = async (email: string, password: string) => {
     try {
-        const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
+        await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
         console.log(error);
         return getErrorFieldAndMessage(error);
