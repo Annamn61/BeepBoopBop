@@ -1,17 +1,14 @@
 import Box from '@mui/material/Box';
-import TitleLogo from '../../Accessories/TitleLogo/TitleLogo';
-import Button from '@mui/material/Button';
-import { useModal } from '../../../utils/modal';
-import { styles } from './Header.styles';
-import LoginPopup from '../LoginPopup/LoginPopup';
 import { useEffect } from 'react';
+import { useModal } from '../../../utils/modal';
 import { useUser } from '../../../utils/user';
-import LogoutPopup from '../LogoutPopup/LogoutPopup';
+import TitleLogo from '../../Accessories/TitleLogo/TitleLogo';
+import { styles } from './Header.styles';
 
 interface Props {}
 
 const Header = ({}: Props) => {
-  const { anchorEl, setModalOpen, setModalClosed } = useModal();
+  const { setModalClosed } = useModal();
 
   const { currentUser } = useUser();
 
@@ -22,7 +19,7 @@ const Header = ({}: Props) => {
   return (
     <Box sx={styles.container}>
       <TitleLogo />
-      {currentUser && (
+      {/* {currentUser && (
         <>
           <Button onClick={setModalOpen}>Logout</Button>
           <LogoutPopup anchorEl={anchorEl} onClose={setModalClosed} />
@@ -33,7 +30,7 @@ const Header = ({}: Props) => {
           <Button onClick={setModalOpen}>Login</Button>
           <LoginPopup anchorEl={anchorEl} onClose={setModalClosed} />
         </>
-      )}
+      )} */}
     </Box>
   );
 };

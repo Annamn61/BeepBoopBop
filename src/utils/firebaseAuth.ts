@@ -5,7 +5,7 @@ import {
     getAuth,
     signInAnonymously,
     signInWithEmailAndPassword,
-    signInWithRedirect,
+    signInWithPopup,
     signOut
 } from 'firebase/auth';
 import { firebaseApp } from "./firebaseInit";
@@ -14,7 +14,7 @@ export const auth = getAuth(firebaseApp);
 const provider = new GoogleAuthProvider();
 provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 
-export const signInWithGoogle = async () => signInWithRedirect(auth, provider);
+export const signInWithGoogle = async () => signInWithPopup(auth, provider);
 
 export const guestSignIn = async () => signInAnonymously(auth);
 

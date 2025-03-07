@@ -15,6 +15,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { importantDates } from '../../../data/ImportantLegistlativeDates';
 import Deadline from './Deadline/Deadline';
+import Tooltip from '@mui/material/Tooltip';
 
 export const MeasureHistory = () => {
   const {
@@ -74,12 +75,16 @@ export const MeasureHistory = () => {
           onChange={(_e, mode) => setFilterToggle(mode)}
           aria-label="update mode"
         >
-          <ToggleButton sx={styles.buttonInGroup} value="all">
-            All Updates
-          </ToggleButton>
-          <ToggleButton sx={styles.buttonInGroup} value="last">
-            Last Update Only
-          </ToggleButton>
+          <Tooltip title="See every update from each measure">
+            <ToggleButton sx={styles.buttonInGroup} value="all">
+              All Updates
+            </ToggleButton>
+          </Tooltip>
+          <Tooltip title="See each measures last update only">
+            <ToggleButton sx={styles.buttonInGroup} value="last">
+              Last Update Only
+            </ToggleButton>
+          </Tooltip>
         </ToggleButtonGroup>
         <Typography>{length} items</Typography>
       </Box>

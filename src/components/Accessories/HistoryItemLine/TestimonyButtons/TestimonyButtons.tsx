@@ -11,11 +11,11 @@ interface Props {
 const TestimonyButtons = ({ testimonyLinks }: Props) => {
   return (
     <>
-      <Tooltip title={'Register to Testify Live'}>
+      {/* <Tooltip title={'Register to Testify Live'}>
         <IconButton size="small" href={testimonyLinks.inPerson} target="_blank">
           <InterpreterModeRoundedIcon />
         </IconButton>
-      </Tooltip>
+      </Tooltip> */}
       <Tooltip title={'Submit Written Testimony'}>
         <IconButton size="small" href={testimonyLinks.written} target="_blank">
           <CommentRoundedIcon />

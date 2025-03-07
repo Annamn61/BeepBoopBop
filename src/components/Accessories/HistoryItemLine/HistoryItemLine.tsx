@@ -120,11 +120,7 @@ export const HistoryItemLine = ({
             </Box>
           </Box>
           {variant === 'full' && (
-            <Box sx={styles.caption}>
-              <Typography variant="caption">
-                {updateItem.MeasureName}
-              </Typography>
-            </Box>
+            <Typography variant="caption">{updateItem.MeasureName}</Typography>
           )}
         </Box>
       </Box>
