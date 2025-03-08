@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { UserTrackedMeasure } from "../../../types/MeasureTypes";
-import { LocalStoreageMeasureCache, MeasureCacheObject, UniqueMeasureIdentifier } from "../../../types/cache";
+import { LocalStoreageMeasureCache } from "../../../types/cache";
 import { isOutOfDate } from "../../../utils/time";
 import { fetchAgendaItems, fetchMeasure } from "../../measures/measures";
 import { getMeasureUniqueId } from "../../../utils/measure";
 
 export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasure[] | undefined) => {
     const [measuresCacheObject, setMeasureCacheObjects] = useState(getMeasuresFromLocalStorage());
-    const [areMeasureCacheObjectLoading, setAreMeasureCacheObjectsLoading] = useState(false);
+    const [isMeasureCacheObjectLoading, setIsMeasureCacheObjectLoading] = useState(false);
     const utmIdList = useMemo(() => userTrackedMeasures && userTrackedMeasures.map((utm) => getMeasureUniqueId(utm)), [userTrackedMeasures])
 
     useEffect(() => {
@@ -17,10 +17,8 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
 
         const { refreshList, removeList } = getRequestList(measuresCacheObject, utmIdList);
         
-        console.log('refresh + remove', refreshList.length, removeList.length)
-
         // REFRESH STALE + GET NEW 
-        setAreMeasureCacheObjectsLoading(true);
+        setIsMeasureCacheObjectLoading(true);
         refreshList.forEach((id) => {
             fetchMeasure(id).then((measureValue) => {
                 setMeasureCacheObjects((prev) => ({
@@ -46,7 +44,7 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
                 }));
             })
         })
-        setAreMeasureCacheObjectsLoading(false);
+        setIsMeasureCacheObjectLoading(false);
         
         // REMOVE UNUSED
         setMeasureCacheObjects((prev) => {
@@ -66,7 +64,7 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
 
     return {
         measuresCacheObject,
-        areMeasureCacheObjectLoading,
+        isMeasureCacheObjectLoading,
         // could set a total number here too for a progress bar
     }
 }
@@ -75,17 +73,10 @@ const getMeasuresFromLocalStorage = () => {
     const result = localStorage.getItem('Measures');
     if(result) {
         const cache = JSON.parse(result) as LocalStoreageMeasureCache;
-        // const measures = Object.keys(cache).map((uniqueMeasureId: UniqueMeasureIdentifier) => {
-        //     return cache[uniqueMeasureId] as MeasureCacheObject;
-        // })
         return cache;
     }
     return {};
 }
-
-// const setMeasureCacheObjectsToCache = () => {
-
-// }
 
 const getRequestList = (measureCacheObjects: LocalStoreageMeasureCache, utmIdList: string[]) => {
     const refreshList: string[] = [];
@@ -101,7 +92,6 @@ const getRequestList = (measureCacheObjects: LocalStoreageMeasureCache, utmIdLis
 
     // Remove ids not in the user list
     measureCacheObjKeys.forEach((uniqueId) => {
-        // console.log(uniqueId, 'utmlist', utmIdList);
         if(!utmIdList.includes(uniqueId)) {
             removeList.push(uniqueId);
         }

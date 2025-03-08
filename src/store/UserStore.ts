@@ -7,7 +7,7 @@ interface UserState {
     userTrackedMeasures: UserTrackedMeasure[] | undefined;
     getSafeUserTrackedMeasures: () => UserTrackedMeasure[];
     /** set the metadata about the measures a user is tracking */
-    setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[]) => void;
+    setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[] | undefined) => void;
     /** Add a single measure's metadata for tracking  */
     addUserTrackedMeasure: (newUserTrackedMeasure: UserTrackedMeasure) => void;
     /** Returns a string array of the ids of the user tracked measures */
@@ -29,8 +29,8 @@ interface UserState {
 export const useUserStore = create<UserState>((set, get) => ({
   userTrackedMeasures: undefined,
   getSafeUserTrackedMeasures: () => get().userTrackedMeasures ? get().userTrackedMeasures! : [],
-  setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[]) => set({userTrackedMeasures}),
-  addUserTrackedMeasure: (newUserTrackedMeasure: UserTrackedMeasure) => set({userTrackedMeasures: [...get().getSafeUserTrackedMeasures(), newUserTrackedMeasure]}),
+  setUserTrackedMeasures: (userTrackedMeasures) => set({userTrackedMeasures}),
+  addUserTrackedMeasure: (newUserTrackedMeasure) => set({userTrackedMeasures: [...get().getSafeUserTrackedMeasures(), newUserTrackedMeasure]}),
   getUserTrackedMeasureUniqueIds: () => get().getSafeUserTrackedMeasures().map((measure) => getMeasureUniqueId(measure)),
   removeTrackedMeasureById: (id) => set({userTrackedMeasures: get().getSafeUserTrackedMeasures().filter((measure) => getMeasureUniqueId(measure) != id)}),
   getUserTrackedMeasurePositionById: (id) => get().getSafeUserTrackedMeasures().find((utm: UserTrackedMeasure) => getMeasureUniqueId(utm) === id)?.position,

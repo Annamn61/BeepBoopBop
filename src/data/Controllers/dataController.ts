@@ -5,8 +5,8 @@ import { useUserStoreController } from "./storeControllers/UserStoreController";
 
 export const useDataController = () => {
     const {userTrackedMeasures, areUtmsLoading} = userUserController();
-    const { measuresCacheObject, areMeasureCacheObjectsLoading } = userOLISMeasureController(userTrackedMeasures);
+    const { measuresCacheObject, isMeasureCacheObjectLoading } = userOLISMeasureController(userTrackedMeasures);
     
-    useMeasureStoreController(measuresCacheObject, areMeasureCacheObjectsLoading);
+    useMeasureStoreController(measuresCacheObject, isMeasureCacheObjectLoading);
     useUserStoreController(userTrackedMeasures, areUtmsLoading);
 }

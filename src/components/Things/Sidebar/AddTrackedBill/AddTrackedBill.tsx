@@ -1,21 +1,21 @@
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useEffect, useRef, useState } from 'react';
 import { MEASURE_COLORS } from '../../../../utils/colors';
 import ColorSquare from '../../../Accessories/ColorSquare/ColorSquare';
-import useMeasureStore from '../../../../store/MeasureStore';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { styles } from './AddTrackedBill.styles';
 import ColorSelectorPopover from './ColorSelectorPopover/ColorSelectorPopover';
-import Tooltip from '@mui/material/Tooltip';
+// import Tooltip from '@mui/material/Tooltip';
+// import AddRoundedIcon from '@mui/icons-material/AddRounded';
+// import IconButton from '@mui/material/IconButton';
+import { useUserStore } from '../../../../store/UserStore';
 
 export const AddTrackedBill = () => {
-  const { addUserTrackedMeasure } = useMeasureStore();
+  const { addUserTrackedMeasure } = useUserStore();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>();
   const [colorAnchorEl, setColorAnchorEl] = useState<HTMLButtonElement | null>(
     null
@@ -38,11 +38,11 @@ export const AddTrackedBill = () => {
 
   return (
     <>
-      <Tooltip title="Add bill to track">
+      {/* <Tooltip title="Add bill to track">
         <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
           <AddRoundedIcon />
         </IconButton>
-      </Tooltip>
+      </Tooltip> */}
       <Popover
         open={!!anchorEl}
         anchorEl={anchorEl}
@@ -97,9 +97,10 @@ export const AddTrackedBill = () => {
               addUserTrackedMeasure({
                 color: measureColor,
                 position: 'Support',
-                id: measureId,
+                MeasurePrefix: measureId.split(' ')[0],
+                MeasureNumber: Number(measureId.split(' ')[1]),
                 isDisplayed: true,
-                sessionKey,
+                SessionKey: sessionKey,
                 nickname: '',
               });
             }}
