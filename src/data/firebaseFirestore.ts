@@ -2,6 +2,7 @@ import { User } from "firebase/auth";
 import { collection, doc, getDocs, getFirestore, setDoc, writeBatch } from "firebase/firestore";
 import { UserTrackedMeasure } from "../types/MeasureTypes";
 import { firebaseApp } from "../utils/firebaseInit";
+import { getMeasureUniqueId } from "../utils/measure";
 
 const db = getFirestore(firebaseApp);
 
@@ -23,7 +24,7 @@ export const batchAddMeasures = async (userId: string, measures: UserTrackedMeas
     const batch = writeBatch(db);
 
     measures.forEach((measure) => {
-        const measureRef = doc(db, `users/${userId}/measure`, measure.id);
+        const measureRef = doc(db, `users/${userId}/measure`, getMeasureUniqueId(measure));
         batch.set(measureRef, measure);
     });
 
@@ -43,7 +44,7 @@ export const batchAddMeasures = async (userId: string, measures: UserTrackedMeas
 
 export const addMeasure = async (userId: string, measure: UserTrackedMeasure) => {
     try {
-        const measureRef = doc(db, `users/${userId}/measure`, measure.id);
+        const measureRef = doc(db, `users/${userId}/measure`, getMeasureUniqueId(measure));
         await setDoc(measureRef, measure);
         console.log("Measure added successfully.");
     } catch (error) {

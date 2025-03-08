@@ -4,7 +4,6 @@ import {
   getShortFormatDateWithTime,
   getMMHHFromDate,
 } from '../../../utils/time';
-import { getMeasureId } from '../../../utils/measure';
 import MeasurePill from '../MeasurePill/MeasurePill';
 import { GenericUpdateItem, Measure } from '../../../types/MeasureTypes';
 import { styles } from './HistoryItemLine.styles';
@@ -16,6 +15,7 @@ import { shouldGetTestimonyLink } from './HistoryItemLine.helpers';
 import TestimonyButtons from './TestimonyButtons/TestimonyButtons';
 import MeetingButton from './MeetingButton/MeetingButton';
 import { useMediaQuery, useTheme } from '@mui/material';
+import { getMeasureUniqueId } from '../../../utils/measure';
 
 interface HistoryItemProps {
   selected: boolean;
@@ -37,7 +37,7 @@ export const HistoryItemLine = ({
   const isDocument = updateItem?.Type === 'MeasureDocument';
   const isMeeting = updateItem?.Type === 'CommitteeMeeting';
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const id = getMeasureId(updateItem.MeasurePrefix, updateItem.MeasureNumber);
+  const id = getMeasureUniqueId(updateItem);
   const displayedTestimony = shouldGetTestimonyLink(updateItem)
     ? getTestimonyLinkByIdAndDate(id, new Date(updateItem.Date))
     : null;
@@ -72,13 +72,7 @@ export const HistoryItemLine = ({
       <Box sx={styles.contentContainer}>
         <Box sx={styles.topLine}>
           {variant === 'full' && (
-            <MeasurePill
-              id={getMeasureId(
-                updateItem.MeasurePrefix,
-                updateItem.MeasureNumber
-              )}
-              withModal={true}
-            />
+            <MeasurePill id={getMeasureUniqueId(updateItem)} withModal={true} />
           )}
           {canClick && (
             <IconButton

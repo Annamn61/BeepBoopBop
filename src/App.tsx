@@ -12,26 +12,21 @@ import { BillLocationBoard } from './components/Pages/BillLocationBoard/BillLoca
 import { MeasureHistory } from './components/Pages/MeasureHistory/MeasureHistory';
 import PageTabs from './components/Things/PageTabs/PageTabs';
 import { Sidebar } from './components/Things/Sidebar/Sidebar';
-import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
-import {
-  useFetchMeasureInfoFromApi,
-  useGetUserTrackedMeasures,
-} from './utils/ODataRquests';
 import theme from './utils/theme';
 import { Typography } from '@mui/material';
 import Header from './components/Things/Header/Header';
+import { useDataController } from './data/Controllers/dataController';
+import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
 
 const localizer = momentLocalizer(moment);
 
 function App() {
+  useDataController();
   const [selectedPage, setSelectedPage] = useState('updates');
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
 
-  const { getCalendarEvents } = useCommitteeAgendaStore();
-  useFetchMeasureInfoFromApi();
-  useGetUserTrackedMeasures();
-
   const [open, setOpen] = useState(false);
+  const { getCalendarEvents } = useCommitteeAgendaStore();
 
   const [meetingId, setMeetingId] = useState<string | undefined>(undefined);
   const handleOpen = (event: any) => {
@@ -39,8 +34,6 @@ function App() {
     setOpen(true);
   };
   const handleClose = () => setOpen(false);
-
-  //   console.log('currentUser', currentUser);
 
   return (
     <ThemeProvider theme={theme}>

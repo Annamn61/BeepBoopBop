@@ -1,12 +1,13 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import useMeasureStore from '../../../store/MeasureStore';
 import MeasureModal from '../MeasureModal/MeasureModal';
 import { useModal } from '../../../utils/modal';
 import Button from '@mui/material/Button';
 import { styles } from './MeasurePill.styles';
 import { TOOLTIP_MESSAGES } from '../../../utils/constants';
 import Tooltip from '@mui/material/Tooltip';
+import { useUserStore } from '../../../store/UserStore';
+import { getReadableId, parseUniqueId } from '../../../utils/measure';
 
 interface MeasurePillProps {
   id: string;
@@ -14,7 +15,7 @@ interface MeasurePillProps {
 }
 
 const MeasurePill = ({ id, withModal }: MeasurePillProps) => {
-  const measureColor = useMeasureStore.getState().getUserMeasureColorById(id);
+  const measureColor = useUserStore.getState().getUserMeasureColorById(id);
   const { anchorEl, setModalOpen, setModalClosed } = useModal();
 
   const backgroundColor = {
@@ -32,7 +33,9 @@ const MeasurePill = ({ id, withModal }: MeasurePillProps) => {
           }}
           onClick={setModalOpen}
         >
-          <Typography variant="overline">{id}</Typography>
+          <Typography variant="overline">
+            {getReadableId(parseUniqueId(id))}
+          </Typography>
         </Button>
       </Tooltip>
 
@@ -44,7 +47,9 @@ const MeasurePill = ({ id, withModal }: MeasurePillProps) => {
     </>
   ) : (
     <Box sx={{ ...styles.pill, ...backgroundColor }}>
-      <Typography variant="overline">{id}</Typography>
+      <Typography variant="overline">
+        {getReadableId(parseUniqueId(id))}
+      </Typography>
     </Box>
   );
 };

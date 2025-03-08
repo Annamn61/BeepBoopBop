@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { AgendaItem, CommitteeMeetingWithUserAgendaItems, TestimonyLinks } from '../types/CommitteeAgendaTypes';
-import { getMeasureId } from '../utils/measure';
 import { Measure } from '../types/MeasureTypes';
 import { CommitteeMeeting } from '../types/CommitteeMeetingsTypes';
+import { getMeasureUniqueId } from '../utils/measure';
 
 interface CommitteeAgendaState {
   unfilteredCommitteeAgenda: AgendaItem[];
@@ -21,7 +21,7 @@ export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) =
     setUnfilteredCommitteeAgenda: (agendaItems) => set({ unfilteredCommitteeAgenda: agendaItems }),
     getCommitteeAgendaItems: () => get().unfilteredCommitteeAgenda,
     getCalendarEvents: () => getCalendarEvents(get().getCommitteeItemsGroupedIntoMeetings()),
-    getUpcomingAgendaItemsById: (id) => get().unfilteredCommitteeAgenda.filter(item => getMeasureId(item.MeasurePrefix, item.MeasureNumber) === id).filter(item => new Date(item.MeetingDate) > new Date()),
+    getUpcomingAgendaItemsById: (id) => get().unfilteredCommitteeAgenda.filter(item => getMeasureUniqueId(item) === id).filter(item => new Date(item.MeetingDate) > new Date()),
     getTestimonyLinkByIdAndDate: (id, date) => getTestimonyLinksFromAgendaItem(findPublicHearingItem(get().unfilteredCommitteeAgenda, id, date)),
     getCommitteeMeetingByIdAndDate: (id, date) => findPublicHearingItem(get().unfilteredCommitteeAgenda, id, date)?.CommitteeMeeting,
     getCommitteeItemsGroupedIntoMeetings: () => groupItemsIntoMeetings(get().getCommitteeAgendaItems()),
@@ -29,6 +29,8 @@ export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) =
 }));
 
 const getCalendarEvents = (meetings: CommitteeMeetingWithUserAgendaItems) => {
+
+    console.log('meetings', Object.keys(meetings));
 
     return Object.keys(meetings).map((key) => {
         const meeting = meetings[key].CommitteeMeeting;
@@ -44,15 +46,6 @@ const getCalendarEvents = (meetings: CommitteeMeetingWithUserAgendaItems) => {
             color: "#f7f7f7"
         }
     })
-//         return {
-//           title: item.MeetingType,
-//           start: new Date(item.MeetingDate),
-//           end: new Date(item.MeetingDate),
-//           id: getMeasureId(item.MeasurePrefix, item.MeasureNumber),
-//           comments: item.Comments,
-//           color: trackedMeasure ? trackedMeasure.color : "#000000" // Use tracked color or default
-//         };
-
 }
 
 const groupItemsIntoMeetings = (items: AgendaItem[]) => {
@@ -75,14 +68,13 @@ const groupItemsIntoMeetings = (items: AgendaItem[]) => {
             }
         }
     })
-    console.log(meetingsWithItems);
 
     return meetingsWithItems;
 }
 
 const findPublicHearingItem = (items: AgendaItem[], id: Measure['id'], date: Date) => {
     const item = items.find((item) => {
-        const sameMeasure = getMeasureId(item.MeasurePrefix, item.MeasureNumber) === id;
+        const sameMeasure = getMeasureUniqueId(item) === id;
         const meetingDate = new Date(item.MeetingDate);
         const millisecondsIn5Minutes = 5 * 60 * 1000;
         const within5Minutes = Math.abs(meetingDate.getTime() - date.getTime()) < millisecondsIn5Minutes;

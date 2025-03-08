@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box';
 import { UserTrackedMeasure } from '../../../../types/MeasureTypes';
-import useMeasureStore from '../../../../store/MeasureStore';
 import { styles } from './SidebarMeasure.styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -12,6 +11,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MeasureModal from '../../../Accessories/MeasureModal/MeasureModal';
 import { TOOLTIP_MESSAGES } from '../../../../utils/constants';
 import ColorSquare from '../../../Accessories/ColorSquare/ColorSquare';
+import { useUserStore } from '../../../../store/UserStore';
+import { getMeasureUniqueId, getReadableId } from '../../../../utils/measure';
+import useMeasureStore from '../../../../store/MeasureStore';
 
 interface SidebarMeasureProps {
   userTrackedMeasure: UserTrackedMeasure;
@@ -24,16 +26,20 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
     setModalClosed: closeMeasureModal,
     setModalOpen: openMeasureModal,
   } = useModal();
+
   const {
+    removeTrackedMeasureById,
     setUserTrackedMeasureFilterStatusById,
     getUserMeasureColorById,
-    removeTrackedMeasureById,
-    getMeasureNicknameById,
-  } = useMeasureStore();
+  } = useUserStore();
 
-  const { isDisplayed, id } = userTrackedMeasure;
-  const title = getMeasureNicknameById(id);
-  const measureColor = getUserMeasureColorById(id);
+  const { getMeasureNicknameById } = useMeasureStore();
+
+  const { isDisplayed } = userTrackedMeasure;
+  const uniqueId = getMeasureUniqueId(userTrackedMeasure);
+
+  const title = getMeasureNicknameById(uniqueId);
+  const measureColor = getUserMeasureColorById(uniqueId);
 
   return (
     <>
@@ -48,7 +54,7 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
               sx={{ ...styles.checkbox }}
               onClick={(e) => {
                 e.stopPropagation();
-                setUserTrackedMeasureFilterStatusById(id, !isDisplayed);
+                setUserTrackedMeasureFilterStatusById(uniqueId, !isDisplayed);
               }}
             >
               <ColorSquare color={measureColor} filled={isDisplayed} />
@@ -57,7 +63,7 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
           <Box sx={styles.infoArea}>
             <Box sx={styles.infoTopline}>
               <Typography variant="h5" sx={styles.measureId}>
-                {id}
+                {getReadableId(userTrackedMeasure)}
               </Typography>
               <Tooltip title={TOOLTIP_MESSAGES.DeleteMeasure}>
                 <IconButton
@@ -80,14 +86,14 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
       <ConfirmationModal
         anchorEl={anchorEl}
         onClose={setModalClosed}
-        handleAction={() => removeTrackedMeasureById(id)}
-        message={`Delete ${id}?`}
+        handleAction={() => removeTrackedMeasureById(uniqueId)}
+        message={`Delete ${uniqueId}?`}
         subtitle="Are you sure you want to remove this measure from your tracked measures? This action cannot be undone."
       />
       <MeasureModal
         anchorEl={measureAnchorEl}
         onClose={closeMeasureModal}
-        measureId={id}
+        measureId={uniqueId}
       />
     </>
   );

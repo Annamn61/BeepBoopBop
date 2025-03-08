@@ -36,6 +36,7 @@ export const MeasureHistory = () => {
       ? getFilteredUpdatesSortedByDate()
       : getFilteredLatestUpdatesOnlyByDate();
   }, [filterToggle, unfilteredHistory]);
+
   const length = useMemo(() => {
     return filterToggle === 'all'
       ? getFilteredUpdatesLength()
@@ -49,6 +50,14 @@ export const MeasureHistory = () => {
   const pastHistory = useMemo(
     () => getPastHistoryFromHistory(history),
     [history]
+  );
+
+  const isLoading = useMemo(
+    () =>
+      !(
+        Object.keys(futureHistory).length > 1 && Object.keys(pastHistory).length
+      ),
+    [futureHistory, pastHistory]
   );
 
   const futureHistoryKeysSorted = useMemo(() => {
@@ -88,58 +97,65 @@ export const MeasureHistory = () => {
         </ToggleButtonGroup>
         <Typography>{length} items</Typography>
       </Box>
-      <Box sx={styles.container}>
-        <Box sx={{ ...styles.dateSectionContainer, ...(styles.future as any) }}>
-          <Typography variant="h4">Upcoming</Typography>
-          {futureHistoryKeysSorted.map((key) => (
-            <Box sx={styles.dateSection} key={key}>
-              <DateTitle dateString={key} />
-              <Box sx={styles.items}>
-                {Object.keys(importantDates).includes(key) && (
-                  <Deadline dateKey={key} />
-                )}
+      {isLoading && <>Loading...</>}
+      {!isLoading && (
+        <>
+          <Box sx={styles.container}>
+            <Box
+              sx={{ ...styles.dateSectionContainer, ...(styles.future as any) }}
+            >
+              <Typography variant="h4">Upcoming</Typography>
+              {futureHistoryKeysSorted.map((key) => (
+                <Box sx={styles.dateSection} key={key}>
+                  <DateTitle dateString={key} />
+                  <Box sx={styles.items}>
+                    {Object.keys(importantDates).includes(key) && (
+                      <Deadline dateKey={key} />
+                    )}
 
-                {futureHistory[key].map((update: GenericUpdateItem) => (
-                  <HistoryItemLine
-                    selected={selectedItem === update.Key}
-                    toggleSelected={() =>
-                      setSelectedItem(
-                        selectedItem === update.Key ? undefined : update.Key
-                      )
-                    }
-                    key={update.Key}
-                    updateItem={update}
-                    variant="full"
-                  />
-                ))}
-              </Box>
+                    {futureHistory[key].map((update: GenericUpdateItem) => (
+                      <HistoryItemLine
+                        selected={selectedItem === update.Key}
+                        toggleSelected={() =>
+                          setSelectedItem(
+                            selectedItem === update.Key ? undefined : update.Key
+                          )
+                        }
+                        key={update.Key}
+                        updateItem={update}
+                        variant="full"
+                      />
+                    ))}
+                  </Box>
+                </Box>
+              ))}
             </Box>
-          ))}
-        </Box>
-        <Box sx={styles.dateSectionContainer}>
-          <Typography variant="h4">Past</Typography>
-          {Object.entries(pastHistory).map(([dateString, updates]) => (
-            <Box sx={styles.dateSection} key={dateString}>
-              <DateTitle dateString={dateString} />
-              <Box sx={styles.items}>
-                {updates.map((update: GenericUpdateItem) => (
-                  <HistoryItemLine
-                    selected={selectedItem === update.Key}
-                    toggleSelected={() =>
-                      setSelectedItem(
-                        selectedItem === update.Key ? undefined : update.Key
-                      )
-                    }
-                    key={update.Key}
-                    updateItem={update}
-                    variant="full"
-                  />
-                ))}
-              </Box>
+            <Box sx={styles.dateSectionContainer}>
+              <Typography variant="h4">Past</Typography>
+              {Object.entries(pastHistory).map(([dateString, updates]) => (
+                <Box sx={styles.dateSection} key={dateString}>
+                  <DateTitle dateString={dateString} />
+                  <Box sx={styles.items}>
+                    {updates.map((update: GenericUpdateItem) => (
+                      <HistoryItemLine
+                        selected={selectedItem === update.Key}
+                        toggleSelected={() =>
+                          setSelectedItem(
+                            selectedItem === update.Key ? undefined : update.Key
+                          )
+                        }
+                        key={update.Key}
+                        updateItem={update}
+                        variant="full"
+                      />
+                    ))}
+                  </Box>
+                </Box>
+              ))}
             </Box>
-          ))}
-        </Box>
-      </Box>
+          </Box>
+        </>
+      )}
     </Box>
   );
 };

@@ -5,11 +5,11 @@ import { styles } from './CommiteeMeetingModal.styles';
 import Typography from '@mui/material/Typography';
 import { getShortFormatDateWithTime } from '../../../utils/time';
 import MeasurePill from '../MeasurePill/MeasurePill';
-import { getMeasureId } from '../../../utils/measure';
 import ViewInOlisButton from '../ViewInOlisButton/ViewInOlisButton';
 import { getCommitteeMeetingURL } from '../../../utils/CommitteeMeeting';
 import IconButton from '@mui/material/IconButton';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { getMeasureUniqueId } from '../../../utils/measure';
 
 interface Props {
   open: boolean;
@@ -47,10 +47,7 @@ const CommiteeMeetingModal = ({ open, onClose, committeeMeetingId }: Props) => {
         <Box sx={styles.divider} />
         {AgendaItems.map((item) => (
           <Box sx={styles.agendaItemContainer}>
-            <MeasurePill
-              id={getMeasureId(item.MeasurePrefix, item.MeasureNumber)}
-              withModal={true}
-            />
+            <MeasurePill id={getMeasureUniqueId(item)} withModal={true} />
             <Typography>{item.MeetingType}</Typography>
           </Box>
         ))}

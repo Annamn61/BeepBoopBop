@@ -8,6 +8,8 @@ import { styles } from './BillCard.styles';
 import { globalStyles } from '../../../../utils/styleHelpers';
 import { TOOLTIP_MESSAGES } from '../../../../utils/constants';
 import Tooltip from '@mui/material/Tooltip';
+import { useUserStore } from '../../../../store/UserStore';
+import { getReadableId, parseUniqueId } from '../../../../utils/measure';
 
 interface BillProps {
   billId: string;
@@ -16,16 +18,15 @@ interface BillProps {
 const Bill = ({ billId }: BillProps) => {
   const { anchorEl, setModalOpen, setModalClosed } = useModal();
 
-  const committeeCode = useMeasureStore
-    .getState()
-    .getMeasureCommitteeCodeById(billId);
-  const position = useMeasureStore
-    .getState()
-    .getUserTrackedMeasurePositionById(billId);
-  const billTitle = useMeasureStore.getState().getMeasureTitleById(billId);
-  const measureColor = useMeasureStore
-    .getState()
-    .getUserMeasureColorById(billId);
+  const { getMeasureCommitteeCodeById, getMeasureTitleById } =
+    useMeasureStore();
+  const { getUserTrackedMeasurePositionById, getUserMeasureColorById } =
+    useUserStore();
+
+  const committeeCode = getMeasureCommitteeCodeById(billId);
+  const position = getUserTrackedMeasurePositionById(billId);
+  const billTitle = getMeasureTitleById(billId);
+  const measureColor = getUserMeasureColorById(billId);
 
   const colorStyles = {
     borderLeft: `8px solid ${measureColor}`,
@@ -55,7 +56,9 @@ const Bill = ({ billId }: BillProps) => {
               {position === 'Support' && '🌍'}
               {position === 'Oppose' && '🚨'}
             </Box>
-            <Typography variant="h5">{billId}</Typography>
+            <Typography variant="h5">
+              {getReadableId(parseUniqueId(billId))}
+            </Typography>
           </Box>
         </Button>
       </Tooltip>

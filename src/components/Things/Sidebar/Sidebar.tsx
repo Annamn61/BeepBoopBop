@@ -1,4 +1,3 @@
-import useMeasureStore from '../../../store/MeasureStore';
 import Typography from '@mui/material/Typography';
 import { AddTrackedBill } from './AddTrackedBill/AddTrackedBill';
 import SidebarMeasure from './SidebarMeasure/SidebarMeasure';
@@ -9,6 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import Drawer from '@mui/material/Drawer';
 import Tooltip from '@mui/material/Tooltip';
+import { useUserStore } from '../../../store/UserStore';
+import { getMeasureUniqueId } from '../../../utils/measure';
 // import SearchBar from '../Accessories/SearchBar/SearchBar';
 
 interface SidebarProps {
@@ -17,7 +18,7 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ open, setOpen }: SidebarProps) => {
-  const { userTrackedMeasures } = useMeasureStore();
+  const { userTrackedMeasures } = useUserStore();
 
   return (
     <Box sx={styles.drawerContainer}>
@@ -44,12 +45,13 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
               <AddTrackedBill />
             </Box>
             {/* <SearchBar /> */}
-            {userTrackedMeasures.map((userTrackedMeasure) => (
-              <SidebarMeasure
-                userTrackedMeasure={userTrackedMeasure}
-                key={userTrackedMeasure.id}
-              />
-            ))}
+            {userTrackedMeasures &&
+              userTrackedMeasures.map((utm) => (
+                <SidebarMeasure
+                  userTrackedMeasure={utm}
+                  key={getMeasureUniqueId(utm)}
+                />
+              ))}
           </Box>
         </Box>
       </Drawer>

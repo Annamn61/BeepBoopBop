@@ -50,9 +50,10 @@ export interface MeasureSponsors {
 }
 
 export interface UserTrackedMeasure {
-    id: string, 
+    MeasurePrefix: string,
+    MeasureNumber: number, 
     position: 'Support' | 'Oppose' | '?',
-    sessionKey: string,
+    SessionKey: string,
     isDisplayed: boolean,
     color: string,
     nickname: string,
