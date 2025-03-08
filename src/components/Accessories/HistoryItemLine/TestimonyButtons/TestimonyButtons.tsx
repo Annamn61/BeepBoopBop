@@ -1,7 +1,7 @@
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
-import InterpreterModeRoundedIcon from '@mui/icons-material/InterpreterModeRounded';
+// import InterpreterModeRoundedIcon from '@mui/icons-material/InterpreterModeRounded';
 import { TestimonyLinks } from '../../../../types/CommitteeAgendaTypes';
 
 interface Props {
