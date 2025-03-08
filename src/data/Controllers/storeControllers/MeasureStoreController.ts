@@ -6,6 +6,7 @@ import useCommitteeAgendaStore from "../../../store/CommitteeAgendaStore";
 
 
 export const useMeasureStoreController = (measuresCacheObject: LocalStoreageMeasureCache, areMeasureCacheObjectsLoading: boolean) => {
+    console.log(areMeasureCacheObjectsLoading);
     const { setUnfilteredMeasures } = useMeasureStore();
     const { setUnfilteredHistory } = useHistoryStore();
     const { setUnfilteredCommitteeAgenda } = useCommitteeAgendaStore();

@@ -1,6 +1,6 @@
-// import IconButton from '@mui/material/IconButton';
-// import Tooltip from '@mui/material/Tooltip';
-// import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ConfirmationModal from '../../../Accessories/ConfirmationModal/ConfirmationModal';
 import { useModal } from '../../../../utils/modal';
 import { Measure } from '../../../../types/MeasureTypes';
@@ -18,7 +18,7 @@ const DeleteBillButton = ({ measureId, onMouseEnter, onMouseLeave }: Props) => {
 
   return (
     <>
-      {/* <Tooltip title="Remove bill from tracking">
+      <Tooltip title="Remove bill from tracking">
         <IconButton
           id="deleteIcon"
           size="small"
@@ -31,7 +31,7 @@ const DeleteBillButton = ({ measureId, onMouseEnter, onMouseLeave }: Props) => {
         >
           <CloseRoundedIcon />
         </IconButton>
-      </Tooltip> */}
+      </Tooltip>
       <ConfirmationModal
         anchorEl={anchorEl}
         onClose={setModalClosed}
