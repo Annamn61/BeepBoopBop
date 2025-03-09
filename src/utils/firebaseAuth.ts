@@ -12,7 +12,6 @@ import { firebaseApp } from "./firebaseInit";
 
 export const auth = getAuth(firebaseApp);
 const provider = new GoogleAuthProvider();
-provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 
 export const signInWithGoogle = async () => signInWithPopup(auth, provider);
 
