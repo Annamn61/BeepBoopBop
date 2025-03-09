@@ -8,6 +8,13 @@ const white = '#fff';
 const boxShadow = '2px 2px 4px 0px rgba(127, 127, 132, 0.2)';
 const lightGreen = "#EFFAEF"
 
+declare module "@mui/material/Button" {
+    interface ButtonPropsVariantOverrides {
+      filled: true;
+    }
+  }
+  
+
 const theme = createTheme({
     palette: {
         primary: {
@@ -90,6 +97,26 @@ const theme = createTheme({
     },
   components: {
     MuiButton: {
+        variants: [
+            {
+              props: { variant: "filled" }, // New variant name
+              style: {
+                backgroundColor: "#3E753B",
+                color: "#fff",
+                borderRadius: "40px",
+                height: '44px',
+                padding: '0px 24px',
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#5B8D59",
+                },
+                "&:disabled": {
+                    backgroundColor: "#D4DFD4",
+                    color: "#9EB09E"
+                }
+              },
+            },
+          ],
         styleOverrides: {
           root: {
             borderRadius: "4px",
@@ -109,6 +136,10 @@ const theme = createTheme({
               boxShadow: 'none',
             },
           },
+          text: {
+            color: "#3E753B",
+            padding: 0,
+          }
         },
       },
     MuiTextField: {

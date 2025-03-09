@@ -93,8 +93,7 @@ export const AddTrackedBill = () => {
             onChange={(e) => setSessionKey(e.target.value)}
           />
           <Button
-            sx={styles.addButton}
-            variant="contained"
+            variant="filled"
             onClick={() => {
               setAnchorEl(null);
               addUserTrackedMeasure({

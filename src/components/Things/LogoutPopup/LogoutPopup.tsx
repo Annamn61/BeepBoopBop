@@ -3,6 +3,7 @@ import Popover from '@mui/material/Popover';
 import { styles } from './LogoutPopup.styles';
 import { logout } from '../../../utils/firebaseAuth';
 import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -15,7 +16,6 @@ const LogoutPopup = ({ anchorEl, onClose }: Props) => {
     <Popover
       open={!!anchorEl}
       anchorEl={anchorEl}
-      sx={styles.popover}
       onClose={() => setTimeout(onClose, 0)} // !! forces a rerender, something to do with double popovers?
       anchorOrigin={{
         vertical: 'bottom',
@@ -27,7 +27,15 @@ const LogoutPopup = ({ anchorEl, onClose }: Props) => {
       }}
     >
       <Box sx={styles.container}>
-        <Button onClick={logout}>Lougout</Button>
+        <Typography>Are you sure you want to logout?</Typography>
+        <Box sx={styles.buttons}>
+          <Button variant="text" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button variant="filled" onClick={logout}>
+            Logout
+          </Button>
+        </Box>
       </Box>
     </Popover>
   );

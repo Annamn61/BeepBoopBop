@@ -40,12 +40,4 @@ export const styles: Record<string, SxProps<Theme>> = {
         width: '144px',
         flexWrap: 'wrap',
     },
-    addButton: {
-        width: 'fit-content',
-        backgroundColor: '#3E753B',
-        borderRadius: '100px',
-        padding: '8px 24px',
-        color: '#fff',
-        textTransform: 'none',
-    }
 };

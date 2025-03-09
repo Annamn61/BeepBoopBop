@@ -1,4 +1,3 @@
-import { TextField } from '@mui/material';
 import { useState } from 'react';
 // import './login.scss';
 import {
@@ -6,6 +5,13 @@ import {
   createUser,
   signInWithGoogle,
 } from '../../../utils/firebaseAuth';
+import google from '../../../assets/GoogleLogo.svg';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { styles } from './Login.styles';
+import Typography from '@mui/material/Typography';
+import logo from '../../../assets/OreganoLogo.svg';
 // import logo from '../../assets/FF_Logo.svg';
 // import logo_large from '../../assets/FF_logo_large.svg';
 
@@ -34,27 +40,27 @@ export const Login: React.FC = () => {
 
   const emailField = (
     <TextField
-      className="login-field"
+      sx={styles.field}
       value={email}
       type="text"
       variant="outlined"
       placeholder="Email"
       autoFocus={true}
       error={error && error.field === 'email'}
-      // helperText={error && (error.field === 'email') && error.message}
+      helperText={error && error.field === 'email' ? error.message : null}
       onChange={(e) => setEmail(e.target.value)}
     />
   );
 
   const passwordField = (
     <TextField
-      className="login-field"
+      sx={styles.field}
       value={password}
       type="password"
       variant="outlined"
       placeholder="Password"
       error={error && error.field === 'password'}
-      // helperText={error && (error.field === 'password') && error.message}
+      helperText={error && error.field === 'password' ? error.message : null}
       autoFocus={true}
       onChange={(e) => setPassword(e.target.value)}
     />
@@ -62,7 +68,7 @@ export const Login: React.FC = () => {
 
   const confirmPasswordField = (
     <TextField
-      className="login-field"
+      sx={styles.field}
       value={confirm}
       type="password"
       variant="outlined"
@@ -70,49 +76,27 @@ export const Login: React.FC = () => {
       autoFocus={true}
       autoComplete="off"
       error={error && error.field === 'password2'}
-      // helperText={error && (error.field === 'password2') && error.message}
+      helperText={error && error.field === 'password2' ? error.message : null}
       onChange={(e) => setConfirmPass(e.target.value)}
     />
   );
 
   const actionButton = (
-    <button
-      disabled={!email || !password}
-      className="button-decorative large"
-      onClick={submit}
-    >
+    <Button disabled={!email || !password} variant="filled" onClick={submit}>
       {signingUp ? 'Sign Up' : 'Sign In'}
-    </button>
+    </Button>
   );
 
   const googleButton = (
-    <button
-      className="button-secondary-decorative large"
+    <Button
+      sx={styles.googleButton}
       onClick={signInWithGoogle}
+      variant="outlined"
     >
-      <img src="" alt="google logo" />
-      Log in with Google
-    </button>
+      <Box src={google} sx={styles.google} component="img" alt="google logo" />
+      Sign in with Google
+    </Button>
   );
-
-  //   const guestButton = (
-  //     <button className="button-secondary-decorative large" onClick={guestSignIn}>
-  //       Continue as a guest
-  //     </button>
-  //   );
-
-  const welcomeText = () => {
-    const welcome = signingUp ? 'Welcome,' : 'Welcome back.';
-    const subtext = signingUp
-      ? "Create an account to save the bills you're interested in"
-      : 'Sign in to see your saved bills';
-    return (
-      <>
-        <h2 className="lowercase">{welcome}</h2>
-        <p>{subtext}</p>
-      </>
-    );
-  };
 
   const switchButton = () => {
     const helperText = signingUp
@@ -120,48 +104,45 @@ export const Login: React.FC = () => {
       : "Don't have an account?";
     const buttonText = signingUp ? 'Sign In' : 'Sign Up';
     return (
-      <div className="switch-login row">
-        <p>{helperText}</p>
-        <button
-          className="button-text"
+      <>
+        <Typography>{helperText}</Typography>
+        <Button
+          variant="text"
+          //   className="button-text"
           onClick={() => setSigningUp(!signingUp)}
         >
           {buttonText}
-        </button>
-      </div>
+        </Button>
+      </>
     );
   };
 
-  const errorMessage = (
-    <div className="error-message">
-      <p>{error?.message}</p>
-    </div>
-  );
+  const errorMessage = error &&
+    !['password2', 'password', 'email'].includes(error.field) && (
+      <div className="error-message">
+        <p>{error?.message}</p>
+      </div>
+    );
 
   return (
-    <div className="login">
-      <div className="login-container row">
-        <div className="login-container-logo row"></div>
-        <div>
-          <div className="login-functions col">
-            <div className="login-functions-fields col">
-              {welcomeText()}
-              {emailField}
-              {passwordField}
-              {signingUp && confirmPasswordField}
-              {errorMessage}
-              {actionButton}
-              <div className="row">
-                <div className="login-functions-fields-line" />
-                or
-                <div className="login-functions-fields-line" />
-              </div>
-              {googleButton}
-            </div>
-            {switchButton()}
-          </div>
-        </div>
-      </div>
-    </div>
+    <Box sx={styles.container}>
+      <Box sx={styles.title}>
+        <Typography variant="h1">Welcome</Typography>
+        <Box sx={styles.logo} src={logo} component="img" />
+      </Box>
+      <Typography>
+        Sign in to customize the list of bills you're tracking
+      </Typography>
+      <Box sx={styles.formFields}>
+        {emailField}
+        {passwordField}
+        {signingUp && confirmPasswordField}
+        {errorMessage}
+        {actionButton}
+        or
+        {googleButton}
+        {switchButton()}
+      </Box>
+    </Box>
   );
 };

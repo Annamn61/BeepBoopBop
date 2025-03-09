@@ -8,6 +8,7 @@ import FF from '../FF/FF';
 import Button from '@mui/material/Button';
 import LogoutPopup from '../LogoutPopup/LogoutPopup';
 import LoginPopup from '../LoginPopup/LoginPopup';
+import Typography from '@mui/material/Typography';
 
 interface Props {}
 
@@ -25,14 +26,19 @@ const Header = ({}: Props) => {
       <TitleLogo />
       <FF value="login">
         {currentUser && (
-          <>
-            <Button onClick={setModalOpen}>Logout</Button>
+          <Box sx={styles.logout}>
+            <Typography>{currentUser.email}</Typography>
+            <Button variant="text" onClick={setModalOpen}>
+              Logout
+            </Button>
             <LogoutPopup anchorEl={anchorEl} onClose={setModalClosed} />
-          </>
+          </Box>
         )}
         {!currentUser && (
           <>
-            <Button onClick={setModalOpen}>Login</Button>
+            <Button variant="filled" onClick={setModalOpen}>
+              Login
+            </Button>
             <LoginPopup anchorEl={anchorEl} onClose={setModalClosed} />
           </>
         )}
