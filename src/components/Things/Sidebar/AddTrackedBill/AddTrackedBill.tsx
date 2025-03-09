@@ -9,10 +9,11 @@ import ColorSquare from '../../../Accessories/ColorSquare/ColorSquare';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { styles } from './AddTrackedBill.styles';
 import ColorSelectorPopover from './ColorSelectorPopover/ColorSelectorPopover';
-// import Tooltip from '@mui/material/Tooltip';
-// import AddRoundedIcon from '@mui/icons-material/AddRounded';
-// import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import IconButton from '@mui/material/IconButton';
 import { useUserStore } from '../../../../store/UserStore';
+import FF from '../../FF/FF';
 
 export const AddTrackedBill = () => {
   const { addUserTrackedMeasure } = useUserStore();
@@ -38,11 +39,13 @@ export const AddTrackedBill = () => {
 
   return (
     <>
-      {/* <Tooltip title="Add bill to track">
-        <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-          <AddRoundedIcon />
-        </IconButton>
-      </Tooltip> */}
+      <FF value="add">
+        <Tooltip title="Add bill to track">
+          <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+            <AddRoundedIcon />
+          </IconButton>
+        </Tooltip>
+      </FF>
       <Popover
         open={!!anchorEl}
         anchorEl={anchorEl}
