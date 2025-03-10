@@ -17,5 +17,6 @@ export type MeasureNumber = number;
 export type SessionKey = string;
 
 export interface LocalStorageCommitteeCache {
-    value: Committee[];
+    value: Committee[],
+    lastUpdate: string,
 }

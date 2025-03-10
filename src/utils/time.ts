@@ -77,11 +77,19 @@ export const getMMHHFromDate = (date: Date) => {
     return `${date.getFullYear()}-${getTwoDigits(date.getMonth() + 1)}-${getTwoDigits(date.getDate())}`
   }
 
-  export const isOutOfDate = (timeString: string) => {
+  export const isOutOfDate_OneHour = (timeString: string) => {
     const now = new Date();
     const lastUpdated = new Date(timeString)
     const oneHourInMilliseconds = 60 * 60 * 1000;
     const dateToUpdateData = new Date(lastUpdated.getTime() + oneHourInMilliseconds)
+    return now > dateToUpdateData;
+  }
+
+  export const isOutOfDate_OneWeek = (timeString: string) => {
+    const now = new Date();
+    const lastUpdated = new Date(timeString)
+    const oneWeekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+    const dateToUpdateData = new Date(lastUpdated.getTime() + oneWeekInMilliseconds)
     return now > dateToUpdateData;
   }
   

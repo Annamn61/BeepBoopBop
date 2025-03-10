@@ -1,7 +1,7 @@
-import { Component, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { UserTrackedMeasure } from "../../../types/MeasureTypes";
 import { LocalStoreageMeasureCache, LocalStorageCommitteeCache } from "../../../types/cache";
-import { isOutOfDate } from "../../../utils/time";
+import { isOutOfDate_OneHour, isOutOfDate_OneWeek } from "../../../utils/time";
 import { fetchAgendaItems, fetchMeasure, fetchCommittees } from "../../measures/measures";
 import { getMeasureUniqueId } from "../../../utils/measure";
 
@@ -11,6 +11,7 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
     const [committeesCacheObject, setCommitteesCacheObject] = useState(getCommitteesFromLocalStorage());
     const [isCommitteesCacheObjectLoading, setIsCommitteesCacheObjectLoading] = useState(false);
     const utmIdList = useMemo(() => userTrackedMeasures && userTrackedMeasures.map((utm) => getMeasureUniqueId(utm)), [userTrackedMeasures])
+    let b_CommitteesOutOfDate = committeesCacheObject ? getCommitteesOutOfDate(committeesCacheObject) : true;
 
     useEffect(() => {
         if(!utmIdList) {
@@ -18,6 +19,9 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
         }
 
         const { refreshList, removeList } = getRequestList(measuresCacheObject, utmIdList);
+
+        // hacky way to check if committees are in need of update
+        b_CommitteesOutOfDate = committeesCacheObject ? getCommitteesOutOfDate(committeesCacheObject) : true;
         
         // REFRESH STALE + GET NEW 
         setIsMeasureCacheObjectLoading(true);
@@ -63,10 +67,13 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
         // FETCH COMMITTEES
         setIsCommitteesCacheObjectLoading(true);
         fetchCommittees().then((committees) => {
-            setCommitteesCacheObject(committees);
+            setCommitteesCacheObject({
+                ...committees,
+                lastUpdate: new Date().toISOString(),
+            });
             setIsCommitteesCacheObjectLoading(false);
         });
-    }, [])
+    }, [b_CommitteesOutOfDate])
 
     useEffect(() => {
         // SET TO LOCAL STORAGE CACHE
@@ -113,7 +120,7 @@ const getRequestList = (measureCacheObjects: LocalStoreageMeasureCache, utmIdLis
 
     // add ids not in the cache, or out of data in the cache
     utmIdList.forEach((utmKey) => {
-        if(!measureCacheObjKeys.includes(utmKey) || isOutOfDate(measureCacheObjects[utmKey].lastUpdate)) {
+        if(!measureCacheObjKeys.includes(utmKey) || isOutOfDate_OneHour(measureCacheObjects[utmKey].lastUpdate)) {
             refreshList.push(utmKey);
         }
     })
@@ -129,4 +136,9 @@ const getRequestList = (measureCacheObjects: LocalStoreageMeasureCache, utmIdLis
         refreshList,
         removeList,
     }
+}
+
+// check if committees are out of date
+const getCommitteesOutOfDate = (committeeCacheObject: LocalStorageCommitteeCache) => {
+    return committeeCacheObject ? isOutOfDate_OneWeek(committeeCacheObject.lastUpdate) : true;
 }
