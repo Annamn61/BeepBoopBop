@@ -13,6 +13,7 @@ import useCommitteeAgendaStore from '../../../store/CommitteeAgendaStore';
 import { getShortFormatDateWithTime } from '../../../utils/time';
 import ViewInOlisButton from '../ViewInOlisButton/ViewInOlisButton';
 import LaunchRoundedIcon from '@mui/icons-material/LaunchRounded';
+import useCommitteeStore from '../../../store/CommitteeStore';
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -29,6 +30,7 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
   } = useMeasureStore();
   const { getUpdatesById } = useHistoryStore();
   const { getUpcomingAgendaItemsById } = useCommitteeAgendaStore();
+  const { getFullCommitteeNameByCode } = useCommitteeStore();
   const measure = getMeasureById(measureId);
   const agendaItems = getUpcomingAgendaItemsById(measureId);
   const sponsors = getSortedMeasureSponsorsById(measureId);
@@ -78,7 +80,7 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
           </Box>
           <Box sx={styles.infoSection}>
             <Typography variant="h3">Summary</Typography>
-            {/* <Box sx={styles.lineItem}>
+{/* <Box sx={styles.lineItem}>
               <Typography variant="subtitle2">Catchline</Typography>
               <Typography variant="body1">{CatchLine}</Typography>
             </Box> */}
@@ -88,7 +90,9 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
             </Box>
             <Box sx={styles.lineItem}>
               <Typography variant="subtitle2">Location</Typography>
-              <Typography variant="body1">{CurrentLocation}</Typography>
+              <Typography variant="body1">
+                {`${CurrentLocation} | ${getFullCommitteeNameByCode(measure?.CurrentCommitteeCode)}`}
+              </Typography>
             </Box>
             <Box sx={styles.lineItem}>
               <Typography sx={{ maxWidth: '100px' }} variant="subtitle2">

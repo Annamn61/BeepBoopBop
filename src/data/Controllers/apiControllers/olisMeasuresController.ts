@@ -1,13 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { Component, useEffect, useMemo, useState } from "react";
 import { UserTrackedMeasure } from "../../../types/MeasureTypes";
-import { LocalStoreageMeasureCache } from "../../../types/cache";
+import { LocalStoreageMeasureCache, LocalStorageCommitteeCache } from "../../../types/cache";
 import { isOutOfDate } from "../../../utils/time";
-import { fetchAgendaItems, fetchMeasure } from "../../measures/measures";
+import { fetchAgendaItems, fetchMeasure, fetchCommittees } from "../../measures/measures";
 import { getMeasureUniqueId } from "../../../utils/measure";
 
 export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasure[] | undefined) => {
     const [measuresCacheObject, setMeasureCacheObjects] = useState(getMeasuresFromLocalStorage());
     const [isMeasureCacheObjectLoading, setIsMeasureCacheObjectLoading] = useState(false);
+    const [committeesCacheObject, setCommitteesCacheObject] = useState(getCommitteesFromLocalStorage());
+    const [isCommitteesCacheObjectLoading, setIsCommitteesCacheObjectLoading] = useState(false);
     const utmIdList = useMemo(() => userTrackedMeasures && userTrackedMeasures.map((utm) => getMeasureUniqueId(utm)), [userTrackedMeasures])
 
     useEffect(() => {
@@ -44,8 +46,9 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
                 }));
             })
         })
+
         setIsMeasureCacheObjectLoading(false);
-        
+
         // REMOVE UNUSED
         setMeasureCacheObjects((prev) => {
             const filteredObj = Object.fromEntries(
@@ -57,14 +60,30 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
     }, [utmIdList])
 
     useEffect(() => {
+        // FETCH COMMITTEES
+        setIsCommitteesCacheObjectLoading(true);
+        fetchCommittees().then((committees) => {
+            setCommitteesCacheObject(committees);
+            setIsCommitteesCacheObjectLoading(false);
+        });
+    }, [])
+
+    useEffect(() => {
         // SET TO LOCAL STORAGE CACHE
         console.log('setting to', measuresCacheObject)
         localStorage.setItem('Measures', JSON.stringify(measuresCacheObject));
     }, [measuresCacheObject])
 
+    useEffect(() => {
+        // SET TO LOCAL STORAGE CACHE
+        localStorage.setItem('Committees', JSON.stringify(committeesCacheObject));
+    }, [committeesCacheObject]);
+
     return {
         measuresCacheObject,
         isMeasureCacheObjectLoading,
+        committeesCacheObject,
+        isCommitteesCacheObjectLoading,
         // could set a total number here too for a progress bar
     }
 }
@@ -73,6 +92,15 @@ const getMeasuresFromLocalStorage = () => {
     const result = localStorage.getItem('Measures');
     if(result) {
         const cache = JSON.parse(result) as LocalStoreageMeasureCache;
+        return cache;
+    }
+    return {};
+}
+
+const getCommitteesFromLocalStorage = () => {
+    const result = localStorage.getItem('Committees');
+    if(result) {
+        const cache = JSON.parse(result) as LocalStorageCommitteeCache;
         return cache;
     }
     return {};

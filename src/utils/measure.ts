@@ -1,3 +1,5 @@
+import { SESSION_KEY } from "./constants";
+
 export const getMeasureUniqueId = (obj: { MeasurePrefix: string, MeasureNumber: number, SessionKey: string}) => {
     const {MeasurePrefix, MeasureNumber, SessionKey} = obj;
     return `${MeasurePrefix}-${MeasureNumber}-${SessionKey}`;
@@ -14,7 +16,7 @@ export const parseUniqueId = (uniqueId: string) => {
     return {
         MeasurePrefix,
         MeasureNumber: Number(MeasureNumber),
-        SessionKey, 
+        SessionKey,
     }
 }
 
@@ -33,6 +35,11 @@ export const getMeasureIdentifierFilters = (id: string, sessionKey: string) => {
     return encodeURIComponent(
       `MeasureNumber eq ${MeasureNumber} and MeasurePrefix eq '${MeasurePrefix}' and SessionKey eq '${SessionKey}'`
     )
+  }
+
+  export const getCommitteeFilters = () => {
+    return encodeURIComponent(
+      `SessionKey eq '${SESSION_KEY}'`)
   }
   
 export const getMeasurePrefixNumberFromId = (id: string) => {

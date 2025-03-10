@@ -5,3 +5,5 @@ export const TOOLTIP_MESSAGES = {
     DeleteMeasure: 'Remove bill from tracking',
     ToggleVisibility: 'Toggle Measure Visibility'
 }
+
+export const SESSION_KEY = '2025R1'
