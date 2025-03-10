@@ -37,7 +37,7 @@ export const getMeasureIdentifierFilters = (id: string, sessionKey: string) => {
     )
   }
 
-  export const getCommitteeFilters = () => {
+  export const getSessionKeyFilter = () => {
     return encodeURIComponent(
       `SessionKey eq '${SESSION_KEY}'`)
   }

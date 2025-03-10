@@ -1,6 +1,5 @@
 import axios from "axios";
-import { getCommitteeFilters, getMeasureFilters } from "../../utils/measure";
-import { LocalStorageCommitteeCache } from "../../types/cache";
+import { getMeasureFilters, getSessionKeyFilter } from "../../utils/measure";
 
 const baseURL = 'https://api.oregonlegislature.gov/odata/odataservice.svc/';
 
@@ -47,18 +46,26 @@ export const fetchMeasure = async (
       }
   };
 
-  export const fetchCommittees = async (): Promise<LocalStorageCommitteeCache> => {
+  export const fetchCommittees = async () => {
 
-    const filters = getCommitteeFilters();
-    console.log("fetching committees");
+    const filters = getSessionKeyFilter();
     try {
-        console.log("fetching committees response");
         const response = await axios.get(`${baseURL}/Committees?$filter=${filters}`);
-        console.log("fetching committees response 2");
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching committees:', error);
+        throw error;
+    }
+  };
+
+  export const fetchLegislators = async () => {
+
+    const filters = getSessionKeyFilter();
+    try {
+        const response = await axios.get(`${baseURL}/Legislators?$filter=${filters}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching Legislators:', error);
         throw error;
     }
   };

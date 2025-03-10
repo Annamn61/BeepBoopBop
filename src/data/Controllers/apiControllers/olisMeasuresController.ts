@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { UserTrackedMeasure } from "../../../types/MeasureTypes";
-import { LocalStoreageMeasureCache, LocalStorageCommitteeCache } from "../../../types/cache";
+import { LocalStoreageMeasureCache, LocalStorageCommitteeCache, LocalStorageLegislatorCache } from "../../../types/cache";
 import { isOutOfDate_OneHour, isOutOfDate_OneWeek } from "../../../utils/time";
-import { fetchAgendaItems, fetchMeasure, fetchCommittees } from "../../measures/measures";
+import { fetchAgendaItems, fetchMeasure, fetchCommittees, fetchLegislators } from "../../measures/measures";
 import { getMeasureUniqueId } from "../../../utils/measure";
 
 export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasure[] | undefined) => {
@@ -10,8 +10,11 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
     const [isMeasureCacheObjectLoading, setIsMeasureCacheObjectLoading] = useState(false);
     const [committeesCacheObject, setCommitteesCacheObject] = useState(getCommitteesFromLocalStorage());
     const [isCommitteesCacheObjectLoading, setIsCommitteesCacheObjectLoading] = useState(false);
+    const [legislatorsCacheObject, setLegislatorsCacheObject] = useState(getLegislatorsFromLocalStorage());
+    const [isLegislatorsCacheObjectLoading, setIsLegislatorsCacheObjectLoading] = useState(false);
     const utmIdList = useMemo(() => userTrackedMeasures && userTrackedMeasures.map((utm) => getMeasureUniqueId(utm)), [userTrackedMeasures])
     let b_CommitteesOutOfDate = committeesCacheObject ? getCommitteesOutOfDate(committeesCacheObject) : true;
+    let b_LegislatorsOutOfDate = legislatorsCacheObject ? getLegislatorsOutOfDate(legislatorsCacheObject) : true;
 
     useEffect(() => {
         if(!utmIdList) {
@@ -22,6 +25,7 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
 
         // hacky way to check if committees are in need of update
         b_CommitteesOutOfDate = committeesCacheObject ? getCommitteesOutOfDate(committeesCacheObject) : true;
+        b_LegislatorsOutOfDate = legislatorsCacheObject ? getLegislatorsOutOfDate(legislatorsCacheObject) : true;
         
         // REFRESH STALE + GET NEW 
         setIsMeasureCacheObjectLoading(true);
@@ -76,6 +80,18 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
     }, [b_CommitteesOutOfDate])
 
     useEffect(() => {
+        // FETCH LEGISLATORS
+        setIsLegislatorsCacheObjectLoading(true);
+        fetchLegislators().then((legislators) => {
+            setLegislatorsCacheObject({
+                ...legislators,
+                lastUpdate: new Date().toISOString(),
+            });
+            setIsLegislatorsCacheObjectLoading(false);
+        });
+    }, [b_LegislatorsOutOfDate])
+
+    useEffect(() => {
         // SET TO LOCAL STORAGE CACHE
         console.log('setting to', measuresCacheObject)
         localStorage.setItem('Measures', JSON.stringify(measuresCacheObject));
@@ -86,11 +102,18 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
         localStorage.setItem('Committees', JSON.stringify(committeesCacheObject));
     }, [committeesCacheObject]);
 
+    useEffect(() => {
+        // SET TO LOCAL STORAGE CACHE
+        localStorage.setItem('Legislators', JSON.stringify(legislatorsCacheObject));
+    }, [legislatorsCacheObject]);
+
     return {
         measuresCacheObject,
         isMeasureCacheObjectLoading,
         committeesCacheObject,
         isCommitteesCacheObjectLoading,
+        legislatorsCacheObject,
+        isLegislatorsCacheObjectLoading,
         // could set a total number here too for a progress bar
     }
 }
@@ -108,6 +131,15 @@ const getCommitteesFromLocalStorage = () => {
     const result = localStorage.getItem('Committees');
     if(result) {
         const cache = JSON.parse(result) as LocalStorageCommitteeCache;
+        return cache;
+    }
+    return null;
+}
+
+const getLegislatorsFromLocalStorage = () => {
+    const result = localStorage.getItem('Legislators');
+    if(result) {
+        const cache = JSON.parse(result) as LocalStorageLegislatorCache;
         return cache;
     }
     return null;
@@ -141,4 +173,9 @@ const getRequestList = (measureCacheObjects: LocalStoreageMeasureCache, utmIdLis
 // check if committees are out of date
 const getCommitteesOutOfDate = (committeeCacheObject: LocalStorageCommitteeCache) => {
     return committeeCacheObject ? isOutOfDate_OneWeek(committeeCacheObject.lastUpdate) : true;
+}
+
+// check if legislators are out of date
+const getLegislatorsOutOfDate = (legislatorCacheObject: LocalStorageLegislatorCache) => {
+    return legislatorCacheObject ? isOutOfDate_OneWeek(legislatorCacheObject.lastUpdate) : true;
 }
