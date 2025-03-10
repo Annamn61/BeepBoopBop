@@ -8,7 +8,8 @@ interface LegislatorState {
   setUnfilteredLegislators: (legislators: Legislator[]) => void;
   
   getLegislatorByCode: (code: string) => Legislator | undefined;
-  getFullLegislatorNameByCode: (code: string) => string | undefined;
+  getFullLegislatorNameByCode: (code: string) => string;
+  getFullLegislatorNameByCodeWithTitle: (code: string) => string;
 }
 
 export const useLegislatorStore = create<LegislatorState>((set, get) => ({
@@ -20,7 +21,11 @@ export const useLegislatorStore = create<LegislatorState>((set, get) => ({
   getLegislatorByCode: (code: string) => get().legislators?.find((legislator) => legislator.LegislatorCode === code),
   getFullLegislatorNameByCode: (code: string) => {
     const legislator = get().legislators?.find((legislator) => legislator.LegislatorCode === code);
-    return legislator ? `${legislator.FirstName} ${legislator.LastName}` : undefined;
+    return legislator ? `${legislator.FirstName} ${legislator.LastName}` : 'undefined';
+  },
+  getFullLegislatorNameByCodeWithTitle: (code: string) => {
+    const legislator = get().legislators?.find((legislator) => legislator.LegislatorCode === code);
+    return legislator ? `${legislator.Title.slice(0, 3)} ${legislator.FirstName} ${legislator.LastName}` : 'undefined';
   },
 }));
 

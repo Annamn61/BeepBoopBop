@@ -14,6 +14,7 @@ import { getShortFormatDateWithTime } from '../../../utils/time';
 import ViewInOlisButton from '../ViewInOlisButton/ViewInOlisButton';
 import LaunchRoundedIcon from '@mui/icons-material/LaunchRounded';
 import useCommitteeStore from '../../../store/CommitteeStore';
+import useLegislatorStore from '../../../store/LegislatorStore';
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -31,6 +32,7 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
   const { getUpdatesById } = useHistoryStore();
   const { getUpcomingAgendaItemsById } = useCommitteeAgendaStore();
   const { getFullCommitteeNameByCode } = useCommitteeStore();
+  const { getFullLegislatorNameByCodeWithTitle } = useLegislatorStore();
   const measure = getMeasureById(measureId);
   const agendaItems = getUpcomingAgendaItemsById(measureId);
   const sponsors = getSortedMeasureSponsorsById(measureId);
@@ -99,13 +101,23 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
                 Chief Sponsors
               </Typography>
               <Typography variant="body1">
-                {chiefSponsors.map((s) => s.LegislatoreCode + ', ')}
+                {chiefSponsors.map((s) => (
+                  <>
+                  {getFullLegislatorNameByCodeWithTitle(s.LegislatoreCode)}
+                  <br />
+                  </>
+                ))}
               </Typography>
             </Box>
             <Box sx={styles.lineItem}>
               <Typography variant="subtitle2">Sponsors</Typography>
               <Typography variant="body1">
-                {sponsors.map((s) => s.LegislatoreCode + ', ')}
+                {sponsors.map((s) => (
+                  <>
+                  {getFullLegislatorNameByCodeWithTitle(s.LegislatoreCode)}
+                  <br />
+                  </>
+                ))}
               </Typography>
             </Box>
           </Box>
