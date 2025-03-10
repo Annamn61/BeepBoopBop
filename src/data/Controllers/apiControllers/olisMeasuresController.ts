@@ -103,7 +103,7 @@ const getCommitteesFromLocalStorage = () => {
         const cache = JSON.parse(result) as LocalStorageCommitteeCache;
         return cache;
     }
-    return {};
+    return null;
 }
 
 const getRequestList = (measureCacheObjects: LocalStoreageMeasureCache, utmIdList: string[]) => {

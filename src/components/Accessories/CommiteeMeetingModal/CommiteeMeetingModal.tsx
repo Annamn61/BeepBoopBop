@@ -10,6 +10,7 @@ import { getCommitteeMeetingURL } from '../../../utils/CommitteeMeeting';
 import IconButton from '@mui/material/IconButton';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { getMeasureUniqueId } from '../../../utils/measure';
+import useCommitteeStore from '../../../store/CommitteeStore';
 
 interface Props {
   open: boolean;
@@ -19,6 +20,7 @@ interface Props {
 
 const CommiteeMeetingModal = ({ open, onClose, committeeMeetingId }: Props) => {
   const { getCommitteeMeetingWithItemsByGuid } = useCommitteeAgendaStore();
+  const { getFullCommitteeNameByCode } = useCommitteeStore();
 
   const meetingObject = getCommitteeMeetingWithItemsByGuid(committeeMeetingId);
 
@@ -38,7 +40,7 @@ const CommiteeMeetingModal = ({ open, onClose, committeeMeetingId }: Props) => {
           </IconButton>
         </Box>
         <Box sx={styles.header}>
-          <Typography variant="h1">{CommitteeMeeting.CommitteeCode}</Typography>
+          <Typography variant="h1">{getFullCommitteeNameByCode(CommitteeMeeting.CommitteeCode)}</Typography>
           <Typography variant="subtitle2">
             {getShortFormatDateWithTime(new Date(CommitteeMeeting.MeetingDate))}
           </Typography>

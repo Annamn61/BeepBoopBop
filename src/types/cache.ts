@@ -1,5 +1,5 @@
-import { MeasureObject } from "./MeasureTypes";
 import { Committee } from "./CommitteeTypes";
+import { MeasureObject } from "./MeasureTypes";
 
 export interface LocalStoreageMeasureCache {
     [uniqueMeasureId: UniqueMeasureIdentifier] : MeasureCacheObject;
@@ -17,10 +17,5 @@ export type MeasureNumber = number;
 export type SessionKey = string;
 
 export interface LocalStorageCommitteeCache {
-    [uniqueCommitteeId: string]: CommitteeCacheObject;
-}
-
-export interface CommitteeCacheObject {
-    CommitteeData: Committee,
-    lastUpdate: string,
+    value: Committee[];
 }
