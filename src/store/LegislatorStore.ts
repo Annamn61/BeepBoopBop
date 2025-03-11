@@ -12,6 +12,7 @@ interface LegislatorState {
   getFullLegislatorNameByCodeWithTitle: (code: string) => string;
   getEmailByLegislatorCode: (code: string) => string | undefined;
   getWebsiteByLegislatorCode: (code: string) => string | undefined;
+  exportLegislatorContactsAsCSV: (codes: string[]) => string;
 }
 
 export const useLegislatorStore = create<LegislatorState>((set, get) => ({
@@ -37,6 +38,14 @@ export const useLegislatorStore = create<LegislatorState>((set, get) => ({
     const legislator = get().legislators?.find((legislator) => legislator.LegislatorCode === code);
     return legislator ? legislator.WebSiteUrl : undefined;
   },
+  exportLegislatorContactsAsCSV: (codes: string[]) => {
+    const legislators = get().legislators.filter(legislator => codes.includes(legislator.LegislatorCode));
+    const header = "FirstName,LastName,Title,CapitolPhone,EmailAddress\n";
+    const rows = legislators.map(legislator => 
+      `${legislator.FirstName},${legislator.LastName},${legislator.Title},${legislator.CapitolPhone},${legislator.EmailAddress}`
+    ).join("\n");
+    return header + rows;
+  }
 }));
 
 export default useLegislatorStore;

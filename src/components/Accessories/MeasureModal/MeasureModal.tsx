@@ -16,6 +16,7 @@ import SendEmailButton from '../SendEmailButton/SendEmailButton';
 import LaunchRoundedIcon from '@mui/icons-material/LaunchRounded';
 import useCommitteeStore from '../../../store/CommitteeStore';
 import useLegislatorStore from '../../../store/LegislatorStore';
+import ExportContactsButton from '../ExportContactsButton/ExportContactsButton';
 
 interface Props {
   anchorEl: HTMLElement | null;
@@ -49,6 +50,11 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
     ...chiefSponsors.map((s) => getEmailByLegislatorCode(s.LegislatoreCode)),
     ...sponsors.map((s) => getEmailByLegislatorCode(s.LegislatoreCode)),
   ].filter((email) => email !== undefined) as string[];
+
+  const allSponsorCodes = [
+    ...chiefSponsors.map((s) => s.LegislatoreCode),
+    ...sponsors.map((s) => s.LegislatoreCode),
+  ];
 
   return (
     <Dialog maxWidth="lg" open={!!anchorEl} onClose={onClose}>
@@ -145,6 +151,7 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
                 Contact Sponsors
               </Typography>
               <SendEmailButton emails={allSponsorEmails} buttonText="Send Email To All Sponsors" />
+              <ExportContactsButton legislatorCodes={allSponsorCodes} buttonText="Export Contacts" />
             </Box>
           </Box>
           <Box sx={{ ...styles.history, ...(styles.infoSection as any) }}>
