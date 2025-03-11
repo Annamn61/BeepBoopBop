@@ -10,6 +10,7 @@ interface LegislatorState {
   getLegislatorByCode: (code: string) => Legislator | undefined;
   getFullLegislatorNameByCode: (code: string) => string;
   getFullLegislatorNameByCodeWithTitle: (code: string) => string;
+  getEmailByLegislatorCode: (code: string) => string | undefined;
 }
 
 export const useLegislatorStore = create<LegislatorState>((set, get) => ({
@@ -26,6 +27,10 @@ export const useLegislatorStore = create<LegislatorState>((set, get) => ({
   getFullLegislatorNameByCodeWithTitle: (code: string) => {
     const legislator = get().legislators?.find((legislator) => legislator.LegislatorCode === code);
     return legislator ? `${legislator.Title.slice(0, 3)} ${legislator.FirstName} ${legislator.LastName}` : 'undefined';
+  },
+  getEmailByLegislatorCode: (code: string) => {
+    const legislator = get().legislators?.find((legislator) => legislator.LegislatorCode === code);
+    return legislator ? legislator.EmailAddress : undefined;
   },
 }));
 

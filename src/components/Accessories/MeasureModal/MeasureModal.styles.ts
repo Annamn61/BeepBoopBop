@@ -72,6 +72,11 @@ export const styles: Record<string, SxProps<Theme>> = {
             minWidth: '100px',
         },
     },
+    lineItemButton: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 2,
+    },
     header: {
         width: '100%',
         display: 'flex',

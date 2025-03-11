@@ -12,6 +12,7 @@ import HistoryItemLine from '../HistoryItemLine/HistoryItemLine';
 import useCommitteeAgendaStore from '../../../store/CommitteeAgendaStore';
 import { getShortFormatDateWithTime } from '../../../utils/time';
 import ViewInOlisButton from '../ViewInOlisButton/ViewInOlisButton';
+import SendEmailButton from '../SendEmailButton/SendEmailButton';
 import LaunchRoundedIcon from '@mui/icons-material/LaunchRounded';
 import useCommitteeStore from '../../../store/CommitteeStore';
 import useLegislatorStore from '../../../store/LegislatorStore';
@@ -32,7 +33,7 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
   const { getUpdatesById } = useHistoryStore();
   const { getUpcomingAgendaItemsById } = useCommitteeAgendaStore();
   const { getFullCommitteeNameByCode } = useCommitteeStore();
-  const { getFullLegislatorNameByCodeWithTitle } = useLegislatorStore();
+  const { getFullLegislatorNameByCodeWithTitle, getEmailByLegislatorCode } = useLegislatorStore();
   const measure = getMeasureById(measureId);
   const agendaItems = getUpcomingAgendaItemsById(measureId);
   const sponsors = getSortedMeasureSponsorsById(measureId);
@@ -43,6 +44,11 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
   }
 
   const { RelatingTo, CatchLine, MeasureDocuments, CurrentLocation } = measure;
+
+  const allSponsorEmails = [
+    ...chiefSponsors.map((s) => getEmailByLegislatorCode(s.LegislatoreCode)),
+    ...sponsors.map((s) => getEmailByLegislatorCode(s.LegislatoreCode)),
+  ].filter((email) => email !== undefined) as string[];
 
   return (
     <Dialog maxWidth="lg" open={!!anchorEl} onClose={onClose}>
@@ -119,6 +125,12 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
                   </>
                 ))}
               </Typography>
+            </Box>
+            <Box sx={styles.lineItemButton}>
+              <Typography sx={{ maxWidth: '100px' }} variant="subtitle2">
+                Contact Sponsors
+              </Typography>
+              <SendEmailButton emails={allSponsorEmails} buttonText="Send Email To All Sponsors" />
             </Box>
           </Box>
           <Box sx={{ ...styles.history, ...(styles.infoSection as any) }}>
