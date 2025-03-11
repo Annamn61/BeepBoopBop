@@ -33,7 +33,7 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
   const { getUpdatesById } = useHistoryStore();
   const { getUpcomingAgendaItemsById } = useCommitteeAgendaStore();
   const { getFullCommitteeNameByCode } = useCommitteeStore();
-  const { getFullLegislatorNameByCodeWithTitle, getEmailByLegislatorCode } = useLegislatorStore();
+  const { getFullLegislatorNameByCodeWithTitle, getEmailByLegislatorCode, getWebsiteByLegislatorCode } = useLegislatorStore();
   const measure = getMeasureById(measureId);
   const agendaItems = getUpcomingAgendaItemsById(measureId);
   const sponsors = getSortedMeasureSponsorsById(measureId);
@@ -109,8 +109,15 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
               <Typography variant="body1">
                 {chiefSponsors.map((s) => (
                   <>
-                  {getFullLegislatorNameByCodeWithTitle(s.LegislatoreCode)}
-                  <br />
+                    <Link
+                      href={getWebsiteByLegislatorCode(s.LegislatoreCode)}
+                      target="_blank"
+                      key={s.LegislatoreCode}
+                      sx={styles.hyperlink}
+                    >
+                      {getFullLegislatorNameByCodeWithTitle(s.LegislatoreCode)}
+                    </Link>
+                    <br />
                   </>
                 ))}
               </Typography>
@@ -120,8 +127,15 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
               <Typography variant="body1">
                 {sponsors.map((s) => (
                   <>
-                  {getFullLegislatorNameByCodeWithTitle(s.LegislatoreCode)}
-                  <br />
+                    <Link
+                      href={getWebsiteByLegislatorCode(s.LegislatoreCode)}
+                      target="_blank"
+                      key={s.LegislatoreCode}
+                      sx={styles.hyperlink}
+                    >
+                      {getFullLegislatorNameByCodeWithTitle(s.LegislatoreCode)}
+                    </Link>
+                    <br />
                   </>
                 ))}
               </Typography>

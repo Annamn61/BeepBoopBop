@@ -11,6 +11,7 @@ interface LegislatorState {
   getFullLegislatorNameByCode: (code: string) => string;
   getFullLegislatorNameByCodeWithTitle: (code: string) => string;
   getEmailByLegislatorCode: (code: string) => string | undefined;
+  getWebsiteByLegislatorCode: (code: string) => string | undefined;
 }
 
 export const useLegislatorStore = create<LegislatorState>((set, get) => ({
@@ -31,6 +32,10 @@ export const useLegislatorStore = create<LegislatorState>((set, get) => ({
   getEmailByLegislatorCode: (code: string) => {
     const legislator = get().legislators?.find((legislator) => legislator.LegislatorCode === code);
     return legislator ? legislator.EmailAddress : undefined;
+  },
+  getWebsiteByLegislatorCode: (code: string) => {
+    const legislator = get().legislators?.find((legislator) => legislator.LegislatorCode === code);
+    return legislator ? legislator.WebSiteUrl : undefined;
   },
 }));
 

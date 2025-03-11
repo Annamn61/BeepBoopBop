@@ -83,5 +83,13 @@ export const styles: Record<string, SxProps<Theme>> = {
         flexDirection: 'row',
         justifyContent: 'flex-end',
         gap: 1,
-    }
+    },
+    hyperlink: {
+        color: 'dimgray',
+        textDecorationColor: 'dimgray',
+        '&:hover': {
+            color: 'black',
+            textDecorationColor: 'black',
+        },
+    },
 };
