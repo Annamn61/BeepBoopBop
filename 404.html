@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script>
+      // Redirect back to index.html for SPA routing
+      var redirect = window.location.pathname.replace(/\/BeepBoopBop\//, "");
+      sessionStorage.redirect = redirect;
+      window.location.replace("/BeepBoopBop/");
+    </script>
+  </head>
+  <body></body>
+</html>
