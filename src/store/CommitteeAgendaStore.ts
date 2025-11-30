@@ -3,6 +3,7 @@ import { AgendaItem, CommitteeMeetingWithUserAgendaItems, TestimonyLinks } from 
 import { Measure } from '../types/MeasureTypes';
 import { CommitteeMeeting } from '../types/CommitteeMeetingsTypes';
 import { getMeasureUniqueId } from '../utils/measure';
+import committeeColors from '../utils/committeeColors';
 
 interface CommitteeAgendaState {
   unfilteredCommitteeAgenda: AgendaItem[];
@@ -43,7 +44,7 @@ const getCalendarEvents = (meetings: CommitteeMeetingWithUserAgendaItems) => {
             end: end,
             id: key,
             comments: 'item.Comments',
-            color: "#f7f7f7"
+            color: committeeColors[meeting.CommitteeCode] || "#f7f7f7"
         }
     })
 }
