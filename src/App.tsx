@@ -17,6 +17,8 @@ import { Typography } from '@mui/material';
 import Header from './components/Things/Header/Header';
 import { useDataController } from './data/Controllers/dataController';
 import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
+import Votes from './components/Pages/Votes/Votes';
+import Parser from './components/Pages/Parser/Parser';
 
 const localizer = momentLocalizer(moment);
 
@@ -101,6 +103,8 @@ function App() {
           {selectedPage === 'location' && (
             <BillLocationBoard sidebarIsOpen={sidebarIsOpen} />
           )}
+          {selectedPage === 'votes' && <Votes />}
+          {selectedPage === 'parser' && <Parser />}
         </Box>
         {meetingId && (
           <CommiteeMeetingModal

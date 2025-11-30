@@ -72,6 +72,46 @@ const PageTabs = ({ selectedPage, setSelectedPage }: PageTabProps) => {
           Calendar
         </Typography>
       </Button>
+      <Button
+        variant="contained"
+        sx={
+          [
+            styles.tabButton,
+            ...(selectedPage === 'votes' ? [styles.activeTabButton] : []),
+          ] as SxProps<Theme>
+        }
+        onClick={() => setSelectedPage('votes')}
+      >
+        <Typography
+          sx={{
+            ...styles.tabText,
+            ...((selectedPage === 'votes' ? styles.activeText : {}) as any),
+          }}
+          variant="button"
+        >
+          Votes
+        </Typography>
+      </Button>
+      <Button
+        variant="contained"
+        sx={
+          [
+            styles.tabButton,
+            ...(selectedPage === 'parser' ? [styles.activeTabButton] : []),
+          ] as SxProps<Theme>
+        }
+        onClick={() => setSelectedPage('parser')}
+      >
+        <Typography
+          sx={{
+            ...styles.tabText,
+            ...((selectedPage === 'parser' ? styles.activeText : {}) as any),
+          }}
+          variant="button"
+        >
+          Parser
+        </Typography>
+      </Button>
     </Box>
   );
 };

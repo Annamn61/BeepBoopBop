@@ -53,6 +53,15 @@ export const defaultUTMData: UserTrackedMeasure[] = [
     { MeasurePrefix: "SB", MeasureNumber: 997, position: '?', isDisplayed: true, color: MEASURE_COLORS.SAGE, SessionKey: '2025R1', nickname: '' }, //350
 ];
 
-//   { id: "LC 1440, position: 'Support', isDisplayed: true, color: MEASURE_COLORS.PINK, SessionKey: '2025R1', nickname: '' },
+// MCAT
+export const defaultUTMDataMCAT: UserTrackedMeasure[] = [
+    { MeasurePrefix: "HB", MeasureNumber: 3628, position: 'Support', isDisplayed: true, color: MEASURE_COLORS.SAGE, SessionKey: '2025R1', nickname: '' }, 
+    { MeasurePrefix: "HB", MeasureNumber: 2949, position: 'Support', isDisplayed: true, color: MEASURE_COLORS.ORANGE, SessionKey: '2025R1', nickname: '' }, 
+    { MeasurePrefix: "HB", MeasureNumber: 2152, position: 'Support', isDisplayed: true, color: MEASURE_COLORS.ORANGE, SessionKey: '2025R1', nickname: '' }, //DO
+    { MeasurePrefix: "HB", MeasureNumber: 3261, position: 'Support', isDisplayed: true, color: MEASURE_COLORS.ORANGE, SessionKey: '2025R1', nickname: 'Renewable Diesel Study' },
+    { MeasurePrefix: "HB", MeasureNumber: 3609, position: '?', isDisplayed: true, color: MEASURE_COLORS.SAGE, SessionKey: '2025R1', nickname: 'Distributed Power Plant' },
+    { MeasurePrefix: "HB", MeasureNumber: 3018, position: 'Support', isDisplayed: true, color: MEASURE_COLORS.PEACH, SessionKey: '2025R1', nickname: 'Reducing Food Waste' },
+    { MeasurePrefix: "SB", MeasureNumber: 1143, position: 'Support', isDisplayed: true, color: MEASURE_COLORS.RED, SessionKey: '2025R1', nickname: 'Thermal Energy Network' },
+    { MeasurePrefix: "SB", MeasureNumber: 1187, position: 'Support', isDisplayed: true, color: MEASURE_COLORS.SAGE, SessionKey: '2025R1', nickname: 'Make Polluters Pay (Climate Superfund)' }, 
+];
 
-// Im interested in 2879 +  HB 3362

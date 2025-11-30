@@ -52,13 +52,14 @@ export const MeasureHistory = () => {
     [history]
   );
 
-  const isLoading = useMemo(
-    () =>
-      !(
-        Object.keys(futureHistory).length > 1 && Object.keys(pastHistory).length
-      ),
-    [futureHistory, pastHistory]
-  );
+  //   const isLoading = useMemo(
+  //     () =>
+  //       !(
+  //         Object.keys(futureHistory).length > 1 && Object.keys(pastHistory).length
+  //       ),
+  //     [futureHistory, pastHistory]
+  //   );
+  const isLoading = false;
 
   const futureHistoryKeysSorted = useMemo(() => {
     return Object.keys(futureHistory).sort();
