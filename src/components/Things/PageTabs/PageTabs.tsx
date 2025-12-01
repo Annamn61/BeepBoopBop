@@ -3,115 +3,89 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { styles } from './PageTabs.styles';
 import { SxProps, Theme } from '@mui/material/styles';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useCallback, useMemo } from 'react';
 
-interface PageTabProps {
-  selectedPage: string;
-  setSelectedPage: (selectedPage: string) => void;
-}
+const PageTabs = () => {
+  const pathname = useLocation().pathname;
+  const navigate = useNavigate();
+  const selectedPage = useMemo(() => {
+    if (pathname.includes('/bill/')) {
+      return 'bill';
+    }
+    if (pathname.includes('/parser')) {
+      return 'parser';
+    }
+    if (pathname.includes('/calendar')) {
+      return 'calendar';
+    }
+    if (pathname.includes('/updates')) {
+      return 'updates';
+    }
+    if (pathname.includes('/location')) {
+      return 'location';
+    }
+    if (pathname.includes('/votes')) {
+      return 'votes';
+    }
+    if (pathname.includes('/')) {
+      return 'updates';
+    }
+  }, [pathname]);
 
-const PageTabs = ({ selectedPage, setSelectedPage }: PageTabProps) => {
+  const setSelectedPage = useCallback(
+    (selectedPage: string) => {
+      if (selectedPage === 'updates') {
+        navigate('/updates');
+      }
+      if (selectedPage === 'parser') {
+        navigate('/parser');
+      }
+      if (selectedPage === 'calendar') {
+        navigate('/calendar');
+      }
+      if (selectedPage === 'location') {
+        navigate('/location');
+      }
+      if (selectedPage === 'votes') {
+        navigate('/votes');
+      }
+    },
+    [navigate]
+  );
+
+  const ButtonTab = ({ label, path }: { label: string; path: string }) => {
+    return (
+      <Button
+        variant="contained"
+        sx={
+          [
+            styles.tabButton,
+            ...(selectedPage === path ? [styles.activeTabButton] : []),
+          ] as SxProps<Theme>
+        }
+        onClick={() => setSelectedPage(path)}
+      >
+        <Typography
+          sx={{
+            ...styles.tabText,
+            ...((selectedPage === path ? styles.activeText : {}) as any),
+          }}
+          variant="button"
+        >
+          {label}
+        </Typography>
+      </Button>
+    );
+  };
+
   return (
     <Box sx={styles.buttonRow}>
-      <Button
-        variant="contained"
-        sx={
-          [
-            styles.tabButton,
-            ...(selectedPage === 'updates' ? [styles.activeTabButton] : []),
-          ] as SxProps<Theme>
-        }
-        onClick={() => setSelectedPage('updates')}
-      >
-        <Typography
-          sx={{
-            ...styles.tabText,
-            ...((selectedPage === 'updates' ? styles.activeText : {}) as any),
-          }}
-          variant="button"
-        >
-          Updates
-        </Typography>
-      </Button>
-      <Button
-        variant="contained"
-        sx={
-          [
-            styles.tabButton,
-            ...(selectedPage === 'location' ? [styles.activeTabButton] : []),
-          ] as SxProps<Theme>
-        }
-        onClick={() => setSelectedPage('location')}
-      >
-        <Typography
-          sx={{
-            ...styles.tabText,
-            ...((selectedPage === 'location' ? styles.activeText : {}) as any),
-          }}
-          variant="button"
-        >
-          Location
-        </Typography>
-      </Button>
-      <Button
-        variant="contained"
-        sx={
-          [
-            styles.tabButton,
-            ...(selectedPage === 'calendar' ? [styles.activeTabButton] : []),
-          ] as SxProps<Theme>
-        }
-        onClick={() => setSelectedPage('calendar')}
-      >
-        <Typography
-          sx={{
-            ...styles.tabText,
-            ...((selectedPage === 'calendar' ? styles.activeText : {}) as any),
-          }}
-          variant="button"
-        >
-          Calendar
-        </Typography>
-      </Button>
-      <Button
-        variant="contained"
-        sx={
-          [
-            styles.tabButton,
-            ...(selectedPage === 'votes' ? [styles.activeTabButton] : []),
-          ] as SxProps<Theme>
-        }
-        onClick={() => setSelectedPage('votes')}
-      >
-        <Typography
-          sx={{
-            ...styles.tabText,
-            ...((selectedPage === 'votes' ? styles.activeText : {}) as any),
-          }}
-          variant="button"
-        >
-          Votes
-        </Typography>
-      </Button>
-      <Button
-        variant="contained"
-        sx={
-          [
-            styles.tabButton,
-            ...(selectedPage === 'parser' ? [styles.activeTabButton] : []),
-          ] as SxProps<Theme>
-        }
-        onClick={() => setSelectedPage('parser')}
-      >
-        <Typography
-          sx={{
-            ...styles.tabText,
-            ...((selectedPage === 'parser' ? styles.activeText : {}) as any),
-          }}
-          variant="button"
-        >
-          Parser
-        </Typography>
-      </Button>
+      <ButtonTab label="Updates" path="updates" />
+      <ButtonTab label="Location" path="location" />
+      <ButtonTab label="Calendar" path="calendar" />
+      <ButtonTab label="Votes" path="votes" />
+      <ButtonTab label="Parser" path="parser" />
     </Box>
   );
 };

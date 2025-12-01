@@ -5,7 +5,6 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import CommiteeMeetingModal from '../../Accessories/CommiteeMeetingModal/CommiteeMeetingModal';
 import useCommitteeAgendaStore from '../../../store/CommitteeAgendaStore';
-import './App.css';
 
 const localizer = momentLocalizer(moment);
 

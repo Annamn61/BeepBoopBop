@@ -16,8 +16,9 @@ import ToggleButton from '@mui/material/ToggleButton';
 import { importantDates } from '../../../data/ImportantLegistlativeDates';
 import Deadline from './Deadline/Deadline';
 import Tooltip from '@mui/material/Tooltip';
+import React from 'react';
 
-export const MeasureHistory = () => {
+const MeasureHistory = () => {
   const {
     unfilteredHistory,
     getFilteredUpdatesSortedByDate,
@@ -160,3 +161,5 @@ export const MeasureHistory = () => {
     </Box>
   );
 };
+
+export default React.memo(MeasureHistory);

@@ -7,7 +7,6 @@ import './App.css';
 import { SnackbarProvider } from './components/Accessories/Snackbar/Snackbar';
 import { BillLocationBoard } from './components/Pages/BillLocationBoard/BillLocationBoard';
 import MeetingCalendar from './components/Pages/Calendar/Calendar';
-import { MeasureHistory } from './components/Pages/MeasureHistory/MeasureHistory';
 import Parser from './components/Pages/Parser/Parser';
 import Header from './components/Things/Header/Header';
 import PageTabs from './components/Things/PageTabs/PageTabs';
@@ -16,6 +15,7 @@ import { useDataController } from './data/Controllers/dataController';
 import theme from './utils/theme';
 import { styles } from './App.styles';
 import Measure from './components/Pages/Measure/Measure';
+import MeasureHistory from './components/Pages/MeasureHistory/MeasureHistory';
 // import Votes from './components/Pages/Votes/Votes';
 
 function App() {
@@ -45,11 +45,8 @@ function App() {
           }}
         >
           <Header />
-          <PageTabs
-            selectedPage={'location'}
-            setSelectedPage={() => console.log('set tab')}
-          />
           <HashRouter>
+            <PageTabs />
             <Routes>
               <Route path="/" element={<MeasureHistory />} />
               <Route path="/bill/:id" element={<Measure />} />
@@ -57,7 +54,7 @@ function App() {
               <Route path="/calendar" element={<MeetingCalendar />} />
               <Route path="/updates" element={<MeasureHistory />} />
               <Route
-                path="/locations"
+                path="/location"
                 element={<BillLocationBoard sidebarIsOpen={sidebarIsOpen} />}
               />
               {/* <Route path="/votes/:id" element={<Votes />} /> */}
