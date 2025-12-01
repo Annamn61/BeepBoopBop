@@ -1,41 +1,37 @@
 import Box from '@mui/material/Box';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
-import moment from 'moment';
 import { useState } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-import { styles } from './App.styles';
-import CommiteeMeetingModal from './components/Accessories/CommiteeMeetingModal/CommiteeMeetingModal';
 import { SnackbarProvider } from './components/Accessories/Snackbar/Snackbar';
 import { BillLocationBoard } from './components/Pages/BillLocationBoard/BillLocationBoard';
+import MeetingCalendar from './components/Pages/Calendar/Calendar';
 import { MeasureHistory } from './components/Pages/MeasureHistory/MeasureHistory';
+import Parser from './components/Pages/Parser/Parser';
+import Header from './components/Things/Header/Header';
 import PageTabs from './components/Things/PageTabs/PageTabs';
 import { Sidebar } from './components/Things/Sidebar/Sidebar';
-import theme from './utils/theme';
-import { Typography } from '@mui/material';
-import Header from './components/Things/Header/Header';
 import { useDataController } from './data/Controllers/dataController';
-import useCommitteeAgendaStore from './store/CommitteeAgendaStore';
-import Votes from './components/Pages/Votes/Votes';
-import Parser from './components/Pages/Parser/Parser';
-
-const localizer = momentLocalizer(moment);
+import theme from './utils/theme';
+import { styles } from './App.styles';
+import Measure from './components/Pages/Measure/Measure';
+// import Votes from './components/Pages/Votes/Votes';
 
 function App() {
-  useDataController();
-  const [selectedPage, setSelectedPage] = useState('updates');
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+  const stored = sessionStorage.getItem('gh-path');
+  if (stored) {
+    sessionStorage.removeItem('gh-path');
 
-  const [open, setOpen] = useState(false);
-  const { getCalendarEvents } = useCommitteeAgendaStore();
-
-  const [meetingId, setMeetingId] = useState<string | undefined>(undefined);
-  const handleOpen = (event: any) => {
-    setMeetingId(event.id);
-    setOpen(true);
-  };
-  const handleClose = () => setOpen(false);
+    if (
+      stored !==
+      window.location.pathname + window.location.search + window.location.hash
+    ) {
+      history.replaceState(null, '', stored);
+    }
+  }
+  useDataController();
 
   return (
     <ThemeProvider theme={theme}>
@@ -48,71 +44,26 @@ function App() {
             paddingLeft: sidebarIsOpen ? '348px' : '0px',
           }}
         >
-          <Box
-            sx={{
-              ...styles.regularPageContainers,
-              paddingLeft: {
-                xs: 2,
-                md: sidebarIsOpen ? 6 : 12,
-              },
-            }}
-          >
-            <Header />
-            <PageTabs
-              selectedPage={selectedPage}
-              setSelectedPage={setSelectedPage}
-            />
-
-            {selectedPage === 'updates' && <MeasureHistory />}
-            {selectedPage === 'calendar' && (
-              <>
-                <Typography>
-                  The calendar currently shows the committe meetings with a
-                  public hearing or work session about bills you're tracking
-                </Typography>
-                <Calendar
-                  localizer={localizer}
-                  events={getCalendarEvents()}
-                  startAccessor="start"
-                  endAccessor="end"
-                  style={{ height: 600, width: '1100px' }}
-                  onSelectEvent={(event) => {
-                    handleOpen(event);
-                  }}
-                  defaultView="week"
-                  step={15}
-                  timeslots={4}
-                  min={moment('7 am', 'h a').toDate()}
-                  max={moment('6 pm', 'h a').toDate()}
-                  eventPropGetter={(event) => {
-                    const backgroundColor = event.color || 'green'; // Default color
-                    return {
-                      style: {
-                        backgroundColor,
-                        color: 'black',
-                        borderRadius: '4px',
-                        padding: '5px',
-                      },
-                    };
-                  }}
-                />
-              </>
-            )}
-          </Box>
-
-          {selectedPage === 'location' && (
-            <BillLocationBoard sidebarIsOpen={sidebarIsOpen} />
-          )}
-          {selectedPage === 'votes' && <Votes />}
-          {selectedPage === 'parser' && <Parser />}
-        </Box>
-        {meetingId && (
-          <CommiteeMeetingModal
-            open={open}
-            onClose={handleClose}
-            committeeMeetingId={meetingId}
+          <Header />
+          <PageTabs
+            selectedPage={'location'}
+            setSelectedPage={() => console.log('set tab')}
           />
-        )}
+          <HashRouter>
+            <Routes>
+              <Route path="/" element={<MeasureHistory />} />
+              <Route path="/bill/:id" element={<Measure />} />
+              <Route path="/parser" element={<Parser />} />
+              <Route path="/calendar" element={<MeetingCalendar />} />
+              <Route path="/updates" element={<MeasureHistory />} />
+              <Route
+                path="/locations"
+                element={<BillLocationBoard sidebarIsOpen={sidebarIsOpen} />}
+              />
+              {/* <Route path="/votes/:id" element={<Votes />} /> */}
+            </Routes>
+          </HashRouter>
+        </Box>
       </div>
     </ThemeProvider>
   );

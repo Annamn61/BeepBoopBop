@@ -11,6 +11,7 @@ export const CLOSE_QUOTE = '”'
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
 const getPDF = async (file: File) => {
+    console.log(file);
     const url = 'https://olis.oregonlegislature.gov/liz/2025R1/Downloads/MeasureDocument/HB3179/House%20Amendments%20to%20Introduced'
     const proxy = `https://pdf-proxy.annamnorm61.workers.dev/?url=${encodeURIComponent(url)}`;
     const pdf: PDFDocumentProxy = await pdfjs.getDocument({
