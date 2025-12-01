@@ -14,9 +14,11 @@ import MeasurePill from '../../Accessories/MeasurePill/MeasurePill';
 import SendEmailButton from '../../Accessories/SendEmailButton/SendEmailButton';
 import ViewInOlisButton from '../../Accessories/ViewInOlisButton/ViewInOlisButton';
 import { styles } from './Measure.styles';
+import { useLocation } from 'react-router-dom';
 
-const Measure = () => {
-  const measureId = 'HB-2020';
+const Measure = ({ measureModalId }: { measureModalId?: string }) => {
+  const pathname = useLocation().pathname;
+  const measureId = measureModalId || pathname.split('/').pop();
   const {
     getMeasureById,
     getMeasureUrlById,
@@ -53,7 +55,7 @@ const Measure = () => {
   ];
 
   return (
-    <Box sx={styles.modalContainer}>
+    <>
       <Box sx={styles.header}>
         <ViewInOlisButton url={getMeasureUrlById(measureId)} />
       </Box>
@@ -184,7 +186,7 @@ const Measure = () => {
           )}
         </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 
