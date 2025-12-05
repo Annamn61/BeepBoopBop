@@ -60,7 +60,7 @@ const MeasureHistory = () => {
   //       ),
   //     [futureHistory, pastHistory]
   //   );
-  const isLoading = false;
+  const isLoading = !length;
 
   const futureHistoryKeysSorted = useMemo(() => {
     return Object.keys(futureHistory).sort();

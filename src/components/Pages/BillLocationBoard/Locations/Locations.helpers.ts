@@ -1,5 +1,5 @@
 import { administrativeKanban, chamberKanban, notPassedKanban, passedKanban } from "../../../../types/KanbanTypes";
-import { Measure } from "../../../../types/MeasureTypes";
+import { Measure, MeasureHistoryItem } from "../../../../types/MeasureTypes";
 
 const chamberOptions = [
     "In House Committee",
@@ -14,8 +14,10 @@ const failedOptions = [
     "Senate Desk - Failed",
     "House Desk - Failed",
     "At House Desk Upon Adjournment",
-"At Senate Desk Upon Adjournment",
-"At Speakers Desk Upon Adjournment",
+    "At Senate Desk Upon Adjournment",
+    "At Speakers Desk Upon Adjournment",
+    "In House Committee",
+    "In Senate Committee",
 ]
 
 const administrativeChecks = [
@@ -95,7 +97,7 @@ export const renderedKanbanLocations = [
             {section: 'Not Passed', data: [
                 {status: 'Failed', data: [
                     "At House Desk",
-                    "At Senate Desk"
+                    "At Senate Desk",
                 ]},
                 {status: 'Tabled', data: [
                     "In Senate",
@@ -106,13 +108,20 @@ export const renderedKanbanLocations = [
                     "At Senate Desk", 
                     "At House Desk"
                 ]},
+                {status: 'In Committee Upon Adjourment', data: [
+                    "In Senate Committee",
+                    "In House Committee"
+                ]},
             ]},
         ]},
     ]
 
-export const getKanbanLocationFromBilLocation = (location: string, xxx: Measure["MeasurePrefix"]) => {
+export const getKanbanLocationFromBilLocation = (location: string, xxx: Measure["MeasurePrefix"], measureHistory: MeasureHistoryItem[]) => {
+
+    const isInCommitteeOnAdjourment = measureHistory.some(history => history.ActionText.toLowerCase().includes('in committee upon adjournment'));
+
     // Chambers
-    if(chamberOptions.some(option => location === option)) {
+    if(chamberOptions.some(option => location === option) && !isInCommitteeOnAdjourment) {
         var chamberLocation = {} as chamberKanban;
 
         // TODO: Fix for joint Measures (HJM) + LC
@@ -161,11 +170,15 @@ export const getKanbanLocationFromBilLocation = (location: string, xxx: Measure[
     }
 
     // Failed
-    if(failedOptions.some(option => location === option)) {
+    if(failedOptions.some(option => location === option) || isInCommitteeOnAdjourment) {
         var failedLocation = {} as notPassedKanban;
         failedLocation.group = 'Not Passed';
         failedLocation.section = 'Not Passed';
-        if(location.includes('tabled')) {
+        if(isInCommitteeOnAdjourment) {
+            console.log('isInCommitteeOnAdjourment', isInCommitteeOnAdjourment, location);
+            failedLocation.status = 'In Committee Upon Adjourment'
+            failedLocation.sublocation = location.includes('Senate') ? 'In Senate Committee' : 'In House Committee';
+        } else if(location.includes('tabled')) {
             failedLocation.status = 'Tabled'
             failedLocation.sublocation = location.includes('senate') ? 'In Senate' : 'In House'
         } else if(location.includes('failed')) {
@@ -177,7 +190,7 @@ export const getKanbanLocationFromBilLocation = (location: string, xxx: Measure[
             if(location === 'At Senate Desk Upon Adjournment') failedLocation.sublocation = 'At Senate Desk'
             if(location === 'At Speakers Desk Upon Adjournment') failedLocation.sublocation = 'At House Speakers Desk'
         }
-
+        return failedLocation;
     }
 
 

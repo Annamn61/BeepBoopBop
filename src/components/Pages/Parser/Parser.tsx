@@ -23,7 +23,6 @@ export default function ThreeVersionBillViewer(): JSX.Element {
     const introBill = await getParsedBill(introducedFile);
     setIntroducedBill(introBill);
     const parsedInstructions = await getParsedInstructions(amendmentsFile);
-    console.log('here', parsedInstructions);
     const engrossed = applyInstructions(
       structuredClone(introBill),
       structuredClone(parsedInstructions)
@@ -35,7 +34,6 @@ export default function ThreeVersionBillViewer(): JSX.Element {
   };
 
   const renderLines = (bill: ParsedBill): JSX.Element[] => {
-    console.log('rendering', bill);
     return bill
       .flatMap((page) => [...page.pre, ...page.content, ...page.post])
       .map((line, i) => (

@@ -13,7 +13,7 @@ const MeasureModal = ({ anchorEl, onClose, measureId }: Props) => {
   return (
     <Dialog maxWidth="lg" open={!!anchorEl} onClose={onClose}>
       <Box sx={styles.modalContainer}>
-        <Measure measureModalId={measureId} />
+        <Measure measureModalId={measureId} onModalClose={onClose} />
       </Box>
     </Dialog>
   );

@@ -31,8 +31,6 @@ export const useCommitteeAgendaStore = create<CommitteeAgendaState>((set, get) =
 
 const getCalendarEvents = (meetings: CommitteeMeetingWithUserAgendaItems) => {
 
-    console.log('meetings', Object.keys(meetings));
-
     return Object.keys(meetings).map((key) => {
         const meeting = meetings[key].CommitteeMeeting;
         const start = new Date(meeting.MeetingDate);

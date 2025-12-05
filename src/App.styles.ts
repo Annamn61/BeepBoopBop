@@ -9,15 +9,16 @@ export const styles: Record<string, SxProps<Theme>> = {
         },
         paddingBottom: 4,
         transition: '0.3s all ease-in-out',
+        width: '100%',
       },
-regularPageContainers: {
-    paddingRight: {
-        xs: 2,
-        md: 12,
-    },
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 4,
-    transition: '0.3s all ease-in-out',
-  }
+    regularPageContainers: {
+        paddingRight: {
+            xs: 2,
+            md: 6,
+        },
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        transition: '0.3s all ease-in-out',
+    }
 };

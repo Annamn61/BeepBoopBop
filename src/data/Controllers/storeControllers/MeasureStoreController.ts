@@ -33,6 +33,5 @@ export const useMeasureStoreController = (measuresCacheObject: LocalStoreageMeas
 
     useEffect(() => {
         setUnfilteredCommitteeAgenda(agendaDataList);
-        console.log('ADL', agendaDataList);
     }, [agendaDataList])
 }

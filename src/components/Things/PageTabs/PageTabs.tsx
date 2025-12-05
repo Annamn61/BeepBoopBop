@@ -13,9 +13,6 @@ const PageTabs = () => {
     if (pathname.includes('/bill/')) {
       return 'bill';
     }
-    if (pathname.includes('/parser')) {
-      return 'parser';
-    }
     if (pathname.includes('/calendar')) {
       return 'calendar';
     }
@@ -37,9 +34,6 @@ const PageTabs = () => {
     (selectedPage: string) => {
       if (selectedPage === 'updates') {
         navigate('/updates');
-      }
-      if (selectedPage === 'parser') {
-        navigate('/parser');
       }
       if (selectedPage === 'calendar') {
         navigate('/calendar');
@@ -85,7 +79,6 @@ const PageTabs = () => {
       <ButtonTab label="Location" path="location" />
       <ButtonTab label="Calendar" path="calendar" />
       <ButtonTab label="Votes" path="votes" />
-      <ButtonTab label="Parser" path="parser" />
     </Box>
   );
 };

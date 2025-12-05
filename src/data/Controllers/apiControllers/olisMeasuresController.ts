@@ -93,7 +93,6 @@ export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasur
 
     useEffect(() => {
         // SET TO LOCAL STORAGE CACHE
-        console.log('setting to', measuresCacheObject)
         localStorage.setItem('Measures', JSON.stringify(measuresCacheObject));
     }, [measuresCacheObject])
 

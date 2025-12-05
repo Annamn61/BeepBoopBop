@@ -68,7 +68,6 @@ export const getRemoteUserTrackedMeasures = async (user: User) => {
         const querySnapshot = await getDocs(measuresRef);
         const measures = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
-        console.log("User measures:", measures);
         return measures;
     } catch (error) {
         console.error("Error fetching user measures:", error);

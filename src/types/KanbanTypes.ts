@@ -8,8 +8,8 @@ export interface passedKanban {
 export interface notPassedKanban {
     group: 'Not Passed'
     section: 'Not Passed'
-    status: 'Failed' | 'Tabled' | 'At Desk Upon Adjourment'
-    sublocation: 'In Senate' | 'In House' | 'At House Speakers Desk' | 'At Senate Desk' | 'At House Desk'
+    status: 'Failed' | 'Tabled' | 'At Desk Upon Adjourment' | 'In Committee Upon Adjourment'
+    sublocation: 'In Senate' | 'In House' | 'At House Speakers Desk' | 'At Senate Desk' | 'At House Desk' | 'In Senate Committee' | 'In House Committee'
 }
 
 export interface administrativeKanban {

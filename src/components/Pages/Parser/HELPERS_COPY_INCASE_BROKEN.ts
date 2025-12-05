@@ -126,7 +126,7 @@ const getLinesFromPieces = (pieces: ParsedPiece[]) => {
                 const numberOfLines = Math.round(Math.abs(piece.y - lastY)/40);
                 for(let i = 0; i < numberOfLines; i++) {
                     lines.push([{
-                        height: 1,
+                        height: 23,
                         isBold: false,
                         text: ' ',
                         x: piece.x,

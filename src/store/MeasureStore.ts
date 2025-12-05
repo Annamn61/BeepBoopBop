@@ -89,7 +89,7 @@ const sortMeasuresIntoKanbanLocations = (measures: Measure[]) => {
   let tempBillsInLocations: any = {}
   if(measures) {
     measures.forEach((measure) => {
-      let {group, section, status, sublocation} = getKanbanLocationFromBilLocation(measure.CurrentLocation, measure.MeasurePrefix);
+      let {group, section, status, sublocation} = getKanbanLocationFromBilLocation(measure.CurrentLocation, measure.MeasurePrefix, measure.MeasureHistoryActions);
         tempBillsInLocations[group] = tempBillsInLocations[group] || {};
         tempBillsInLocations[group][section] = tempBillsInLocations[group][section] || {}
         tempBillsInLocations[group][section][status] = tempBillsInLocations[group][section][status] || {}

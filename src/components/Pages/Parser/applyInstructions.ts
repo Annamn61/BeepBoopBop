@@ -7,8 +7,6 @@ export const applyInstructions = (bill: ParsedBill, instructions: any[]) => {
         if(instructionSet.type === INSTRUCTION_TYPES.DELETE_LINES) {
             const instructionSetTyped: DeleteLinesInstruction = instructionSet;
             let newPage = editedBill[instructionSet.page - 1];
-            console.log('EB', editedBill, editedBill[instructionSet.page - 1])
-            console.log('newPAGE', newPage)
             let content = newPage.content;
             let newContent = []
             for(const line of content) {
@@ -19,7 +17,6 @@ export const applyInstructions = (bill: ParsedBill, instructions: any[]) => {
             }
             newPage.content = newContent;
             editedBill[instructionSet.page] = newPage;
-            console.log('EDITED BILL', newPage, editedBill, bill)
         }
         if(instructionSet.type === INSTRUCTION_TYPES.DELETE_PAGES) {
             console.log('DP');

@@ -1,7 +1,9 @@
-import LaunchRoundedIcon from '@mui/icons-material/LaunchRounded';
+import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
+import { useNavigate, useParams } from 'react-router-dom';
 import useCommitteeAgendaStore from '../../../store/CommitteeAgendaStore';
 import useCommitteeStore from '../../../store/CommitteeStore';
 import useHistoryStore from '../../../store/HistoryStore';
@@ -14,11 +16,17 @@ import MeasurePill from '../../Accessories/MeasurePill/MeasurePill';
 import SendEmailButton from '../../Accessories/SendEmailButton/SendEmailButton';
 import ViewInOlisButton from '../../Accessories/ViewInOlisButton/ViewInOlisButton';
 import { styles } from './Measure.styles';
-import { useLocation } from 'react-router-dom';
 
-const Measure = ({ measureModalId }: { measureModalId?: string }) => {
-  const pathname = useLocation().pathname;
-  const measureId = measureModalId || pathname.split('/').pop();
+const Measure = ({
+  measureModalId,
+  onModalClose,
+}: {
+  measureModalId?: string;
+  onModalClose?: () => void;
+}) => {
+  const params = useParams();
+  const navigate = useNavigate();
+  const measureId = measureModalId || params.id;
   const {
     getMeasureById,
     getMeasureUrlById,
@@ -37,7 +45,7 @@ const Measure = ({ measureModalId }: { measureModalId?: string }) => {
   const agendaItems = getUpcomingAgendaItemsById(measureId);
   const sponsors = getSortedMeasureSponsorsById(measureId);
   const chiefSponsors = getSortedMeasureChiefSponsorsById(measureId);
-
+  const isOnModal = !!measureModalId;
   if (!measureId || !measure) {
     return null;
   }
@@ -56,11 +64,24 @@ const Measure = ({ measureModalId }: { measureModalId?: string }) => {
 
   return (
     <>
-      <Box sx={styles.header}>
-        <ViewInOlisButton url={getMeasureUrlById(measureId)} />
-      </Box>
       <Box sx={styles.modalContent}>
-        <MeasurePill id={measureId} withModal={false} />
+        <Box sx={styles.header}>
+          <MeasurePill id={measureId} withModal={false} />
+          <Box sx={styles.headerButtons}>
+            <ViewInOlisButton url={getMeasureUrlById(measureId)} />
+            {isOnModal && (
+              <IconButton
+                sx={styles.headerButton}
+                onClick={() => {
+                  onModalClose?.();
+                  navigate(`/bill/${measureId}`);
+                }}
+              >
+                <OpenInFullRoundedIcon />
+              </IconButton>
+            )}
+          </Box>
+        </Box>
         <Typography variant="h1" sx={styles.title}>
           {CatchLine}
         </Typography>
@@ -71,14 +92,12 @@ const Measure = ({ measureModalId }: { measureModalId?: string }) => {
               <Link
                 role="button"
                 sx={styles.measureDocument}
-                href={doc.DocumentUrl}
-                target="_blank"
+                href={`/#/bill/${measureId}/document/${doc.VersionDescription}`}
                 key={doc.DocumentUrl}
               >
-                <Typography variant="body1">
+                <Typography variant="body1" sx={{ whiteSpace: 'nowrap' }}>
                   {doc.VersionDescription}
                 </Typography>
-                <LaunchRoundedIcon sx={styles.launchIcon} fontSize="small" />
               </Link>
             ))}
           </Box>
