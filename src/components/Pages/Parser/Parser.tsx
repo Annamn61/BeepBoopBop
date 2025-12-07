@@ -1,60 +1,60 @@
 import * as pdfjs from 'pdfjs-dist/build/pdf';
 import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
-import { useState } from 'react';
-import { ParsedBill } from './Types';
-import { applyInstructions } from './applyInstructions';
-import { getParsedBill, getParsedInstructions } from './helpers';
+// import { useState } from 'react';
+// import { ParsedBill } from './Types';
+// import { applyInstructions } from './applyInstructions';
+// import { getParsedBill, getParsedInstructions } from './helpers';
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
 export default function ThreeVersionBillViewer(): JSX.Element {
-  const [introducedFile, setIntroducedFile] = useState<File | null>(null);
-  const [amendmentsFile, setAmendmentsFile] = useState<File | null>(null);
-  const [introducedBill, setIntroducedBill] = useState<ParsedBill>();
-  //   const [amendmentBill, setAmendmentBill] = useState<TextLine[]>([]);
-  const [engrossedBill, setEngrossedBill] = useState<ParsedBill>([]);
+  //   const [introducedFile, setIntroducedFile] = useState<File | null>(null);
+  //   const [amendmentsFile, setAmendmentsFile] = useState<File | null>(null);
+  //   const [introducedBill, setIntroducedBill] = useState<ParsedBill>();
+  //   //   const [amendmentBill, setAmendmentBill] = useState<TextLine[]>([]);
+  //   const [engrossedBill, setEngrossedBill] = useState<ParsedBill>([]);
 
-  const handleBuild = async (): Promise<void> => {
-    if (!introducedFile || !amendmentsFile) {
-      return;
-    }
+  //   const handleBuild = async (): Promise<void> => {
+  //     if (!introducedFile || !amendmentsFile) {
+  //       return;
+  //     }
 
-    // getParsedBill(introducedFile);
-    const introBill = await getParsedBill(introducedFile);
-    setIntroducedBill(introBill);
-    const parsedInstructions = await getParsedInstructions(amendmentsFile);
-    const engrossed = applyInstructions(
-      structuredClone(introBill),
-      structuredClone(parsedInstructions)
-    );
-    setEngrossedBill(engrossed);
+  //     // getParsedBill(introducedFile);
+  //     const introBill = await getParsedBill(introducedFile);
+  //     setIntroducedBill(introBill);
+  //     const parsedInstructions = await getParsedInstructions(amendmentsFile);
+  //     const engrossed = applyInstructions(
+  //       structuredClone(introBill),
+  //       structuredClone(parsedInstructions)
+  //     );
+  //     setEngrossedBill(engrossed);
 
-    // setIntroducedBill(amendBill);
-    // setAmendmentsLines(amendLines);
-  };
+  //     // setIntroducedBill(amendBill);
+  //     // setAmendmentsLines(amendLines);
+  //   };
 
-  const renderLines = (bill: ParsedBill): JSX.Element[] => {
-    return bill
-      .flatMap((page) => [...page.pre, ...page.content, ...page.post])
-      .map((line, i) => (
-        <div key={i}>
-          {line.map((span, j) => (
-            <span
-              key={j}
-              style={{ fontWeight: span.isBold ? 'bold' : 'normal' }}
-            >
-              {span.text}
-            </span>
-          ))}
-        </div>
-      ));
-  };
+  //   const renderLines = (bill: ParsedBill): JSX.Element[] => {
+  //     return bill
+  //       .flatMap((page) => [...page.pre, ...page.content, ...page.post])
+  //       .map((line, i) => (
+  //         <div key={i}>
+  //           {line.map((span, j) => (
+  //             <span
+  //               key={j}
+  //               style={{ fontWeight: span.isBold ? 'bold' : 'normal' }}
+  //             >
+  //               {span.text}
+  //             </span>
+  //           ))}
+  //         </div>
+  //       ));
+  //   };
 
   return (
     <div style={{ padding: 20 }}>
       <h2>Oregon Bill Viewer - Three Versions</h2>
 
-      <div style={{ marginBottom: 10 }}>
+      {/* <div style={{ marginBottom: 10 }}>
         <p>Introduced Bill PDF:</p>
         <input
           type="file"
@@ -98,7 +98,7 @@ export default function ThreeVersionBillViewer(): JSX.Element {
             </div>
           </div>
 
-          {/* <div style={{ flex: 1 }}>
+          <div style={{ flex: 1 }}>
             <h3>Amendments</h3>
             <div
               style={{
@@ -113,7 +113,7 @@ export default function ThreeVersionBillViewer(): JSX.Element {
             >
               {renderLines(amendmentsLines)}
             </div>
-          </div> */}
+          </div>
 
           <div style={{ flex: 1 }}>
             <h3>Engrossed</h3>
@@ -132,7 +132,7 @@ export default function ThreeVersionBillViewer(): JSX.Element {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

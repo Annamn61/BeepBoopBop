@@ -6,9 +6,9 @@ import { useMeasureStoreController } from "./storeControllers/MeasureStoreContro
 
 export const useDataController = () => {
     userUserController();
-    const { measuresCacheObject, isMeasureCacheObjectLoading, committeesCacheObject, isCommitteesCacheObjectLoading, legislatorsCacheObject, isLegislatorsCacheObjectLoading } = userOLISMeasureController();
+    const { measuresCacheObject, committeesCacheObject, legislatorsCacheObject } = userOLISMeasureController();
     
-    useMeasureStoreController(measuresCacheObject, isMeasureCacheObjectLoading);
-    useCommitteeStoreController(committeesCacheObject, isCommitteesCacheObjectLoading);
-    useLegislatorStoreController(legislatorsCacheObject, isLegislatorsCacheObjectLoading);
+    useMeasureStoreController(measuresCacheObject);
+    useCommitteeStoreController(committeesCacheObject);
+    useLegislatorStoreController(legislatorsCacheObject);
 }
