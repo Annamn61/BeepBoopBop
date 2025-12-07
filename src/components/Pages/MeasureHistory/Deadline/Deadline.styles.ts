@@ -3,6 +3,7 @@ import { SxProps, Theme } from '@mui/material/styles';
 export const styles: Record<string, SxProps<Theme>> = {
     container: {
         width: '100%',
+        boxSizing: 'border-box',
         padding: 1,
         backgroundColor: '#dedede',
         display: 'flex',

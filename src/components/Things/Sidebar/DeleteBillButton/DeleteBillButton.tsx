@@ -5,6 +5,8 @@ import ConfirmationModal from '../../../Accessories/ConfirmationModal/Confirmati
 import { useModal } from '../../../../utils/modal';
 import { Measure } from '../../../../types/MeasureTypes';
 import { useUserStore } from '../../../../store/UserStore';
+import { useUser } from '../../../../utils/user';
+import { removeMeasure } from '../../../../data/firebaseFirestore';
 
 interface Props {
   measureId: Measure['id'];
@@ -15,6 +17,7 @@ interface Props {
 const DeleteBillButton = ({ measureId, onMouseEnter, onMouseLeave }: Props) => {
   const { anchorEl, setModalClosed, setModalOpen } = useModal();
   const { removeTrackedMeasureById } = useUserStore();
+  const { currentUser } = useUser();
 
   return (
     <>
@@ -35,7 +38,20 @@ const DeleteBillButton = ({ measureId, onMouseEnter, onMouseLeave }: Props) => {
       <ConfirmationModal
         anchorEl={anchorEl}
         onClose={setModalClosed}
-        handleAction={() => removeTrackedMeasureById(measureId)}
+        handleAction={async () => {
+          // Optimistically remove from store (disappears immediately)
+          removeTrackedMeasureById(measureId);
+
+          // Remove from Firebase if user is logged in
+          if (currentUser) {
+            try {
+              await removeMeasure(currentUser.uid, measureId);
+            } catch (error) {
+              console.error('Error removing measure from Firebase:', error);
+              // TODO: Could revert the optimistic update here if needed
+            }
+          }
+        }}
         message={`Delete ${measureId}?`}
         subtitle="Are you sure you want to remove this measure from your tracked measures? This action cannot be undone."
       />

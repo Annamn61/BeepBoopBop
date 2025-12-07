@@ -8,30 +8,45 @@ import { useState } from 'react';
 
 interface Props {
   shouldLayoutChildren?: boolean;
+  showSidebar?: boolean;
+  showTabs?: boolean;
   children: React.ReactNode;
 }
 
-const LayoutPage = ({ shouldLayoutChildren = true, children }: Props) => {
+const LayoutPage = ({
+  shouldLayoutChildren = true,
+  showSidebar = true,
+  showTabs = true,
+  children,
+}: Props) => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
 
   if (shouldLayoutChildren) {
     return (
       <>
-        <Sidebar open={sidebarIsOpen} setOpen={setSidebarIsOpen} />
+        {showSidebar && (
+          <Sidebar open={sidebarIsOpen} setOpen={setSidebarIsOpen} />
+        )}
         <Box
           sx={{
             ...styles.contentContainer,
-            paddingLeft: sidebarIsOpen ? '348px' : '0px',
+            paddingLeft: {
+              xs: '0px', // No padding on mobile - sidebar overlays
+              md: showSidebar && sidebarIsOpen ? '348px' : '0px',
+            },
           }}
         >
           <Box
             sx={{
               ...styles.regularPageContainers,
-              paddingLeft: sidebarIsOpen ? 6 : 12,
+              paddingLeft: {
+                xs: showSidebar && sidebarIsOpen ? 6 : 2,
+                md: showSidebar && sidebarIsOpen ? 6 : 12,
+              },
             }}
           >
             <Header />
-            <PageTabs />
+            {showTabs && <PageTabs />}
             {children}
           </Box>
         </Box>
@@ -41,21 +56,29 @@ const LayoutPage = ({ shouldLayoutChildren = true, children }: Props) => {
 
   return (
     <>
-      <Sidebar open={sidebarIsOpen} setOpen={setSidebarIsOpen} />
+      {showSidebar && (
+        <Sidebar open={sidebarIsOpen} setOpen={setSidebarIsOpen} />
+      )}
       <Box
         sx={{
           ...styles.contentContainer,
-          paddingLeft: sidebarIsOpen ? '348px' : '0px',
+          paddingLeft: {
+            xs: '0px', // No padding on mobile - sidebar overlays
+            md: showSidebar && sidebarIsOpen ? '348px' : '0px',
+          },
         }}
       >
         <Box
           sx={{
             ...styles.regularPageContainers,
-            paddingLeft: sidebarIsOpen ? 6 : 12,
+            paddingLeft: {
+              xs: showSidebar && sidebarIsOpen ? 6 : 2,
+              md: showSidebar && sidebarIsOpen ? 6 : 12,
+            },
           }}
         >
           <Header />
-          <PageTabs />
+          {showTabs && <PageTabs />}
         </Box>
         {children}
       </Box>

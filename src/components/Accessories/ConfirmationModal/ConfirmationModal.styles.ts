@@ -12,5 +12,6 @@ export const styles: Record<string, SxProps<Theme>> = {
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'flex-end',
+        gap: 2,
     }
 };

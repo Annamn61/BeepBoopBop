@@ -13,9 +13,14 @@ export const styles: Record<string, SxProps<Theme>> = {
         display: 'flex',
         flexDirection: 'row',
         gap: 1.5,
-        alignItems: 'center'
+        alignItems: 'center',
+        flexShrink: 0,
     },
     logo: {
         height: '44px',
+        flexShrink: 0,
+    },
+    words: {
+        flexShrink: 0,
     }
 };

@@ -10,6 +10,8 @@ import Drawer from '@mui/material/Drawer';
 import Tooltip from '@mui/material/Tooltip';
 import { useUserStore } from '../../../store/UserStore';
 import { getMeasureUniqueId } from '../../../utils/measure';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 // import SearchBar from '../Accessories/SearchBar/SearchBar';
 
 interface SidebarProps {
@@ -19,13 +21,15 @@ interface SidebarProps {
 
 export const Sidebar = ({ open, setOpen }: SidebarProps) => {
   const { userTrackedMeasures } = useUserStore();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Box sx={styles.drawerContainer}>
       <Drawer
         sx={styles.drawer}
         open={open}
-        variant="persistent"
+        variant={isMobile ? 'temporary' : 'persistent'}
         anchor="left"
         onClose={() => setOpen(false)}
       >
@@ -41,7 +45,7 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
           </Tooltip>
           <Box sx={styles.section}>
             <Box sx={styles.sectionHeader}>
-              <Typography variant="h2">Tracked Bills</Typography>
+              <Typography variant="h2">My Tracked Bills</Typography>
               <AddTrackedBill />
             </Box>
             {/* <SearchBar /> */}

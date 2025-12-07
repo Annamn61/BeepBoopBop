@@ -6,7 +6,6 @@ const ParsedFileViewer = ({ bill }: { bill?: ParsedBill }) => {
   if (!bill) return null;
 
   const renderLines = (bill: ParsedBill): JSX.Element[] => {
-    console.log(bill[0].content);
     return bill.map((page, index) => (
       <div key={index + 1}>
         {page.pre.map((line, index) => {

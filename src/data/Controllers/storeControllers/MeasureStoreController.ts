@@ -5,18 +5,17 @@ import useHistoryStore from "../../../store/HistoryStore";
 import useCommitteeAgendaStore from "../../../store/CommitteeAgendaStore";
 
 
-export const useMeasureStoreController = (measuresCacheObject: LocalStoreageMeasureCache, areMeasureCacheObjectsLoading: boolean) => {
-    console.log(areMeasureCacheObjectsLoading);
+export const useMeasureStoreController = (measuresCacheObject: LocalStoreageMeasureCache) => {
     const { setUnfilteredMeasures } = useMeasureStore();
     const { setUnfilteredHistory } = useHistoryStore();
     const { setUnfilteredCommitteeAgenda } = useCommitteeAgendaStore();
     
-    const measureDataList = useMemo(() => Object.entries(measuresCacheObject).map(([_, measuresCacheObject]) => {
-        return measuresCacheObject.MeasureData
-    }), [measuresCacheObject])
+    const measureDataList = useMemo(() => Object.entries(measuresCacheObject)
+        .map(([_, measuresCacheObject]) => measuresCacheObject.MeasureData)
+        .filter((measureData) => measureData !== undefined), [measuresCacheObject])
 
     const historyDataList = useMemo(() => Object.entries(measuresCacheObject).flatMap(([_, measuresCacheObject]) => {
-        return measuresCacheObject.MeasureData?.value[0].MeasureHistoryActions || [];
+        return measuresCacheObject.MeasureData?.value?.[0]?.MeasureHistoryActions || [];
     }), [measuresCacheObject])
 
     const agendaDataList = useMemo(() => Object.entries(measuresCacheObject).flatMap(([_, measuresCacheObject]) => {

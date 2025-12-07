@@ -1,10 +1,12 @@
 import { create } from 'zustand';
-import { Measure, MeasureDocument, MeasureObject, MeasureSponsors, UserTrackedMeasure } from '../types/MeasureTypes';
+import { Measure, MeasureDocument, MeasureObject, MeasureSponsors, OLISMeasureLoadingState, UserTrackedMeasure } from '../types/MeasureTypes';
 import { getKanbanLocationFromBilLocation } from '../components/Pages/BillLocationBoard/Locations/Locations.helpers';
 import { useUserStore } from './UserStore';
 import { getMeasureUniqueId } from '../utils/measure';
 
 interface MeasureState {
+  areOlisMeasuresLoading: OLISMeasureLoadingState;
+  setAreOlisMeasuresLoading: (areOlisMeasuresLoading: OLISMeasureLoadingState) => void;
   /** Get an array of the ids of measures filtered as 'on' by the user */
   getFilteredMeasureIds: () => Measure['id'][];
   /** Returns all the measure documents for measures that are displayed */
@@ -38,6 +40,12 @@ interface MeasureState {
 }
 
 export const useMeasureStore = create<MeasureState>((set, get) => ({
+  areOlisMeasuresLoading: {
+    areMeasuresLoading: true,
+    totalMeasures: 0,
+    measuresLoaded: 0,
+  },
+  setAreOlisMeasuresLoading: (areOlisMeasuresLoading: OLISMeasureLoadingState) => set({ areOlisMeasuresLoading }),
   getFilteredMeasureIds: () => (useUserStore.getState().userTrackedMeasures) ? (useUserStore.getState().getSafeUserTrackedMeasures()).filter((m) =>m.isDisplayed).map((measure) => getMeasureUniqueId(measure)) : [],
   getFilteredMeasureDocuments: () => get().getMeasures().flatMap((measure) => measure.MeasureDocuments),
   unfilteredMeasures: [],

@@ -12,6 +12,7 @@ import Measure from './components/Pages/Measure/Measure';
 import MeasureHistory from './components/Pages/MeasureHistory/MeasureHistory';
 import Parser from './components/Pages/Parser/Parser';
 import Votes from './components/Pages/Votes/Votes';
+import Feedback from './components/Pages/Feedback/Feedback';
 import { useDataController } from './data/Controllers/dataController';
 import theme from './utils/theme';
 
@@ -71,6 +72,16 @@ function App() {
             <Route
               path="/votes/:id"
               element={<LayoutPage children={<Votes />} />}
+            />
+            <Route
+              path="/feedback"
+              element={
+                <LayoutPage
+                  showSidebar={false}
+                  showTabs={false}
+                  children={<Feedback />}
+                />
+              }
             />
             <Route
               path="*"

@@ -33,6 +33,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         display: 'flex',
         flexDirection: 'column',
         gap: 0.5,
+        width: '100%',
     }, 
     sectionHeader: {
         display: 'flex',
@@ -43,8 +44,14 @@ export const styles: Record<string, SxProps<Theme>> = {
     },
     closeArrows: {
         width: '40',
-        opacity: 0,
-        visibility: 'hidden',
+        opacity: {
+            xs: 1,
+            md: 0,
+        },
+        visibility: {
+            xs: 'visible',
+            md: 'hidden',
+        },
         transition: 'opacity 0.2s ease-in-out, visibility 0.2s',
     },
     menuIconContainer: {

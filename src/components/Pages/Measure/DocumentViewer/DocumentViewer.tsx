@@ -15,7 +15,6 @@ const DocumentViewer = () => {
   const params = useParams();
   const measureId = params.id;
   const documentName = params.name;
-  console.log('mID', measureId, documentName);
 
   const { getMeasureById } = useMeasureStore();
   const measure = getMeasureById(measureId);

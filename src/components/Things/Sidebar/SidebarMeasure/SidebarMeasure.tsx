@@ -14,6 +14,8 @@ import ColorSquare from '../../../Accessories/ColorSquare/ColorSquare';
 import { useUserStore } from '../../../../store/UserStore';
 import { getMeasureUniqueId, getReadableId } from '../../../../utils/measure';
 import useMeasureStore from '../../../../store/MeasureStore';
+import { useUser } from '../../../../utils/user';
+import { removeMeasure } from '../../../../data/firebaseFirestore';
 
 interface SidebarMeasureProps {
   userTrackedMeasure: UserTrackedMeasure;
@@ -34,6 +36,7 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
   } = useUserStore();
 
   const { getMeasureNicknameById } = useMeasureStore();
+  const { currentUser } = useUser();
 
   const { isDisplayed } = userTrackedMeasure;
   const uniqueId = getMeasureUniqueId(userTrackedMeasure);
@@ -86,7 +89,20 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
       <ConfirmationModal
         anchorEl={anchorEl}
         onClose={setModalClosed}
-        handleAction={() => removeTrackedMeasureById(uniqueId)}
+        handleAction={async () => {
+          // Optimistically remove from store (disappears immediately)
+          removeTrackedMeasureById(uniqueId);
+
+          // Remove from Firebase if user is logged in
+          if (currentUser) {
+            try {
+              await removeMeasure(currentUser.uid, uniqueId);
+            } catch (error) {
+              console.error('Error removing measure from Firebase:', error);
+              // TODO: Could revert the optimistic update here if needed
+            }
+          }
+        }}
         message={`Delete ${uniqueId}?`}
         subtitle="Are you sure you want to remove this measure from your tracked measures? This action cannot be undone."
       />

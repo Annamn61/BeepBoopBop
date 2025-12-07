@@ -110,4 +110,10 @@ export interface DateGroupedUpdates {
     [date: string]: GenericUpdateItem[]
 }
 
+export interface OLISMeasureLoadingState {
+    areMeasuresLoading: boolean;
+    totalMeasures: number;
+    measuresLoaded: number;
+}
+
 

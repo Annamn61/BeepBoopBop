@@ -8,7 +8,6 @@ export const getInstructionActions = (instructionGroups: ParsedInstruction[]) =>
     let page = 1;
     const instructionsLists = instructionGroups.map((group) => {
         const instructionText = group.instruction.lines.flatMap(line => line.slice(1).flatMap(piece => piece.text)).join('')
-        console.log('instructionText', instructionText);
         const { pageNumber, text } = extractPage(instructionText);
         const { lineNumber, text2 } =  extractLine(text);
         const pageNum = pageNumber || page;
@@ -17,11 +16,9 @@ export const getInstructionActions = (instructionGroups: ParsedInstruction[]) =>
         // const { tokens, tokenizedText } = tokenizeText("Delete lines 4 through 20 and delete pages 2 through 7 and insert:");
         const { tokens, tokenizedText } = tokenizeText(text2);
         const cleanedText = cleanText(tokenizedText);
-        console.log(pageNumber, lineNumber, tokens, tokenizedText, cleanedText)
         const splitInstructions = getSplitInstructions({text: cleanedText, pageNum, lineNum: lineNumber, tokens});
         return splitInstructions;
     })
-    console.log('+++', instructionsLists);
     return instructionsLists;
 }
 
@@ -33,7 +30,6 @@ const extractPage = (instructionText: string) => {
     const firstSection = splitInstructions[0];
     if(firstSection.toLocaleLowerCase().startsWith('on page')) {
         const pageNumber = +firstSection.split(' ')[2];
-        console.log('page', pageNumber, '---', instructionText, );
         return { pageNumber, text: splitInstructions.slice(1).join(',')};
     }
     return { pageNumber: undefined, text: splitInstructions.join(',')}

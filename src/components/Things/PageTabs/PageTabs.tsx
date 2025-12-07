@@ -5,6 +5,7 @@ import { styles } from './PageTabs.styles';
 import { SxProps, Theme } from '@mui/material/styles';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCallback, useMemo } from 'react';
+import FF from '../FF/FF';
 
 const PageTabs = () => {
   const pathname = useLocation().pathname;
@@ -78,7 +79,9 @@ const PageTabs = () => {
       <ButtonTab label="Updates" path="updates" />
       <ButtonTab label="Location" path="location" />
       <ButtonTab label="Calendar" path="calendar" />
-      <ButtonTab label="Votes" path="votes" />
+      <FF value="votes">
+        <ButtonTab label="Votes" path="votes" />
+      </FF>
     </Box>
   );
 };

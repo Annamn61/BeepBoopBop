@@ -1,4 +1,5 @@
 import useHistoryStore from '../../../store/HistoryStore';
+import { useUserStore } from '../../../store/UserStore';
 import DateTitle from './DateTitle/DateTitle';
 import Box from '@mui/material/Box';
 import EmptyObject from '../../Accessories/EmptyObject/EmptyObject';
@@ -17,6 +18,7 @@ import { importantDates } from '../../../data/ImportantLegistlativeDates';
 import Deadline from './Deadline/Deadline';
 import Tooltip from '@mui/material/Tooltip';
 import React from 'react';
+import { CircularProgress } from '@mui/material';
 
 const MeasureHistory = () => {
   const {
@@ -53,14 +55,7 @@ const MeasureHistory = () => {
     [history]
   );
 
-  //   const isLoading = useMemo(
-  //     () =>
-  //       !(
-  //         Object.keys(futureHistory).length > 1 && Object.keys(pastHistory).length
-  //       ),
-  //     [futureHistory, pastHistory]
-  //   );
-  const isLoading = !length;
+  const { areUserMeasuresLoading } = useUserStore();
 
   const futureHistoryKeysSorted = useMemo(() => {
     return Object.keys(futureHistory).sort();
@@ -99,8 +94,19 @@ const MeasureHistory = () => {
         </ToggleButtonGroup>
         <Typography>{length} items</Typography>
       </Box>
-      {isLoading && <>Loading...</>}
-      {!isLoading && (
+      {areUserMeasuresLoading && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '200px',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+      {!areUserMeasuresLoading && (
         <>
           <Box sx={styles.container}>
             <Box

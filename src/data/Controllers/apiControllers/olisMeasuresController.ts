@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { UserTrackedMeasure } from "../../../types/MeasureTypes";
 import { LocalStoreageMeasureCache, LocalStorageCommitteeCache, LocalStorageLegislatorCache } from "../../../types/cache";
 import { isOutOfDate_OneHour, isOutOfDate_OneWeek } from "../../../utils/time";
 import { fetchAgendaItems, fetchMeasure, fetchCommittees, fetchLegislators } from "../../measures/measures";
 import { getMeasureUniqueId } from "../../../utils/measure";
+import { useUserStore } from "../../../store/UserStore";
 
-export const userOLISMeasureController = (userTrackedMeasures: UserTrackedMeasure[] | undefined) => {
+export const userOLISMeasureController = () => {
+    const { userTrackedMeasures } = useUserStore();
     const [measuresCacheObject, setMeasureCacheObjects] = useState(getMeasuresFromLocalStorage());
     const [isMeasureCacheObjectLoading, setIsMeasureCacheObjectLoading] = useState(false);
     const [committeesCacheObject, setCommitteesCacheObject] = useState(getCommitteesFromLocalStorage());

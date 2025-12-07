@@ -175,7 +175,6 @@ export const getKanbanLocationFromBilLocation = (location: string, xxx: Measure[
         failedLocation.group = 'Not Passed';
         failedLocation.section = 'Not Passed';
         if(isInCommitteeOnAdjourment) {
-            console.log('isInCommitteeOnAdjourment', isInCommitteeOnAdjourment, location);
             failedLocation.status = 'In Committee Upon Adjourment'
             failedLocation.sublocation = location.includes('Senate') ? 'In Senate Committee' : 'In House Committee';
         } else if(location.includes('tabled')) {

@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { collection, doc, getDocs, getFirestore, setDoc, writeBatch } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, getFirestore, setDoc, writeBatch } from "firebase/firestore";
 import { UserTrackedMeasure } from "../types/MeasureTypes";
 import { firebaseApp } from "../utils/firebaseInit";
 import { getMeasureUniqueId } from "../utils/measure";
@@ -24,7 +24,7 @@ export const batchAddMeasures = async (userId: string, measures: UserTrackedMeas
     const batch = writeBatch(db);
 
     measures.forEach((measure) => {
-        const measureRef = doc(db, `users/${userId}/measure`, getMeasureUniqueId(measure));
+        const measureRef = doc(db, `users/${userId}/measures`, getMeasureUniqueId(measure));
         batch.set(measureRef, measure);
     });
 
@@ -44,11 +44,22 @@ export const batchAddMeasures = async (userId: string, measures: UserTrackedMeas
 
 export const addMeasure = async (userId: string, measure: UserTrackedMeasure) => {
     try {
-        const measureRef = doc(db, `users/${userId}/measure`, getMeasureUniqueId(measure));
+        const measureRef = doc(db, `users/${userId}/measures`, getMeasureUniqueId(measure));
         await setDoc(measureRef, measure);
         console.log("Measure added successfully.");
     } catch (error) {
         console.error("Error adding measure:", error);
+    }
+}
+
+export const removeMeasure = async (userId: string, measureId: string) => {
+    try {
+        const measureRef = doc(db, `users/${userId}/measures`, measureId);
+        await deleteDoc(measureRef);
+        console.log("Measure removed successfully.");
+    } catch (error) {
+        console.error("Error removing measure:", error);
+        throw error;
     }
 }
 
@@ -62,7 +73,7 @@ export const addMeasure = async (userId: string, measure: UserTrackedMeasure) =>
 export const getRemoteUserTrackedMeasures = async (user: User) => {
 
     const userId = user.uid;
-    const measuresRef = collection(db, `users/${userId}/measure`);
+    const measuresRef = collection(db, `users/${userId}/measures`);
 
     try {
         const querySnapshot = await getDocs(measuresRef);

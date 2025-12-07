@@ -25,8 +25,12 @@ const ConfirmationModal = ({
         <Typography variant="h5">{message}</Typography>
         <Typography variant="body2">{subtitle}</Typography>
         <Box sx={styles.buttonContainer}>
-          <Button onClick={onClose}>Cancel</Button>
+          <Button variant="text" onClick={onClose}>
+            Cancel
+          </Button>
           <Button
+            variant="contained"
+            color="error"
             onClick={() => {
               handleAction();
               onClose();

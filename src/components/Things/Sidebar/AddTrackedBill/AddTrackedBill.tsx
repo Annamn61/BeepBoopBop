@@ -14,9 +14,12 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import IconButton from '@mui/material/IconButton';
 import { useUserStore } from '../../../../store/UserStore';
 import FF from '../../FF/FF';
+import { useUser } from '../../../../utils/user';
+import { addMeasure } from '../../../../data/firebaseFirestore';
 
 export const AddTrackedBill = () => {
   const { addUserTrackedMeasure } = useUserStore();
+  const { currentUser } = useUser();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>();
   const [colorAnchorEl, setColorAnchorEl] = useState<HTMLButtonElement | null>(
     null
@@ -88,23 +91,38 @@ export const AddTrackedBill = () => {
           </Box>
           <TextField
             sx={styles.sessionKey}
+            disabled={true}
             placeholder="Session Key"
             value={sessionKey}
             onChange={(e) => setSessionKey(e.target.value)}
           />
           <Button
             variant="filled"
-            onClick={() => {
-              setAnchorEl(null);
-              addUserTrackedMeasure({
+            onClick={async () => {
+              const newMeasure = {
                 color: measureColor,
-                position: 'Support',
+                position: '?' as const,
                 MeasurePrefix: measureId.split(' ')[0],
                 MeasureNumber: Number(measureId.split(' ')[1]),
                 isDisplayed: true,
                 SessionKey: sessionKey,
                 nickname: '',
-              });
+              };
+
+              setAnchorEl(null);
+
+              // Optimistically update the store (appears immediately)
+              addUserTrackedMeasure(newMeasure);
+
+              // Save to Firebase if user is logged in
+              if (currentUser) {
+                try {
+                  await addMeasure(currentUser.uid, newMeasure);
+                } catch (error) {
+                  console.error('Error adding measure to Firebase:', error);
+                  // TODO: Could revert the optimistic update here if needed
+                }
+              }
             }}
           >
             Add

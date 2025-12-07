@@ -8,6 +8,9 @@ interface UserState {
     getSafeUserTrackedMeasures: () => UserTrackedMeasure[];
     /** set the metadata about the measures a user is tracking */
     setUserTrackedMeasures: (userTrackedMeasures: UserTrackedMeasure[] | undefined) => void;
+    /** Whether user measures are currently loading from Firebase */
+    areUserMeasuresLoading: boolean;
+    setAreUserMeasuresLoading: (areUserMeasuresLoading: boolean) => void;
     /** Add a single measure's metadata for tracking  */
     addUserTrackedMeasure: (newUserTrackedMeasure: UserTrackedMeasure) => void;
     /** Returns a string array of the ids of the user tracked measures */
@@ -28,8 +31,10 @@ interface UserState {
 
 export const useUserStore = create<UserState>((set, get) => ({
   userTrackedMeasures: undefined,
+  areUserMeasuresLoading: true,
   getSafeUserTrackedMeasures: () => get().userTrackedMeasures ? get().userTrackedMeasures! : [],
   setUserTrackedMeasures: (userTrackedMeasures) => set({userTrackedMeasures}),
+  setAreUserMeasuresLoading: (areUserMeasuresLoading) => set({areUserMeasuresLoading}),
   addUserTrackedMeasure: (newUserTrackedMeasure) => set({userTrackedMeasures: [...get().getSafeUserTrackedMeasures(), newUserTrackedMeasure]}),
   getUserTrackedMeasureUniqueIds: () => get().getSafeUserTrackedMeasures().map((measure) => getMeasureUniqueId(measure)),
   removeTrackedMeasureById: (id) => set({userTrackedMeasures: get().getSafeUserTrackedMeasures().filter((measure) => getMeasureUniqueId(measure) != id)}),
