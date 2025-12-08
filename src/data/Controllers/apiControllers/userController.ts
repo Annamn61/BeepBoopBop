@@ -2,12 +2,12 @@ import { useEffect } from "react";
 import { useUser } from "../../../utils/user";
 // import { defaultUTMData } from "../../userMeasureData";
 import { UserTrackedMeasure } from "../../../types/MeasureTypes";
-import { getRemoteUserTrackedMeasures } from "../../firebaseFirestore";
+import { getRemoteUserTrackedMeasures, getUserGroups, getUserGroupMeasures } from "../../firebaseFirestore";
 import { useUserStore } from "../../../store/UserStore";
 
 export const userUserController = () => {
     const { currentUser } = useUser();
-    const { setUserTrackedMeasures, setAreUserMeasuresLoading } = useUserStore();
+    const { setUserTrackedMeasures, setAreUserMeasuresLoading, setUserGroups, setGroupMeasures } = useUserStore();
 
     useEffect(() => {
         console.log('currentUser', currentUser);
@@ -27,5 +27,24 @@ export const userUserController = () => {
             // TODO: Fetch user measures from firebase
             // Store these in localstorage 
         }
-    }, [currentUser])
+    }, [currentUser, setUserTrackedMeasures, setAreUserMeasuresLoading]);
+
+    useEffect(() => {
+        if(!currentUser) {
+            setUserGroups([]);
+            setGroupMeasures({});
+        } else {
+            getUserGroups(currentUser.uid).then((groups) => {
+                setUserGroups(groups);
+            }).catch(error => {
+                console.error("Error fetching user groups:", error);
+            });
+            
+            getUserGroupMeasures(currentUser.uid).then((groupMeasures) => {
+                setGroupMeasures(groupMeasures);
+            }).catch(error => {
+                console.error("Error fetching user group measures:", error);
+            });
+        }
+    }, [currentUser, setUserGroups, setGroupMeasures]);
 }

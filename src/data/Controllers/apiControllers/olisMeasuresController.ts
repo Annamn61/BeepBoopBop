@@ -2,18 +2,19 @@ import { useEffect, useMemo, useState } from "react";
 import { LocalStoreageMeasureCache, LocalStorageCommitteeCache, LocalStorageLegislatorCache } from "../../../types/cache";
 import { isOutOfDate_OneHour, isOutOfDate_OneWeek } from "../../../utils/time";
 import { fetchAgendaItems, fetchMeasure, fetchCommittees, fetchLegislators } from "../../measures/measures";
-import { getMeasureUniqueId } from "../../../utils/measure";
 import { useUserStore } from "../../../store/UserStore";
 
 export const userOLISMeasureController = () => {
-    const { userTrackedMeasures } = useUserStore();
+    const userTrackedMeasures = useUserStore((state) => state.userTrackedMeasures);
+    const groupMeasures = useUserStore((state) => state.groupMeasures);
+    const getAllMeasureIdsForFetching = useUserStore((state) => state.getAllMeasureIdsForFetching);
     const [measuresCacheObject, setMeasureCacheObjects] = useState(getMeasuresFromLocalStorage());
     const [isMeasureCacheObjectLoading, setIsMeasureCacheObjectLoading] = useState(false);
     const [committeesCacheObject, setCommitteesCacheObject] = useState(getCommitteesFromLocalStorage());
     const [isCommitteesCacheObjectLoading, setIsCommitteesCacheObjectLoading] = useState(false);
     const [legislatorsCacheObject, setLegislatorsCacheObject] = useState(getLegislatorsFromLocalStorage());
     const [isLegislatorsCacheObjectLoading, setIsLegislatorsCacheObjectLoading] = useState(false);
-    const utmIdList = useMemo(() => userTrackedMeasures && userTrackedMeasures.map((utm) => getMeasureUniqueId(utm)), [userTrackedMeasures])
+    const utmIdList = useMemo(() => getAllMeasureIdsForFetching(), [userTrackedMeasures, groupMeasures])
     let b_CommitteesOutOfDate = committeesCacheObject ? getCommitteesOutOfDate(committeesCacheObject) : true;
     let b_LegislatorsOutOfDate = legislatorsCacheObject ? getLegislatorsOutOfDate(legislatorsCacheObject) : true;
 

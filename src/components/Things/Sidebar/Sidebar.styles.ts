@@ -34,6 +34,10 @@ export const styles: Record<string, SxProps<Theme>> = {
         flexDirection: 'column',
         gap: 0.5,
         width: '100%',
+        marginTop: 2,
+        '&:first-of-type': {
+            marginTop: 0,
+        },
     }, 
     sectionHeader: {
         display: 'flex',

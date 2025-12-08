@@ -1,6 +1,15 @@
 import { create } from "zustand";
-import { UserTrackedMeasure } from "../types/MeasureTypes";
-import { getMeasureUniqueId } from "../utils/measure";
+import { UserTrackedMeasure, UserTrackedMeasureWithSource } from "../types/MeasureTypes";
+import { getMeasureUniqueId, parseUniqueId } from "../utils/measure";
+
+export interface GroupSummary {
+    id: string;
+    name: string;
+}
+
+export interface GroupMeasures {
+    [groupId: string]: string[]; 
+}
 
 interface UserState {
     /** Metadata about the measures a user is tracking */
@@ -27,6 +36,22 @@ interface UserState {
     setUserTrackedMeasureFilterStatusById: (id: string, isDisplayed: boolean) => void;
     /**  Toggle all measures as filtered on or off except for this id */
     toggleAllUserTrackedFilterStatusesBasedOnAnId: (id: string) => void;
+    /** Groups the user is in */
+    userGroups: GroupSummary[];
+    /** Set the user's groups */
+    setUserGroups: (userGroups: GroupSummary[]) => void;
+    /** Add a group to the user's groups (optimistic update) */
+    addUserGroup: (group: GroupSummary) => void;
+    /** Remove a group from the user's groups */
+    removeUserGroup: (groupId: string) => void;
+    /** Group measures stored in user document: groupId -> measureIds */
+    groupMeasures: GroupMeasures;
+    /** Set group measures */
+    setGroupMeasures: (groupMeasures: GroupMeasures) => void;
+    /** Get all measures (user + group) with source tracking, handling duplicates */
+    getAllTrackedMeasuresWithSource: () => UserTrackedMeasureWithSource[];
+    /** Get all measure IDs for OLIS fetching (user + group, deduplicated) */
+    getAllMeasureIdsForFetching: () => string[];
 }
 
 export const useUserStore = create<UserState>((set, get) => ({
@@ -43,6 +68,77 @@ export const useUserStore = create<UserState>((set, get) => ({
   getUserMeasureColorById: (id) => get().getUserMeasureMetadataById(id)?.color,
   setUserTrackedMeasureFilterStatusById: (id, isDisplayed) => set({userTrackedMeasures: getUserTrackedMeasuresWithNewFilterStatus(get().getSafeUserTrackedMeasures(), id, isDisplayed)}),
   toggleAllUserTrackedFilterStatusesBasedOnAnId: (id) => set({userTrackedMeasures: getToggledFilters(get().getSafeUserTrackedMeasures(), id)}),
+  userGroups: [],
+  setUserGroups: (userGroups) => set({userGroups}),
+  addUserGroup: (group) => set({userGroups: [...get().userGroups, group]}),
+  removeUserGroup: (groupId) => set({userGroups: get().userGroups.filter((g) => g.id !== groupId)}),
+  groupMeasures: {},
+  setGroupMeasures: (groupMeasures) => set({groupMeasures}),
+  getAllTrackedMeasuresWithSource: () => {
+    const userMeasures = get().getSafeUserTrackedMeasures();
+    const groupMeasures = get().groupMeasures;
+    const userGroups = get().userGroups;
+    const userMeasureIds = new Set(userMeasures.map(m => getMeasureUniqueId(m)));
+    
+    // Start with user measures (marked as source: 'user')
+    const allMeasures: UserTrackedMeasureWithSource[] = userMeasures.map(measure => ({
+      ...measure,
+      source: 'user' as const,
+      isDuplicate: false,
+    }));
+    
+    // Add group measures, checking for duplicates
+    Object.entries(groupMeasures).forEach(([groupId, measureIds]) => {
+      const group = userGroups.find(g => g.id === groupId);
+      if (!group) return;
+      
+      measureIds.forEach((measureId) => {
+        const measureIdStr = measureId;
+        // Check if this measure exists in user measures
+        const existsInUser = userMeasureIds.has(measureIdStr);
+        
+        // Parse measure ID to create UserTrackedMeasure
+        try {
+          const parsed = parseUniqueId(measureIdStr);
+          allMeasures.push({
+            MeasurePrefix: parsed.MeasurePrefix,
+            MeasureNumber: parsed.MeasureNumber,
+            SessionKey: parsed.SessionKey,
+            position: '?' as const,
+            isDisplayed: true,
+            color: '#E5EFE5', // Default color for group measures
+            nickname: '',
+            source: { type: 'group', groupId, groupName: group.name },
+            isDuplicate: existsInUser, // Mark as duplicate if it exists in user measures
+          });
+        } catch (error) {
+          console.error('Error parsing measure ID:', measureIdStr, error);
+        }
+      });
+    });
+    
+    return allMeasures;
+  },
+  getAllMeasureIdsForFetching: () => {
+    const userMeasures = get().getSafeUserTrackedMeasures();
+    const groupMeasures = get().groupMeasures;
+    const userMeasureIds = new Set(userMeasures.map(m => getMeasureUniqueId(m)));
+    const allIds = new Set<string>();
+    
+    // Add user measure IDs
+    userMeasureIds.forEach(id => allIds.add(id));
+    
+    // Add group measure IDs (deduplicated)
+    Object.values(groupMeasures).forEach(measureIds => {
+      measureIds.forEach(id => {
+        if (!userMeasureIds.has(id)) {
+          allIds.add(id);
+        }
+      });
+    });
+    
+    return Array.from(allIds);
+  },
 }));
 
 const getToggledFilters = (userTrackedMeasures: UserTrackedMeasure[], id: string) => {

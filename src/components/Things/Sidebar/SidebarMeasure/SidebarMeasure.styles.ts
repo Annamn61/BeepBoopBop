@@ -41,4 +41,7 @@ export const styles: Record<string, SxProps<Theme>> = {
     deleteIcon: {
         visibility: 'hidden',
     },
+    disabled: {
+        textDecoration: 'line-through',
+    },
 }

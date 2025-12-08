@@ -1,6 +1,8 @@
 import Typography from '@mui/material/Typography';
 import { AddTrackedBill } from './AddTrackedBill/AddTrackedBill';
+import { AddGroup } from './AddGroup/AddGroup';
 import SidebarMeasure from './SidebarMeasure/SidebarMeasure';
+import SidebarGroup from './SidebarGroup/SidebarGroup';
 import Box from '@mui/material/Box';
 import { styles } from './Sidebar.styles';
 import KeyboardDoubleArrowLeftRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowLeftRounded';
@@ -20,7 +22,7 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ open, setOpen }: SidebarProps) => {
-  const { userTrackedMeasures } = useUserStore();
+  const { userTrackedMeasures, userGroups } = useUserStore();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -56,6 +58,15 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
                   key={getMeasureUniqueId(utm)}
                 />
               ))}
+          </Box>
+          <Box sx={styles.section}>
+            <Box sx={styles.sectionHeader}>
+              <Typography variant="h6">My Groups</Typography>
+              <AddGroup />
+            </Box>
+            {userGroups.map((group) => (
+              <SidebarGroup group={group} key={group.id} />
+            ))}
           </Box>
         </Box>
       </Drawer>

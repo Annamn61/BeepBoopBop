@@ -19,9 +19,15 @@ import { removeMeasure } from '../../../../data/firebaseFirestore';
 
 interface SidebarMeasureProps {
   userTrackedMeasure: UserTrackedMeasure;
+  isDuplicate?: boolean;
+  groupNickname?: string;
 }
 
-const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
+const SidebarMeasure = ({
+  userTrackedMeasure,
+  isDuplicate,
+  groupNickname,
+}: SidebarMeasureProps) => {
   const { anchorEl, setModalClosed, setModalOpen } = useModal();
   const {
     anchorEl: measureAnchorEl,
@@ -41,24 +47,34 @@ const SidebarMeasure = ({ userTrackedMeasure }: SidebarMeasureProps) => {
   const { isDisplayed } = userTrackedMeasure;
   const uniqueId = getMeasureUniqueId(userTrackedMeasure);
 
-  const title = getMeasureNicknameById(uniqueId);
+  const title = groupNickname || getMeasureNicknameById(uniqueId);
   const measureColor = getUserMeasureColorById(uniqueId);
 
   return (
     <>
       <Tooltip title={TOOLTIP_MESSAGES.MeasureModal}>
         <Box
-          sx={styles.measureFilterContainer}
-          onClick={(e) => openMeasureModal(e)}
+          sx={
+            {
+              ...styles.measureFilterContainer,
+              ...(isDuplicate ? styles.disabled : {}),
+            } as any
+          }
+          onClick={(e: React.MouseEvent<HTMLElement>) =>
+            !isDuplicate && openMeasureModal(e)
+          }
           role="button"
         >
           <Tooltip title={TOOLTIP_MESSAGES.ToggleVisibility}>
             <Button
-              sx={{ ...styles.checkbox }}
-              onClick={(e) => {
+              sx={styles.checkbox}
+              onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
-                setUserTrackedMeasureFilterStatusById(uniqueId, !isDisplayed);
+                if (!isDuplicate) {
+                  setUserTrackedMeasureFilterStatusById(uniqueId, !isDisplayed);
+                }
               }}
+              disabled={isDuplicate}
             >
               <ColorSquare color={measureColor} filled={isDisplayed} />
             </Button>

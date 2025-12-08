@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { collection, deleteDoc, doc, getDocs, getFirestore, setDoc, writeBatch } from "firebase/firestore";
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, serverTimestamp, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 import { UserTrackedMeasure } from "../types/MeasureTypes";
 import { firebaseApp } from "../utils/firebaseInit";
 import { getMeasureUniqueId } from "../utils/measure";
@@ -83,5 +83,192 @@ export const getRemoteUserTrackedMeasures = async (user: User) => {
     } catch (error) {
         console.error("Error fetching user measures:", error);
         return [];
+    }
+}
+
+export interface FeedbackEntry {
+    timestamp: Date;
+    email: string;
+    feedback: string;
+    userId: string | null;
+    status: string;
+}
+
+export const submitFeedback = async (feedbackData: Omit<FeedbackEntry, 'timestamp'>) => {
+    try {
+        const feedbackRef = collection(db, 'feedback');
+        await addDoc(feedbackRef, {
+            ...feedbackData,
+            timestamp: serverTimestamp(),
+        });
+        console.log("Feedback submitted successfully.");
+    } catch (error) {
+        console.error("Error submitting feedback:", error);
+        throw error;
+    }
+}
+
+import { GroupSummary, GroupMeasures } from "../store/UserStore";
+
+// Group types and functions
+export interface Group {
+    id: string;
+    name: string;
+    admins: string[]; // Array of user IDs
+    measures: string[]; // Array of measure IDs
+}
+
+// Get a list of all groups (names and ids at least)
+export const getAllGroups = async (): Promise<GroupSummary[]> => {
+    try {
+        const groupsRef = collection(db, 'groups');
+        const querySnapshot = await getDocs(groupsRef);
+        const groups = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            name: doc.data().name || '',
+        }));
+        return groups;
+    } catch (error) {
+        console.error("Error fetching all groups:", error);
+        throw error;
+    }
+}
+
+// Get the groups a user is in
+export const getUserGroups = async (userId: string): Promise<GroupSummary[]> => {
+    try {
+        const userRef = doc(db, 'users', userId);
+        const userDoc = await getDoc(userRef);
+        
+        if (!userDoc.exists()) {
+            return [];
+        }
+        
+        const userData = userDoc.data();
+        const groupIds: string[] = userData.groups || [];
+        
+        if (groupIds.length === 0) {
+            return [];
+        }
+        
+        // Fetch group details for each group ID
+        const groupPromises = groupIds.map(async (groupId) => {
+            const groupRef = doc(db, 'groups', groupId);
+            const groupDoc = await getDoc(groupRef);
+            if (groupDoc.exists()) {
+                return {
+                    id: groupDoc.id,
+                    name: groupDoc.data().name || '',
+                };
+            }
+            return null;
+        });
+        
+        const groups = await Promise.all(groupPromises);
+        return groups.filter((group): group is GroupSummary => group !== null);
+    } catch (error) {
+        console.error("Error fetching user groups:", error);
+        throw error;
+    }
+}
+
+// Get group measures and store them in user document structure
+export const getUserGroupMeasures = async (userId: string): Promise<GroupMeasures> => {
+    try {
+        const userRef = doc(db, 'users', userId);
+        const userDoc = await getDoc(userRef);
+        
+        if (!userDoc.exists()) {
+            return {};
+        }
+        
+        const userData = userDoc.data();
+        const groupIds: string[] = userData.groups || [];
+        
+        if (groupIds.length === 0) {
+            return {};
+        }
+        
+        // Fetch group measures for each group
+        const groupMeasures: GroupMeasures = {};
+        const groupPromises = groupIds.map(async (groupId) => {
+            const groupRef = doc(db, 'groups', groupId);
+            const groupDoc = await getDoc(groupRef);
+            if (groupDoc.exists()) {
+                const measures: string[] = groupDoc.data().measures || [];
+                groupMeasures[groupId] = measures;
+            }
+        });
+        
+        await Promise.all(groupPromises);
+        return groupMeasures;
+    } catch (error) {
+        console.error("Error fetching user group measures:", error);
+        throw error;
+    }
+}
+
+// Get a full group with all its data
+export const getGroup = async (groupId: string): Promise<Group | null> => {
+    try {
+        const groupRef = doc(db, 'groups', groupId);
+        const groupDoc = await getDoc(groupRef);
+        
+        if (!groupDoc.exists()) {
+            return null;
+        }
+        
+        const data = groupDoc.data();
+        return {
+            id: groupDoc.id,
+            name: data.name || '',
+            admins: data.admins || [],
+            measures: data.measures || [],
+        };
+    } catch (error) {
+        console.error("Error fetching group:", error);
+        throw error;
+    }
+}
+
+// Add a group to a user
+export const addGroupToUser = async (userId: string, groupId: string) => {
+    try {
+        const userRef = doc(db, 'users', userId);
+        await updateDoc(userRef, {
+            groups: arrayUnion(groupId),
+        });
+        console.log("Group added to user successfully.");
+    } catch (error) {
+        console.error("Error adding group to user:", error);
+        throw error;
+    }
+}
+
+// Delete a group from a user
+export const removeGroupFromUser = async (userId: string, groupId: string) => {
+    try {
+        const userRef = doc(db, 'users', userId);
+        await updateDoc(userRef, {
+            groups: arrayRemove(groupId),
+        });
+        console.log("Group removed from user successfully.");
+    } catch (error) {
+        console.error("Error removing group from user:", error);
+        throw error;
+    }
+}
+
+// Add a measure to a group
+export const addMeasureToGroup = async (groupId: string, measureId: string) => {
+    try {
+        const groupRef = doc(db, 'groups', groupId);
+        await updateDoc(groupRef, {
+            measures: arrayUnion(measureId),
+        });
+        console.log("Measure added to group successfully.");
+    } catch (error) {
+        console.error("Error adding measure to group:", error);
+        throw error;
     }
 }

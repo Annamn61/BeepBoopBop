@@ -82,12 +82,12 @@ const MeasureHistory = () => {
           aria-label="update mode"
         >
           <Tooltip title="See every update from each measure">
-            <ToggleButton sx={styles.buttonInGroup} value="all">
+            <ToggleButton sx={styles.buttonInGroup} size="small" value="all">
               All Updates
             </ToggleButton>
           </Tooltip>
           <Tooltip title="See each measures last update only">
-            <ToggleButton sx={styles.buttonInGroup} value="last">
+            <ToggleButton sx={styles.buttonInGroup} size="small" value="last">
               Last Update Only
             </ToggleButton>
           </Tooltip>

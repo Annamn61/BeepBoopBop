@@ -2,14 +2,17 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useState, useEffect } from 'react';
 import { useUser } from '../../../utils/user';
 import { Theme } from '@mui/material/styles';
+import { submitFeedback } from '../../../data/firebaseFirestore';
 
 const Feedback = () => {
   const { currentUser } = useUser();
   const [email, setEmail] = useState('');
   const [feedback, setFeedback] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (currentUser?.email) {
@@ -17,8 +20,29 @@ const Feedback = () => {
     }
   }, [currentUser]);
 
-  const handleSubmit = () => {
-    console.log('submit', { email, feedback });
+  const handleSubmit = async () => {
+    if (!email || !feedback) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await submitFeedback({
+        email,
+        feedback,
+        userId: currentUser?.uid || null,
+        status: 'Not addressed',
+      });
+
+      // Clear form on success
+      setEmail(currentUser?.email || '');
+      setFeedback('');
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      // TODO: Show error message to user
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -74,10 +98,13 @@ const Feedback = () => {
       <Button
         variant="contained"
         onClick={handleSubmit}
-        disabled={!email || !feedback}
+        disabled={!email || !feedback || isSubmitting}
         sx={{ alignSelf: 'flex-end' }}
+        startIcon={
+          isSubmitting ? <CircularProgress size={20} color="inherit" /> : null
+        }
       >
-        Submit
+        {isSubmitting ? 'Submitting...' : 'Submit'}
       </Button>
     </Box>
   );

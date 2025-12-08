@@ -59,6 +59,11 @@ export interface UserTrackedMeasure {
     nickname: string,
 }
 
+export interface UserTrackedMeasureWithSource extends UserTrackedMeasure {
+    source: 'user' | { type: 'group'; groupId: string; groupName: string };
+    isDuplicate?: boolean; // True if this measure exists in user measures
+}
+
 export interface MeasureLocalStorage {
     lastUpdated: string,
     measures: MeasureObject[], 
