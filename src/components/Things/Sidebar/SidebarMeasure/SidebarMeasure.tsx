@@ -1,11 +1,15 @@
 import Box from '@mui/material/Box';
-import { UserTrackedMeasure } from '../../../../types/MeasureTypes';
+import {
+  UserTrackedMeasure,
+  UserTrackedMeasureWithSource,
+} from '../../../../types/MeasureTypes';
 import { styles } from './SidebarMeasure.styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import EditIcon from '@mui/icons-material/Edit';
+import Chip from '@mui/material/Chip';
 import ConfirmationModal from '../../../Accessories/ConfirmationModal/ConfirmationModal';
 import { AddBillModal } from '../AddBillModal/AddBillModal';
 import { useModal } from '../../../../utils/modal';
@@ -27,9 +31,8 @@ import {
 } from '../../../../data/firebaseFirestore';
 
 interface SidebarMeasureProps {
-  userTrackedMeasure: UserTrackedMeasure;
+  userTrackedMeasure: UserTrackedMeasure | UserTrackedMeasureWithSource;
   isDuplicate?: boolean;
-  groupNickname?: string;
   isGroupMeasure?: boolean;
   groupId?: string;
   isGroupAdmin?: boolean;
@@ -39,7 +42,6 @@ interface SidebarMeasureProps {
 const SidebarMeasure = ({
   userTrackedMeasure,
   isDuplicate,
-  groupNickname,
   isGroupMeasure,
   groupId,
   isGroupAdmin,
@@ -60,7 +62,6 @@ const SidebarMeasure = ({
   const {
     removeTrackedMeasureById,
     setUserTrackedMeasureFilterStatusById,
-    getUserMeasureColorById,
     updateUserTrackedMeasure,
     setGroupMeasures,
   } = useUserStore();
@@ -69,12 +70,15 @@ const SidebarMeasure = ({
   const loadingMeasureIds = useMeasureStore((state) => state.loadingMeasureIds);
   const { currentUser } = useUser();
 
-  const { isDisplayed } = userTrackedMeasure;
+  const { isDisplayed, color, nickname } = userTrackedMeasure;
   const uniqueId = getMeasureUniqueId(userTrackedMeasure);
   const isLoading = loadingMeasureIds.has(uniqueId);
 
-  const title = groupNickname || getMeasureNicknameById(uniqueId);
-  const measureColor = getUserMeasureColorById(uniqueId);
+  // Use nickname from the measure object, or fall back to catchline from OLIS data
+  // This works for both user measures and group measures
+  const title = nickname || getMeasureNicknameById(uniqueId);
+  // Use color directly from userTrackedMeasure - group measures now have their own color stored
+  const measureColor = color;
 
   if (isLoading) {
     return (
@@ -100,15 +104,8 @@ const SidebarMeasure = ({
     <>
       <Tooltip title={TOOLTIP_MESSAGES.MeasureModal}>
         <Box
-          sx={
-            {
-              ...styles.measureFilterContainer,
-              ...(isDuplicate ? styles.disabled : {}),
-            } as any
-          }
-          onClick={(e: React.MouseEvent<HTMLElement>) =>
-            !isDuplicate && openMeasureModal(e)
-          }
+          sx={styles.measureFilterContainer}
+          onClick={(e: React.MouseEvent<HTMLElement>) => openMeasureModal(e)}
           role="button"
         >
           <Tooltip title={TOOLTIP_MESSAGES.ToggleVisibility}>
@@ -120,16 +117,30 @@ const SidebarMeasure = ({
                   setUserTrackedMeasureFilterStatusById(uniqueId, !isDisplayed);
                 }
               }}
-              disabled={isDuplicate}
             >
               <ColorSquare color={measureColor} filled={isDisplayed} />
             </Button>
           </Tooltip>
           <Box sx={styles.infoArea}>
             <Box sx={styles.infoTopline}>
-              <Typography variant="h5" sx={styles.measureId}>
-                {getReadableId(userTrackedMeasure)}
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    ...styles.measureId,
+                    ...(isDuplicate && { textDecoration: 'line-through' }),
+                  }}
+                >
+                  {getReadableId(userTrackedMeasure)}
+                </Typography>
+                {isDuplicate && (
+                  <Chip
+                    label="Duplicate"
+                    size="small"
+                    sx={styles.duplicateTag}
+                  />
+                )}
+              </Box>
               {(!isGroupMeasure || isGroupAdmin) && (
                 <Box>
                   <Tooltip title="Edit measure">
@@ -196,8 +207,11 @@ const SidebarMeasure = ({
         }}
         message={`Delete ${uniqueId}?`}
         subtitle={
-          isGroupMeasure
-            ? `Are you sure you want to remove this measure from the ${groupNickname} group? This action will delete the measure for all members and cannot be undone.`
+          isGroupMeasure &&
+          'source' in userTrackedMeasure &&
+          typeof userTrackedMeasure.source === 'object' &&
+          userTrackedMeasure.source.type === 'group'
+            ? `Are you sure you want to remove this measure from the ${userTrackedMeasure.source.groupName} group? This action will delete the measure for all members and cannot be undone.`
             : 'Are you sure you want to remove this measure from your tracked measures? This action cannot be undone.'
         }
       />
@@ -224,14 +238,17 @@ const SidebarMeasure = ({
           ) => {
             if (isGroupMeasure && groupId) {
               // Update group measure
-              const newMeasureId = getMeasureUniqueId({
+              const updatedMeasure: UserTrackedMeasure = {
+                ...userTrackedMeasure,
                 MeasurePrefix: measurePrefix,
                 MeasureNumber: measureNumber,
+                color: measureColor,
                 SessionKey: sessionKey,
-              });
+                nickname: nickname,
+              };
 
               try {
-                await updateMeasureInGroup(groupId, uniqueId, newMeasureId);
+                await updateMeasureInGroup(groupId, uniqueId, updatedMeasure);
                 // Refresh group measures in store
                 if (currentUser) {
                   const groupMeasures = await getUserGroupMeasures(

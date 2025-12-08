@@ -106,7 +106,6 @@ const SidebarGroup = ({ group }: SidebarGroupProps) => {
           <SidebarMeasure
             userTrackedMeasure={measure}
             isDuplicate={measure.isDuplicate}
-            groupNickname={groupSource?.groupName}
             isGroupMeasure={isGroupMeasure}
             groupId={groupSource?.groupId}
             isGroupAdmin={isGroupMeasure ? isAdmin : undefined}

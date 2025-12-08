@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { UserTrackedMeasure, UserTrackedMeasureWithSource } from "../types/MeasureTypes";
-import { getMeasureUniqueId, parseUniqueId } from "../utils/measure";
+import { getMeasureUniqueId } from "../utils/measure";
 
 export interface GroupSummary {
     id: string;
@@ -8,7 +8,7 @@ export interface GroupSummary {
 }
 
 export interface GroupMeasures {
-    [groupId: string]: string[]; 
+    [groupId: string]: UserTrackedMeasure[]; 
 }
 
 interface UserState {
@@ -84,7 +84,12 @@ export const useUserStore = create<UserState>((set, get) => ({
   removeTrackedMeasureById: (id) => set({userTrackedMeasures: get().getSafeUserTrackedMeasures().filter((measure) => getMeasureUniqueId(measure) != id)}),
   getUserTrackedMeasurePositionById: (id) => get().getSafeUserTrackedMeasures().find((utm: UserTrackedMeasure) => getMeasureUniqueId(utm) === id)?.position,
   getUserMeasureMetadataById: (id) => get().getSafeUserTrackedMeasures().find((measure: UserTrackedMeasure) => getMeasureUniqueId(measure) === id),
-  getUserMeasureColorById: (id) => get().getUserMeasureMetadataById(id)?.color,
+  getUserMeasureColorById: (id) => {
+    // Check all tracked measures (user + group) for color
+    const allMeasures = get().getAllTrackedMeasuresWithSource();
+    const trackedMeasure = allMeasures.find(m => getMeasureUniqueId(m) === id);
+    return trackedMeasure?.color;
+  },
   setUserTrackedMeasureFilterStatusById: (id, isDisplayed) => set({userTrackedMeasures: getUserTrackedMeasuresWithNewFilterStatus(get().getSafeUserTrackedMeasures(), id, isDisplayed)}),
   toggleAllUserTrackedFilterStatusesBasedOnAnId: (id) => set({userTrackedMeasures: getToggledFilters(get().getSafeUserTrackedMeasures(), id)}),
   userGroups: [],
@@ -107,32 +112,21 @@ export const useUserStore = create<UserState>((set, get) => ({
     }));
     
     // Add group measures, checking for duplicates
-    Object.entries(groupMeasures).forEach(([groupId, measureIds]) => {
+    Object.entries(groupMeasures).forEach(([groupId, measures]) => {
       const group = userGroups.find(g => g.id === groupId);
       if (!group) return;
       
-      measureIds.forEach((measureId) => {
-        const measureIdStr = measureId;
+      measures.forEach((measure) => {
+        const measureId = getMeasureUniqueId(measure);
         // Check if this measure exists in user measures
-        const existsInUser = userMeasureIds.has(measureIdStr);
+        const existsInUser = userMeasureIds.has(measureId);
         
-        // Parse measure ID to create UserTrackedMeasure
-        try {
-          const parsed = parseUniqueId(measureIdStr);
-          allMeasures.push({
-            MeasurePrefix: parsed.MeasurePrefix,
-            MeasureNumber: parsed.MeasureNumber,
-            SessionKey: parsed.SessionKey,
-            position: '?' as const,
-            isDisplayed: true,
-            color: '#E5EFE5', // Default color for group measures
-            nickname: '',
-            source: { type: 'group', groupId, groupName: group.name },
-            isDuplicate: existsInUser, // Mark as duplicate if it exists in user measures
-          });
-        } catch (error) {
-          console.error('Error parsing measure ID:', measureIdStr, error);
-        }
+        // Use the full measure object from the group with its own metadata
+        allMeasures.push({
+          ...measure,
+          source: { type: 'group', groupId, groupName: group.name },
+          isDuplicate: existsInUser, // Mark as duplicate if it exists in user measures
+        });
       });
     });
     
@@ -148,8 +142,9 @@ export const useUserStore = create<UserState>((set, get) => ({
     userMeasureIds.forEach(id => allIds.add(id));
     
     // Add group measure IDs (deduplicated)
-    Object.values(groupMeasures).forEach(measureIds => {
-      measureIds.forEach(id => {
+    Object.values(groupMeasures).forEach(measures => {
+      measures.forEach(measure => {
+        const id = getMeasureUniqueId(measure);
         if (!userMeasureIds.has(id)) {
           allIds.add(id);
         }

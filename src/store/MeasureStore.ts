@@ -60,10 +60,16 @@ export const useMeasureStore = create<MeasureState>((set, get) => ({
     }
   },
   isMeasureLoading: (id: string) => get().loadingMeasureIds.has(id),
-  getFilteredMeasureIds: () => (useUserStore.getState().userTrackedMeasures) ? (useUserStore.getState().getSafeUserTrackedMeasures()).filter((m) =>m.isDisplayed).map((measure) => getMeasureUniqueId(measure)) : [],
+  getFilteredMeasureIds: () => {
+    const allMeasuresWithSource = useUserStore.getState().getAllTrackedMeasuresWithSource();
+    // Return IDs of displayed measures that are either user measures or non-duplicate group measures
+    return allMeasuresWithSource
+      .filter((m) => m.isDisplayed && (!m.isDuplicate || m.source === 'user'))
+      .map((measure) => getMeasureUniqueId(measure));
+  },
   getFilteredMeasureDocuments: () => get().getMeasures().flatMap((measure) => measure.MeasureDocuments),
   unfilteredMeasures: [],
-  getMeasures: () => getMeasuresFromFiltersAndUnfilteredMeasures(get().unfilteredMeasures, useUserStore.getState().getSafeUserTrackedMeasures()),
+  getMeasures: () => getMeasuresFromFiltersAndUnfilteredMeasures(get().unfilteredMeasures, useUserStore.getState().getAllTrackedMeasuresWithSource()),
   getMeasuresSortedIntoKanbanLocations: () => sortMeasuresIntoKanbanLocations(get().getMeasures()),
   getHasKanbanSortingError: () => getHasSortingError(get().getMeasuresSortedIntoKanbanLocations()),
   setUnfilteredMeasures: (measureObjects) => set({ unfilteredMeasures: getMeasuresFromMeasureObjects(measureObjects) }),
@@ -72,7 +78,12 @@ export const useMeasureStore = create<MeasureState>((set, get) => ({
   getMeasureCommitteeCodeById: (id) => get().getMeasureById(id)?.CurrentCommitteeCode,
   getMeasureDocumentsById: (id) => get().getMeasureById(id)?.MeasureDocuments,
   getMeasureTitleById: (id) => get().getMeasureById(id)?.CatchLine,
-  getMeasureNicknameById: (id) => useUserStore.getState().getUserMeasureMetadataById(id)?.nickname || get().getMeasureById(id)?.CatchLine || undefined,
+  getMeasureNicknameById: (id) => {
+    // Check all tracked measures (user + group) for nickname
+    const allMeasures = useUserStore.getState().getAllTrackedMeasuresWithSource();
+    const trackedMeasure = allMeasures.find(m => getMeasureUniqueId(m) === id);
+    return trackedMeasure?.nickname || get().getMeasureById(id)?.CatchLine || undefined;
+  },
   getSortedMeasureSponsorsById: (id) => sortSponsors(get().getMeasureById(id)?.MeasureSponsors),
   getSortedMeasureChiefSponsorsById: (id) => sortChiefSponsors(get().getMeasureById(id)?.MeasureSponsors)
 }));
@@ -96,10 +107,15 @@ const getMeasureUrl = (measure?: Measure) => {
     return `https://olis.oregonlegislature.gov/liz/${measure.SessionKey}/Measures/Overview/${measure.MeasurePrefix}${measure.MeasureNumber}`
 }
 
-const getMeasuresFromFiltersAndUnfilteredMeasures = (unfilteredMeasures: Measure[], userTrackedMeasures: UserTrackedMeasure[]) => {
+const getMeasuresFromFiltersAndUnfilteredMeasures = (unfilteredMeasures: Measure[], allTrackedMeasures: (UserTrackedMeasure | import('../types/MeasureTypes').UserTrackedMeasureWithSource)[]) => {
   return unfilteredMeasures.filter(unfilteredMeasure => {
-    const isDisplayed = userTrackedMeasures.find((userTrackedMeasure) => getMeasureUniqueId(unfilteredMeasure) === getMeasureUniqueId(userTrackedMeasure))?.isDisplayed;
-    return isDisplayed ? unfilteredMeasure : null;
+    const trackedMeasure = allTrackedMeasures.find((trackedMeasure) => getMeasureUniqueId(unfilteredMeasure) === getMeasureUniqueId(trackedMeasure));
+    if (!trackedMeasure) return false;
+    // Include if displayed and either a user measure or a non-duplicate group measure
+    const isDisplayed = trackedMeasure.isDisplayed;
+    const isDuplicate = 'isDuplicate' in trackedMeasure && trackedMeasure.isDuplicate;
+    const isUserMeasure = !('source' in trackedMeasure) || trackedMeasure.source === 'user';
+    return isDisplayed && (isUserMeasure || !isDuplicate) ? unfilteredMeasure : null;
   })
 }
 

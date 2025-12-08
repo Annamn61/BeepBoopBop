@@ -47,4 +47,12 @@ export const styles: Record<string, SxProps<Theme>> = {
     disabled: {
         textDecoration: 'line-through',
     },
+    duplicateTag: {
+        textDecoration: 'none',
+        fontSize: '0.75rem',
+        height: '20px',
+        backgroundColor: '#E0E0E0',
+        color: '#666',
+        fontWeight: 500,
+    },
 }

@@ -144,7 +144,7 @@ export interface Group {
     id: string;
     name: string;
     admins: string[]; // Array of user IDs
-    measures: string[]; // Array of measure IDs
+    measures: UserTrackedMeasure[]; // Array of full measure objects with metadata
 }
 
 // Get a list of all groups (names and ids at least)
@@ -224,7 +224,7 @@ export const getUserGroupMeasures = async (userId: string): Promise<GroupMeasure
             const groupRef = doc(db, 'groups', groupId);
             const groupDoc = await getDoc(groupRef);
             if (groupDoc.exists()) {
-                const measures: string[] = groupDoc.data().measures || [];
+                const measures: UserTrackedMeasure[] = groupDoc.data().measures || [];
                 groupMeasures[groupId] = measures;
             }
         });
@@ -252,7 +252,7 @@ export const getGroup = async (groupId: string): Promise<Group | null> => {
             id: groupDoc.id,
             name: data.name || '',
             admins: data.admins || [],
-            measures: data.measures || [],
+            measures: (data.measures || []) as UserTrackedMeasure[],
         };
     } catch (error) {
         console.error("Error fetching group:", error);
@@ -289,13 +289,28 @@ export const removeGroupFromUser = async (userId: string, groupId: string) => {
 }
 
 // Add a measure to a group
-export const addMeasureToGroup = async (groupId: string, measureId: string) => {
+export const addMeasureToGroup = async (groupId: string, measure: UserTrackedMeasure) => {
     try {
         const groupRef = doc(db, 'groups', groupId);
-        await updateDoc(groupRef, {
-            measures: arrayUnion(measureId),
-        });
-        console.log("Measure added to group successfully.");
+        const groupDoc = await getDoc(groupRef);
+        
+        if (!groupDoc.exists()) {
+            throw new Error("Group not found");
+        }
+        
+        const currentMeasures: UserTrackedMeasure[] = groupDoc.data().measures || [];
+        // Check if measure already exists (by unique ID)
+        const measureId = getMeasureUniqueId(measure);
+        const exists = currentMeasures.some(m => getMeasureUniqueId(m) === measureId);
+        
+        if (!exists) {
+            await updateDoc(groupRef, {
+                measures: [...currentMeasures, measure],
+            });
+            console.log("Measure added to group successfully.");
+        } else {
+            console.log("Measure already exists in group.");
+        }
     } catch (error) {
         console.error("Error adding measure to group:", error);
         throw error;
@@ -306,8 +321,17 @@ export const addMeasureToGroup = async (groupId: string, measureId: string) => {
 export const removeMeasureFromGroup = async (groupId: string, measureId: string) => {
     try {
         const groupRef = doc(db, 'groups', groupId);
+        const groupDoc = await getDoc(groupRef);
+        
+        if (!groupDoc.exists()) {
+            throw new Error("Group not found");
+        }
+        
+        const currentMeasures: UserTrackedMeasure[] = groupDoc.data().measures || [];
+        const updatedMeasures = currentMeasures.filter(m => getMeasureUniqueId(m) !== measureId);
+        
         await updateDoc(groupRef, {
-            measures: arrayRemove(measureId),
+            measures: updatedMeasures,
         });
         console.log("Measure removed from group successfully.");
     } catch (error) {
@@ -316,16 +340,23 @@ export const removeMeasureFromGroup = async (groupId: string, measureId: string)
     }
 }
 
-// Update a measure in a group (remove old ID, add new ID)
-export const updateMeasureInGroup = async (groupId: string, oldMeasureId: string, newMeasureId: string) => {
+// Update a measure in a group
+export const updateMeasureInGroup = async (groupId: string, oldMeasureId: string, updatedMeasure: UserTrackedMeasure) => {
     try {
         const groupRef = doc(db, 'groups', groupId);
-        // Remove old measure ID and add new one
+        const groupDoc = await getDoc(groupRef);
+        
+        if (!groupDoc.exists()) {
+            throw new Error("Group not found");
+        }
+        
+        const currentMeasures: UserTrackedMeasure[] = groupDoc.data().measures || [];
+        const updatedMeasures = currentMeasures.map(m => 
+            getMeasureUniqueId(m) === oldMeasureId ? updatedMeasure : m
+        );
+        
         await updateDoc(groupRef, {
-            measures: arrayRemove(oldMeasureId),
-        });
-        await updateDoc(groupRef, {
-            measures: arrayUnion(newMeasureId),
+            measures: updatedMeasures,
         });
         console.log("Measure updated in group successfully.");
     } catch (error) {

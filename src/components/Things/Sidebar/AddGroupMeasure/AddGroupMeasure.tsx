@@ -2,10 +2,10 @@ import {
   addMeasureToGroup,
   getUserGroupMeasures,
 } from '../../../../data/firebaseFirestore';
-import { getMeasureUniqueId } from '../../../../utils/measure';
 import { useUserStore } from '../../../../store/UserStore';
 import { useUser } from '../../../../utils/user';
 import { AddBillModal } from '../AddBillModal/AddBillModal';
+import { UserTrackedMeasure } from '../../../../types/MeasureTypes';
 
 interface AddGroupMeasureProps {
   groupId: string;
@@ -22,19 +22,23 @@ export const AddGroupMeasure = ({
   const handleAdd = async (
     measurePrefix: string,
     measureNumber: number,
-    _measureColor: string,
+    measureColor: string,
     sessionKey: string,
-    _nickname: string
+    nickname: string
   ) => {
-    const measureUniqueId = getMeasureUniqueId({
+    const measure: UserTrackedMeasure = {
       MeasurePrefix: measurePrefix,
       MeasureNumber: measureNumber,
       SessionKey: sessionKey,
-    });
+      position: '?' as const,
+      isDisplayed: true,
+      color: measureColor,
+      nickname: nickname,
+    };
 
     // Save to Firebase
     try {
-      await addMeasureToGroup(groupId, measureUniqueId);
+      await addMeasureToGroup(groupId, measure);
       // Refresh group measures in store
       if (currentUser) {
         const groupMeasures = await getUserGroupMeasures(currentUser.uid);
