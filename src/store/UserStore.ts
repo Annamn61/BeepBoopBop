@@ -22,6 +22,8 @@ interface UserState {
     setAreUserMeasuresLoading: (areUserMeasuresLoading: boolean) => void;
     /** Add a single measure's metadata for tracking  */
     addUserTrackedMeasure: (newUserTrackedMeasure: UserTrackedMeasure) => void;
+    /** Update a measure's metadata */
+    updateUserTrackedMeasure: (oldId: string, updatedMeasure: UserTrackedMeasure) => void;
     /** Returns a string array of the ids of the user tracked measures */
     getUserTrackedMeasureUniqueIds: () => string[];
     /** remove a measure's metadata from the list of what to track */
@@ -61,6 +63,23 @@ export const useUserStore = create<UserState>((set, get) => ({
   setUserTrackedMeasures: (userTrackedMeasures) => set({userTrackedMeasures}),
   setAreUserMeasuresLoading: (areUserMeasuresLoading) => set({areUserMeasuresLoading}),
   addUserTrackedMeasure: (newUserTrackedMeasure) => set({userTrackedMeasures: [...get().getSafeUserTrackedMeasures(), newUserTrackedMeasure]}),
+  updateUserTrackedMeasure: (oldId, updatedMeasure) => {
+    const measures = get().getSafeUserTrackedMeasures();
+    const oldIndex = measures.findIndex((m) => getMeasureUniqueId(m) === oldId);
+    if (oldIndex >= 0) {
+      const newMeasures = [...measures];
+      const newId = getMeasureUniqueId(updatedMeasure);
+      // If ID changed, remove old and add new
+      if (oldId !== newId) {
+        newMeasures.splice(oldIndex, 1);
+        newMeasures.push(updatedMeasure);
+      } else {
+        // Just update in place
+        newMeasures[oldIndex] = updatedMeasure;
+      }
+      set({userTrackedMeasures: newMeasures});
+    }
+  },
   getUserTrackedMeasureUniqueIds: () => get().getSafeUserTrackedMeasures().map((measure) => getMeasureUniqueId(measure)),
   removeTrackedMeasureById: (id) => set({userTrackedMeasures: get().getSafeUserTrackedMeasures().filter((measure) => getMeasureUniqueId(measure) != id)}),
   getUserTrackedMeasurePositionById: (id) => get().getSafeUserTrackedMeasures().find((utm: UserTrackedMeasure) => getMeasureUniqueId(utm) === id)?.position,

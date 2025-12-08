@@ -14,6 +14,9 @@ export const styles: Record<string, SxProps<Theme>> = {
         },
         '&:hover #deleteIcon': {
             visibility: 'visible',
+        },
+        '&:hover #editIcon': {
+            visibility: 'visible',
         }
     },
     checkbox: {

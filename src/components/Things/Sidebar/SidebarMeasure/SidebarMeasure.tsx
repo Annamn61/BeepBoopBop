@@ -5,7 +5,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import EditIcon from '@mui/icons-material/Edit';
 import ConfirmationModal from '../../../Accessories/ConfirmationModal/ConfirmationModal';
+import { AddBillModal } from '../AddBillModal/AddBillModal';
 import { useModal } from '../../../../utils/modal';
 import Tooltip from '@mui/material/Tooltip';
 import MeasureModal from '../../../Accessories/MeasureModal/MeasureModal';
@@ -18,6 +20,9 @@ import { useUser } from '../../../../utils/user';
 import {
   removeMeasure,
   removeMeasureFromGroup,
+  updateMeasure,
+  updateMeasureInGroup,
+  getUserGroupMeasures,
 } from '../../../../data/firebaseFirestore';
 
 interface SidebarMeasureProps {
@@ -45,11 +50,18 @@ const SidebarMeasure = ({
     setModalClosed: closeMeasureModal,
     setModalOpen: openMeasureModal,
   } = useModal();
+  const {
+    anchorEl: editAnchorEl,
+    setModalClosed: closeEditModal,
+    setModalOpen: openEditModal,
+  } = useModal();
 
   const {
     removeTrackedMeasureById,
     setUserTrackedMeasureFilterStatusById,
     getUserMeasureColorById,
+    updateUserTrackedMeasure,
+    setGroupMeasures,
   } = useUserStore();
 
   const { getMeasureNicknameById } = useMeasureStore();
@@ -96,19 +108,34 @@ const SidebarMeasure = ({
                 {getReadableId(userTrackedMeasure)}
               </Typography>
               {(!isGroupMeasure || isGroupAdmin) && (
-                <Tooltip title={TOOLTIP_MESSAGES.DeleteMeasure}>
-                  <IconButton
-                    id="deleteIcon"
-                    sx={styles.deleteIcon}
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setModalOpen(e);
-                    }}
-                  >
-                    <CloseRoundedIcon />
-                  </IconButton>
-                </Tooltip>
+                <Box>
+                  <Tooltip title="Edit measure">
+                    <IconButton
+                      id="editIcon"
+                      sx={styles.deleteIcon}
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openEditModal(e);
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={TOOLTIP_MESSAGES.DeleteMeasure}>
+                    <IconButton
+                      id="deleteIcon"
+                      sx={styles.deleteIcon}
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setModalOpen(e);
+                      }}
+                    >
+                      <CloseRoundedIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
               )}
             </Box>
             <Typography variant="body1">{title}</Typography>
@@ -156,6 +183,76 @@ const SidebarMeasure = ({
         onClose={closeMeasureModal}
         measureId={uniqueId}
       />
+      {(!isGroupMeasure || (isGroupMeasure && isGroupAdmin)) && (
+        <AddBillModal
+          title="Edit Bill"
+          tooltip="Edit bill"
+          triggerIcon="edit"
+          initialValues={userTrackedMeasure}
+          anchorEl={editAnchorEl as HTMLButtonElement | null}
+          onClose={closeEditModal}
+          onOpen={(e) => openEditModal(e as React.MouseEvent<HTMLElement>)}
+          onAdd={async (
+            measurePrefix: string,
+            measureNumber: number,
+            measureColor: string,
+            sessionKey: string,
+            nickname: string
+          ) => {
+            if (isGroupMeasure && groupId) {
+              // Update group measure
+              const newMeasureId = getMeasureUniqueId({
+                MeasurePrefix: measurePrefix,
+                MeasureNumber: measureNumber,
+                SessionKey: sessionKey,
+              });
+
+              try {
+                await updateMeasureInGroup(groupId, uniqueId, newMeasureId);
+                // Refresh group measures in store
+                if (currentUser) {
+                  const groupMeasures = await getUserGroupMeasures(
+                    currentUser.uid
+                  );
+                  setGroupMeasures(groupMeasures);
+                }
+                if (onGroupMeasureRemoved) {
+                  onGroupMeasureRemoved();
+                }
+              } catch (error) {
+                console.error('Error updating measure in group:', error);
+              }
+            } else {
+              // Update user measure
+              const updatedMeasure: UserTrackedMeasure = {
+                ...userTrackedMeasure,
+                MeasurePrefix: measurePrefix,
+                MeasureNumber: measureNumber,
+                color: measureColor,
+                SessionKey: sessionKey,
+                nickname: nickname,
+              };
+
+              // Optimistically update the store
+              updateUserTrackedMeasure(uniqueId, updatedMeasure);
+
+              // Update in Firebase if user is logged in
+              if (currentUser) {
+                try {
+                  await updateMeasure(
+                    currentUser.uid,
+                    uniqueId,
+                    updatedMeasure
+                  );
+                } catch (error) {
+                  console.error('Error updating measure in Firebase:', error);
+                  // TODO: Could revert the optimistic update here if needed
+                }
+              }
+            }
+          }}
+        />
+      )}
     </>
   );
 };

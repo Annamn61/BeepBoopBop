@@ -12,8 +12,8 @@ export const userUserController = () => {
     useEffect(() => {
         console.log('currentUser', currentUser);
         if(!currentUser) {
-            // setUserTrackedMeasures(defaultUTMData);
-            // setAreUserMeasuresLoading(false);
+            setUserTrackedMeasures(undefined);
+            setAreUserMeasuresLoading(false);
         } else {
             setAreUserMeasuresLoading(true);
             getRemoteUserTrackedMeasures(currentUser).then((measures) => {

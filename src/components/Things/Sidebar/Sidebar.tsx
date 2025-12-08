@@ -14,6 +14,7 @@ import { useUserStore } from '../../../store/UserStore';
 import { getMeasureUniqueId } from '../../../utils/measure';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { useUser } from '../../../utils/user';
 // import SearchBar from '../Accessories/SearchBar/SearchBar';
 
 interface SidebarProps {
@@ -23,6 +24,7 @@ interface SidebarProps {
 
 export const Sidebar = ({ open, setOpen }: SidebarProps) => {
   const { userTrackedMeasures, userGroups } = useUserStore();
+  const { currentUser } = useUser();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -34,6 +36,11 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
         variant={isMobile ? 'temporary' : 'persistent'}
         anchor="left"
         onClose={() => setOpen(false)}
+        PaperProps={{
+          sx: {
+            overscrollBehavior: 'contain',
+          },
+        }}
       >
         <Box sx={styles.container}>
           <Tooltip title="Close Sidebar">
@@ -62,11 +69,15 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
           <Box sx={styles.section}>
             <Box sx={styles.sectionHeader}>
               <Typography variant="h6">My Groups</Typography>
-              <AddGroup />
+              {currentUser && <AddGroup />}
             </Box>
-            {userGroups.map((group) => (
-              <SidebarGroup group={group} key={group.id} />
-            ))}
+            {currentUser ? (
+              userGroups.map((group) => (
+                <SidebarGroup group={group} key={group.id} />
+              ))
+            ) : (
+              <Typography variant="body2">Login to join groups</Typography>
+            )}
           </Box>
         </Box>
       </Drawer>

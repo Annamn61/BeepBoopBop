@@ -52,6 +52,35 @@ export const addMeasure = async (userId: string, measure: UserTrackedMeasure) =>
     }
 }
 
+export const updateMeasure = async (userId: string, oldMeasureId: string, measure: UserTrackedMeasure) => {
+    try {
+        const newMeasureId = getMeasureUniqueId(measure);
+        const oldMeasureRef = doc(db, `users/${userId}/measures`, oldMeasureId);
+        const newMeasureRef = doc(db, `users/${userId}/measures`, newMeasureId);
+        
+        // If the ID changed (prefix/number/session changed), we need to delete the old and create the new
+        if (oldMeasureId !== newMeasureId) {
+            await deleteDoc(oldMeasureRef);
+            await setDoc(newMeasureRef, measure);
+        } else {
+            // Just update the existing document
+            await updateDoc(oldMeasureRef, {
+                MeasurePrefix: measure.MeasurePrefix,
+                MeasureNumber: measure.MeasureNumber,
+                position: measure.position,
+                SessionKey: measure.SessionKey,
+                isDisplayed: measure.isDisplayed,
+                color: measure.color,
+                nickname: measure.nickname,
+            });
+        }
+        console.log("Measure updated successfully.");
+    } catch (error) {
+        console.error("Error updating measure:", error);
+        throw error;
+    }
+}
+
 export const removeMeasure = async (userId: string, measureId: string) => {
     try {
         const measureRef = doc(db, `users/${userId}/measures`, measureId);
@@ -283,6 +312,24 @@ export const removeMeasureFromGroup = async (groupId: string, measureId: string)
         console.log("Measure removed from group successfully.");
     } catch (error) {
         console.error("Error removing measure from group:", error);
+        throw error;
+    }
+}
+
+// Update a measure in a group (remove old ID, add new ID)
+export const updateMeasureInGroup = async (groupId: string, oldMeasureId: string, newMeasureId: string) => {
+    try {
+        const groupRef = doc(db, 'groups', groupId);
+        // Remove old measure ID and add new one
+        await updateDoc(groupRef, {
+            measures: arrayRemove(oldMeasureId),
+        });
+        await updateDoc(groupRef, {
+            measures: arrayUnion(newMeasureId),
+        });
+        console.log("Measure updated in group successfully.");
+    } catch (error) {
+        console.error("Error updating measure in group:", error);
         throw error;
     }
 }

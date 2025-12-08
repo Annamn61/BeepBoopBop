@@ -14,7 +14,7 @@ export const styles: Record<string, SxProps<Theme>> = {
     container: {
         width: `${DRAWER_WIDTH}`,
         boxSizing: 'border-box',
-        minHeight: '100vh',
+        height: '100vh',
         flexShrink: 0,
         backgroundColor: '#F7F7F7',
         padding: '24px 24px',
@@ -24,6 +24,8 @@ export const styles: Record<string, SxProps<Theme>> = {
         flexDirection: 'column',
         alignItems: 'flex-end',
         gap: 0.5,
+        overflowY: 'auto',
+        overscrollBehavior: 'contain',
         "&:hover #closeIcon": {
             visibility: 'visible',
             opacity: 1,
@@ -67,5 +69,10 @@ export const styles: Record<string, SxProps<Theme>> = {
             xs: 'absolute',
             md: 'fixed',
         },
-    }
+    },
+    loginText: {
+        color: 'text.secondary',
+        padding: 2,
+        textAlign: 'center',
+    },
 };

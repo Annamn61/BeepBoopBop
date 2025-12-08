@@ -14,12 +14,12 @@ export const userOLISMeasureController = () => {
     const [isCommitteesCacheObjectLoading, setIsCommitteesCacheObjectLoading] = useState(false);
     const [legislatorsCacheObject, setLegislatorsCacheObject] = useState(getLegislatorsFromLocalStorage());
     const [isLegislatorsCacheObjectLoading, setIsLegislatorsCacheObjectLoading] = useState(false);
-    const utmIdList = useMemo(() => getAllMeasureIdsForFetching(), [userTrackedMeasures, groupMeasures])
+    const utmIdList = useMemo(() => getAllMeasureIdsForFetching(), [userTrackedMeasures, groupMeasures, getAllMeasureIdsForFetching])
     let b_CommitteesOutOfDate = committeesCacheObject ? getCommitteesOutOfDate(committeesCacheObject) : true;
     let b_LegislatorsOutOfDate = legislatorsCacheObject ? getLegislatorsOutOfDate(legislatorsCacheObject) : true;
 
     useEffect(() => {
-        if(!utmIdList) {
+        if(!utmIdList || utmIdList.length === 0) {
             return;
         }
 

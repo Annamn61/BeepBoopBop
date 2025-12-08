@@ -11,7 +11,9 @@ import { styles } from './AddBillModal.styles';
 import ColorSelectorPopover from '../AddTrackedBill/ColorSelectorPopover/ColorSelectorPopover';
 import Tooltip from '@mui/material/Tooltip';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
+import { UserTrackedMeasure } from '../../../../types/MeasureTypes';
 
 interface AddBillModalProps {
   title: string;
@@ -23,10 +25,27 @@ interface AddBillModalProps {
     sessionKey: string,
     nickname: string
   ) => Promise<void> | void;
+  initialValues?: UserTrackedMeasure;
+  triggerIcon?: 'add' | 'edit';
+  anchorEl?: HTMLButtonElement | null;
+  onClose?: () => void;
+  onOpen?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const AddBillModal = ({ title, tooltip, onAdd }: AddBillModalProps) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+export const AddBillModal = ({
+  title,
+  tooltip,
+  onAdd,
+  initialValues,
+  triggerIcon = 'add',
+  anchorEl: externalAnchorEl,
+  onClose: externalOnClose,
+  onOpen: externalOnOpen,
+}: AddBillModalProps) => {
+  const [internalAnchorEl, setInternalAnchorEl] =
+    useState<HTMLButtonElement | null>(null);
+  const anchorEl =
+    externalAnchorEl !== undefined ? externalAnchorEl : internalAnchorEl;
   const [colorAnchorEl, setColorAnchorEl] = useState<HTMLButtonElement | null>(
     null
   );
@@ -39,21 +58,34 @@ export const AddBillModal = ({ title, tooltip, onAdd }: AddBillModalProps) => {
   const [nickname, setNickname] = useState('');
 
   const resetState = () => {
-    setMeasurePrefix('');
-    setMeasureNumber('');
-    setMeasureColor(MEASURE_COLORS.SAGE);
-    setSessionKey('2025R1');
-    setNickname('');
+    if (initialValues) {
+      setMeasurePrefix(initialValues.MeasurePrefix);
+      setMeasureNumber(initialValues.MeasureNumber.toString());
+      setMeasureColor(initialValues.color);
+      setSessionKey(initialValues.SessionKey);
+      setNickname(initialValues.nickname);
+    } else {
+      setMeasurePrefix('');
+      setMeasureNumber('');
+      setMeasureColor(MEASURE_COLORS.SAGE);
+      setSessionKey('2025R1');
+      setNickname('');
+    }
   };
 
   useEffect(() => {
     resetState();
-  }, [anchorEl]);
+  }, [anchorEl, initialValues]);
 
   const handleAdd = async () => {
     if (!measurePrefix || !measureNumber) return;
 
-    setAnchorEl(null);
+    if (externalAnchorEl !== undefined && externalOnClose) {
+      externalOnClose();
+    } else {
+      setInternalAnchorEl(null);
+    }
+    setColorAnchorEl(null);
     await onAdd(
       measurePrefix,
       Number(measureNumber),
@@ -63,20 +95,38 @@ export const AddBillModal = ({ title, tooltip, onAdd }: AddBillModalProps) => {
     );
   };
 
+  const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (externalOnOpen) {
+      externalOnOpen(e);
+    } else {
+      setInternalAnchorEl(e.currentTarget);
+    }
+  };
+
+  const handleClose = () => {
+    if (externalAnchorEl !== undefined && externalOnClose) {
+      externalOnClose();
+    } else {
+      setInternalAnchorEl(null);
+    }
+    setColorAnchorEl(null);
+  };
+
+  const Icon = triggerIcon === 'edit' ? EditIcon : AddRoundedIcon;
+
   return (
     <>
-      <Tooltip title={tooltip}>
-        <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-          <AddRoundedIcon />
-        </IconButton>
-      </Tooltip>
+      {triggerIcon === 'add' && (
+        <Tooltip title={tooltip}>
+          <IconButton onClick={handleOpen}>
+            <Icon />
+          </IconButton>
+        </Tooltip>
+      )}
       <Popover
         open={!!anchorEl}
-        anchorEl={anchorEl}
-        onClose={() => {
-          setAnchorEl(null);
-          setColorAnchorEl(null);
-        }}
+        anchorEl={anchorEl || null}
+        onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
@@ -134,7 +184,7 @@ export const AddBillModal = ({ title, tooltip, onAdd }: AddBillModalProps) => {
             onClick={handleAdd}
             disabled={!measurePrefix || !measureNumber}
           >
-            Add
+            {initialValues ? 'Save' : 'Add'}
           </Button>
         </Box>
       </Popover>
