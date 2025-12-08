@@ -16,6 +16,7 @@ import ColorSquare from '../../../Accessories/ColorSquare/ColorSquare';
 import { useUserStore } from '../../../../store/UserStore';
 import { getMeasureUniqueId, getReadableId } from '../../../../utils/measure';
 import useMeasureStore from '../../../../store/MeasureStore';
+import Skeleton from '@mui/material/Skeleton';
 import { useUser } from '../../../../utils/user';
 import {
   removeMeasure,
@@ -65,13 +66,35 @@ const SidebarMeasure = ({
   } = useUserStore();
 
   const { getMeasureNicknameById } = useMeasureStore();
+  const loadingMeasureIds = useMeasureStore((state) => state.loadingMeasureIds);
   const { currentUser } = useUser();
 
   const { isDisplayed } = userTrackedMeasure;
   const uniqueId = getMeasureUniqueId(userTrackedMeasure);
+  const isLoading = loadingMeasureIds.has(uniqueId);
 
   const title = groupNickname || getMeasureNicknameById(uniqueId);
   const measureColor = getUserMeasureColorById(uniqueId);
+
+  if (isLoading) {
+    return (
+      <Box sx={styles.measureFilterContainer}>
+        <Tooltip title={TOOLTIP_MESSAGES.ToggleVisibility}>
+          <Button sx={styles.checkbox} disabled>
+            <ColorSquare color={measureColor} filled={isDisplayed} />
+          </Button>
+        </Tooltip>
+        <Box sx={styles.infoArea}>
+          <Box sx={styles.infoTopline}>
+            <Typography variant="h5" sx={styles.measureId}>
+              {getReadableId(userTrackedMeasure)}
+            </Typography>
+          </Box>
+          <Skeleton variant="text" width="80%" height={20} />
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <>

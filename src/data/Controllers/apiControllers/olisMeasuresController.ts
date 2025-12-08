@@ -3,11 +3,13 @@ import { LocalStoreageMeasureCache, LocalStorageCommitteeCache, LocalStorageLegi
 import { isOutOfDate_OneHour, isOutOfDate_OneWeek } from "../../../utils/time";
 import { fetchAgendaItems, fetchMeasure, fetchCommittees, fetchLegislators } from "../../measures/measures";
 import { useUserStore } from "../../../store/UserStore";
+import useMeasureStore from "../../../store/MeasureStore";
 
 export const userOLISMeasureController = () => {
     const userTrackedMeasures = useUserStore((state) => state.userTrackedMeasures);
     const groupMeasures = useUserStore((state) => state.groupMeasures);
     const getAllMeasureIdsForFetching = useUserStore((state) => state.getAllMeasureIdsForFetching);
+    const { setLoadingMeasureIds } = useMeasureStore();
     const [measuresCacheObject, setMeasureCacheObjects] = useState(getMeasuresFromLocalStorage());
     const [isMeasureCacheObjectLoading, setIsMeasureCacheObjectLoading] = useState(false);
     const [committeesCacheObject, setCommitteesCacheObject] = useState(getCommitteesFromLocalStorage());
@@ -31,6 +33,36 @@ export const userOLISMeasureController = () => {
         
         // REFRESH STALE + GET NEW 
         setIsMeasureCacheObjectLoading(true);
+        
+        // Track which measures are loading
+        const loadingIds = new Set(refreshList);
+        setLoadingMeasureIds(loadingIds);
+        
+        // Track completed fetches per measure (both measure and agenda must complete)
+        const completedMeasures = new Set<string>();
+        const checkMeasureComplete = (id: string, type: 'measure' | 'agenda') => {
+            const measureKey = `${id}-${type}`;
+            completedMeasures.add(measureKey);
+            
+            // Check if both measure and agenda are complete for this ID
+            const measureComplete = completedMeasures.has(`${id}-measure`);
+            const agendaComplete = completedMeasures.has(`${id}-agenda`);
+            
+            if (measureComplete && agendaComplete) {
+                // Both fetches complete, remove from loading set
+                setLoadingMeasureIds((prev) => {
+                    const next = new Set(prev);
+                    next.delete(id);
+                    return next;
+                });
+            }
+            
+            // Check if all measures are complete
+            if (completedMeasures.size === refreshList.length * 2) {
+                setIsMeasureCacheObjectLoading(false);
+            }
+        };
+        
         refreshList.forEach((id) => {
             fetchMeasure(id).then((measureValue) => {
                 setMeasureCacheObjects((prev) => ({
@@ -41,8 +73,11 @@ export const userOLISMeasureController = () => {
                         lastUpdate: new Date().toISOString(),
                     }
                 }));
-            })
-        })
+                checkMeasureComplete(id, 'measure');
+            }).catch(() => {
+                checkMeasureComplete(id, 'measure');
+            });
+        });
 
         refreshList.forEach((id) => {
             fetchAgendaItems(id).then((agendaValue) => {
@@ -54,10 +89,11 @@ export const userOLISMeasureController = () => {
                         lastUpdate: new Date().toISOString(),
                     }
                 }));
-            })
-        })
-
-        setIsMeasureCacheObjectLoading(false);
+                checkMeasureComplete(id, 'agenda');
+            }).catch(() => {
+                checkMeasureComplete(id, 'agenda');
+            });
+        });
 
         // REMOVE UNUSED
         setMeasureCacheObjects((prev) => {

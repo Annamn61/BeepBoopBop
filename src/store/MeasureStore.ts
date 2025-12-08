@@ -7,6 +7,11 @@ import { getMeasureUniqueId } from '../utils/measure';
 interface MeasureState {
   areOlisMeasuresLoading: OLISMeasureLoadingState;
   setAreOlisMeasuresLoading: (areOlisMeasuresLoading: OLISMeasureLoadingState) => void;
+  /** Set of measure IDs that are currently being loaded */
+  loadingMeasureIds: Set<string>;
+  setLoadingMeasureIds: (loadingMeasureIds: Set<string> | ((prev: Set<string>) => Set<string>)) => void;
+  /** Check if a specific measure is loading */
+  isMeasureLoading: (id: string) => boolean;
   /** Get an array of the ids of measures filtered as 'on' by the user */
   getFilteredMeasureIds: () => Measure['id'][];
   /** Returns all the measure documents for measures that are displayed */
@@ -46,6 +51,15 @@ export const useMeasureStore = create<MeasureState>((set, get) => ({
     measuresLoaded: 0,
   },
   setAreOlisMeasuresLoading: (areOlisMeasuresLoading: OLISMeasureLoadingState) => set({ areOlisMeasuresLoading }),
+  loadingMeasureIds: new Set<string>(),
+  setLoadingMeasureIds: (loadingMeasureIds: Set<string> | ((prev: Set<string>) => Set<string>)) => {
+    if (loadingMeasureIds instanceof Set) {
+      set({ loadingMeasureIds });
+    } else {
+      set((state) => ({ loadingMeasureIds: loadingMeasureIds(state.loadingMeasureIds) }));
+    }
+  },
+  isMeasureLoading: (id: string) => get().loadingMeasureIds.has(id),
   getFilteredMeasureIds: () => (useUserStore.getState().userTrackedMeasures) ? (useUserStore.getState().getSafeUserTrackedMeasures()).filter((m) =>m.isDisplayed).map((measure) => getMeasureUniqueId(measure)) : [],
   getFilteredMeasureDocuments: () => get().getMeasures().flatMap((measure) => measure.MeasureDocuments),
   unfilteredMeasures: [],
