@@ -2,11 +2,14 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { GroupSummary, useUserStore } from '../../../../store/UserStore';
 import { styles } from './SidebarGroup.styles';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import SidebarMeasure from '../SidebarMeasure/SidebarMeasure';
 import { getMeasureUniqueId } from '../../../../utils/measure';
 import { AddGroupMeasure } from '../AddGroupMeasure/AddGroupMeasure';
-import { getUserGroupMeasures } from '../../../../data/firebaseFirestore';
+import {
+  getUserGroupMeasures,
+  getGroup,
+} from '../../../../data/firebaseFirestore';
 import { useUser } from '../../../../utils/user';
 
 interface SidebarGroupProps {
@@ -24,6 +27,7 @@ const SidebarGroup = ({ group }: SidebarGroupProps) => {
   );
   const { setGroupMeasures } = useUserStore();
   const { currentUser } = useUser();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Get all measures with source tracking and filter for this group
   const groupMeasuresList = useMemo(() => {
@@ -63,30 +67,54 @@ const SidebarGroup = ({ group }: SidebarGroupProps) => {
     }
   };
 
-  // Fetch group data on mount
+  // Fetch group data and check admin status on mount
   useEffect(() => {
     fetchGroupData();
+    if (currentUser) {
+      getGroup(group.id)
+        .then((groupData) => {
+          if (groupData) {
+            console.log('Group data:', groupData);
+            setIsAdmin(groupData.admins.includes(currentUser.uid));
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching group data:', error);
+        });
+    }
   }, [group.id, currentUser]);
 
   return (
     <Box sx={styles.groupContainer}>
       <Box sx={styles.sectionHeader}>
         <Typography variant="h2">{group.name}</Typography>
-        <AddGroupMeasure groupId={group.id} onMeasureAdded={fetchGroupData} />
+        {isAdmin && (
+          <AddGroupMeasure groupId={group.id} onMeasureAdded={fetchGroupData} />
+        )}
       </Box>
-      {groupMeasuresList.map((measure) => (
-        <SidebarMeasure
-          userTrackedMeasure={measure}
-          isDuplicate={measure.isDuplicate}
-          groupNickname={
-            typeof measure.source === 'object' &&
-            measure.source.type === 'group'
-              ? measure.source.groupName
-              : undefined
-          }
-          key={getMeasureUniqueId(measure)}
-        />
-      ))}
+      {groupMeasuresList.map((measure) => {
+        const isGroupMeasure =
+          typeof measure.source === 'object' && measure.source.type === 'group';
+        const groupSource = isGroupMeasure
+          ? (measure.source as {
+              type: 'group';
+              groupId: string;
+              groupName: string;
+            })
+          : null;
+        return (
+          <SidebarMeasure
+            userTrackedMeasure={measure}
+            isDuplicate={measure.isDuplicate}
+            groupNickname={groupSource?.groupName}
+            isGroupMeasure={isGroupMeasure}
+            groupId={groupSource?.groupId}
+            isGroupAdmin={isGroupMeasure ? isAdmin : undefined}
+            onGroupMeasureRemoved={isGroupMeasure ? fetchGroupData : undefined}
+            key={getMeasureUniqueId(measure)}
+          />
+        );
+      })}
     </Box>
   );
 };

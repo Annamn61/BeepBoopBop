@@ -272,3 +272,17 @@ export const addMeasureToGroup = async (groupId: string, measureId: string) => {
         throw error;
     }
 }
+
+// Remove a measure from a group
+export const removeMeasureFromGroup = async (groupId: string, measureId: string) => {
+    try {
+        const groupRef = doc(db, 'groups', groupId);
+        await updateDoc(groupRef, {
+            measures: arrayRemove(measureId),
+        });
+        console.log("Measure removed from group successfully.");
+    } catch (error) {
+        console.error("Error removing measure from group:", error);
+        throw error;
+    }
+}

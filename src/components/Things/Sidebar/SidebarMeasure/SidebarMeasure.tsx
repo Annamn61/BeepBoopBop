@@ -15,18 +15,29 @@ import { useUserStore } from '../../../../store/UserStore';
 import { getMeasureUniqueId, getReadableId } from '../../../../utils/measure';
 import useMeasureStore from '../../../../store/MeasureStore';
 import { useUser } from '../../../../utils/user';
-import { removeMeasure } from '../../../../data/firebaseFirestore';
+import {
+  removeMeasure,
+  removeMeasureFromGroup,
+} from '../../../../data/firebaseFirestore';
 
 interface SidebarMeasureProps {
   userTrackedMeasure: UserTrackedMeasure;
   isDuplicate?: boolean;
   groupNickname?: string;
+  isGroupMeasure?: boolean;
+  groupId?: string;
+  isGroupAdmin?: boolean;
+  onGroupMeasureRemoved?: () => void;
 }
 
 const SidebarMeasure = ({
   userTrackedMeasure,
   isDuplicate,
   groupNickname,
+  isGroupMeasure,
+  groupId,
+  isGroupAdmin,
+  onGroupMeasureRemoved,
 }: SidebarMeasureProps) => {
   const { anchorEl, setModalClosed, setModalOpen } = useModal();
   const {
@@ -84,19 +95,21 @@ const SidebarMeasure = ({
               <Typography variant="h5" sx={styles.measureId}>
                 {getReadableId(userTrackedMeasure)}
               </Typography>
-              <Tooltip title={TOOLTIP_MESSAGES.DeleteMeasure}>
-                <IconButton
-                  id="deleteIcon"
-                  sx={styles.deleteIcon}
-                  size="small"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setModalOpen(e);
-                  }}
-                >
-                  <CloseRoundedIcon />
-                </IconButton>
-              </Tooltip>
+              {(!isGroupMeasure || isGroupAdmin) && (
+                <Tooltip title={TOOLTIP_MESSAGES.DeleteMeasure}>
+                  <IconButton
+                    id="deleteIcon"
+                    sx={styles.deleteIcon}
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModalOpen(e);
+                    }}
+                  >
+                    <CloseRoundedIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Box>
             <Typography variant="body1">{title}</Typography>
           </Box>
@@ -106,21 +119,37 @@ const SidebarMeasure = ({
         anchorEl={anchorEl}
         onClose={setModalClosed}
         handleAction={async () => {
-          // Optimistically remove from store (disappears immediately)
-          removeTrackedMeasureById(uniqueId);
-
-          // Remove from Firebase if user is logged in
-          if (currentUser) {
+          if (isGroupMeasure && groupId) {
+            // Remove from group
             try {
-              await removeMeasure(currentUser.uid, uniqueId);
+              await removeMeasureFromGroup(groupId, uniqueId);
+              // Refresh group measures
+              onGroupMeasureRemoved?.();
             } catch (error) {
-              console.error('Error removing measure from Firebase:', error);
-              // TODO: Could revert the optimistic update here if needed
+              console.error('Error removing measure from group:', error);
+            }
+          } else {
+            // Remove from user measures
+            // Optimistically remove from store (disappears immediately)
+            removeTrackedMeasureById(uniqueId);
+
+            // Remove from Firebase if user is logged in
+            if (currentUser) {
+              try {
+                await removeMeasure(currentUser.uid, uniqueId);
+              } catch (error) {
+                console.error('Error removing measure from Firebase:', error);
+                // TODO: Could revert the optimistic update here if needed
+              }
             }
           }
         }}
         message={`Delete ${uniqueId}?`}
-        subtitle="Are you sure you want to remove this measure from your tracked measures? This action cannot be undone."
+        subtitle={
+          isGroupMeasure
+            ? `Are you sure you want to remove this measure from the ${groupNickname} group? This action will delete the measure for all members and cannot be undone.`
+            : 'Are you sure you want to remove this measure from your tracked measures? This action cannot be undone.'
+        }
       />
       <MeasureModal
         anchorEl={measureAnchorEl}
