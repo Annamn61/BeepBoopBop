@@ -1,8 +1,10 @@
-import Popover from '@mui/material/Popover';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import Tooltip from '@mui/material/Tooltip';
+import EditIcon from '@mui/icons-material/Edit';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -10,10 +12,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import ListItemText from '@mui/material/ListItemText';
 import { styles } from './AddGroup.styles';
 import {
   getAllGroups,
   addGroupToUser,
+  removeGroupFromUser,
   getUserGroupMeasures,
 } from '../../../../data/firebaseFirestore';
 import { GroupSummary } from '../../../../store/UserStore';
@@ -21,7 +25,8 @@ import { useUser } from '../../../../utils/user';
 import { useUserStore } from '../../../../store/UserStore';
 
 export const AddGroup = () => {
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [open, setOpen] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
   const [allGroups, setAllGroups] = useState<GroupSummary[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +35,7 @@ export const AddGroup = () => {
     useUserStore();
 
   useEffect(() => {
-    if (anchorEl) {
+    if (open) {
       setIsLoading(true);
       getAllGroups()
         .then((groups) => {
@@ -43,8 +48,9 @@ export const AddGroup = () => {
         });
     } else {
       setSelectedGroupId('');
+      setShowAddForm(false);
     }
-  }, [anchorEl]);
+  }, [open]);
 
   const handleJoin = async () => {
     if (!selectedGroupId || !currentUser) {
@@ -59,12 +65,12 @@ export const AddGroup = () => {
     const isAlreadyInGroup = userGroups.some((g) => g.id === selectedGroupId);
     if (isAlreadyInGroup) {
       console.log('User is already in this group');
-      setAnchorEl(null);
+      setSelectedGroupId('');
+      setShowAddForm(false);
       return;
     }
 
-    setAnchorEl(null);
-
+    // Optimistically update
     addUserGroup(selectedGroup);
 
     try {
@@ -72,57 +78,157 @@ export const AddGroup = () => {
       // Refresh group measures after joining
       const groupMeasures = await getUserGroupMeasures(currentUser.uid);
       setGroupMeasures(groupMeasures);
+      setSelectedGroupId('');
+      setShowAddForm(false);
     } catch (error) {
       console.error('Error adding group to user:', error);
       removeUserGroup(selectedGroupId);
     }
   };
 
+  const handleCancelAdd = () => {
+    setShowAddForm(false);
+    setSelectedGroupId('');
+  };
+
+  const handleLeave = async (groupId: string) => {
+    if (!currentUser) {
+      return;
+    }
+
+    // Optimistically update
+    removeUserGroup(groupId);
+
+    try {
+      await removeGroupFromUser(currentUser.uid, groupId);
+      // Refresh group measures after leaving
+      const groupMeasures = await getUserGroupMeasures(currentUser.uid);
+      setGroupMeasures(groupMeasures);
+    } catch (error) {
+      console.error('Error removing group from user:', error);
+      // Revert optimistic update on error
+      const group = userGroups.find((g) => g.id === groupId);
+      if (group) {
+        addUserGroup(group);
+      }
+    }
+  };
+
+  // Filter out groups the user is already in
+  const availableGroups = allGroups.filter(
+    (group) => !userGroups.some((ug) => ug.id === group.id)
+  );
+
   return (
     <>
-      <Tooltip title="Join a group">
-        <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-          <AddRoundedIcon />
+      <Tooltip title="Edit Groups">
+        <IconButton onClick={() => setOpen(true)}>
+          <EditIcon />
         </IconButton>
       </Tooltip>
-      <Popover
-        open={!!anchorEl}
-        anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        maxWidth="sm"
+        fullWidth
       >
-        <Box sx={styles.container}>
-          <Typography variant="h2" sx={styles.title}>
-            Join a Group
-          </Typography>
-          <FormControl fullWidth sx={styles.select}>
-            <InputLabel>Select a group</InputLabel>
-            <Select
-              value={selectedGroupId}
-              onChange={(e) => setSelectedGroupId(e.target.value)}
-              label="Select a group"
-              disabled={isLoading}
-            >
-              {allGroups.map((group) => (
-                <MenuItem key={group.id} value={group.id}>
-                  {group.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Button
-            variant="filled"
-            onClick={handleJoin}
-            disabled={!selectedGroupId || isLoading}
-            sx={styles.joinButton}
-          >
-            Join
-          </Button>
-        </Box>
-      </Popover>
+        <DialogContent>
+          <Box sx={styles.dialogContent}>
+            <Typography variant="h1">My Groups</Typography>
+            {userGroups.length === 0 && !showAddForm ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 2,
+                }}
+              >
+                <Typography variant="body2" color="text.secondary">
+                  You are not in any groups yet.
+                </Typography>
+                <Button variant="filled" onClick={() => setShowAddForm(true)}>
+                  Join a group
+                </Button>
+              </Box>
+            ) : (
+              <>
+                {userGroups.length > 0 && (
+                  <Box>
+                    {userGroups.map((group) => (
+                      <Box key={group.id} sx={{ display: 'flex', gap: 2 }}>
+                        <ListItemText primary={group.name} />
+                        <Button
+                          variant="text"
+                          onClick={() => handleLeave(group.id)}
+                        >
+                          Leave
+                        </Button>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+                {!showAddForm ? (
+                  <Box
+                    sx={{
+                      marginTop: 2,
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    <Tooltip title="Add a group">
+                      <IconButton onClick={() => setShowAddForm(true)}>
+                        <AddRoundedIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                ) : (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 2,
+                      marginTop: 2,
+                      alignItems: 'center',
+                    }}
+                  >
+                    <FormControl sx={{ flexGrow: 1, minWidth: 200 }}>
+                      <InputLabel>Select a group</InputLabel>
+                      <Select
+                        value={selectedGroupId}
+                        onChange={(e) => setSelectedGroupId(e.target.value)}
+                        label="Select a group"
+                        disabled={isLoading}
+                      >
+                        {availableGroups.length === 0 ? (
+                          <MenuItem disabled value="">
+                            No more groups found
+                          </MenuItem>
+                        ) : (
+                          availableGroups.map((group) => (
+                            <MenuItem key={group.id} value={group.id}>
+                              {group.name}
+                            </MenuItem>
+                          ))
+                        )}
+                      </Select>
+                    </FormControl>
+                    <Button variant="text" onClick={handleCancelAdd}>
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="filled"
+                      onClick={handleJoin}
+                      disabled={!selectedGroupId || isLoading}
+                    >
+                      Join
+                    </Button>
+                  </Box>
+                )}
+              </>
+            )}
+          </Box>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

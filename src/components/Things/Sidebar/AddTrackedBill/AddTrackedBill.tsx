@@ -13,7 +13,6 @@ import Tooltip from '@mui/material/Tooltip';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import IconButton from '@mui/material/IconButton';
 import { useUserStore } from '../../../../store/UserStore';
-import FF from '../../FF/FF';
 import { useUser } from '../../../../utils/user';
 import { addMeasure } from '../../../../data/firebaseFirestore';
 
@@ -42,13 +41,11 @@ export const AddTrackedBill = () => {
 
   return (
     <>
-      <FF value="add">
-        <Tooltip title="Add bill to track">
-          <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-            <AddRoundedIcon />
-          </IconButton>
-        </Tooltip>
-      </FF>
+      <Tooltip title="Add bill to track">
+        <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+          <AddRoundedIcon />
+        </IconButton>
+      </Tooltip>
       <Popover
         open={!!anchorEl}
         anchorEl={anchorEl}

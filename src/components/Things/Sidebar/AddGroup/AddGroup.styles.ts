@@ -5,12 +5,21 @@ export const styles: Record<string, SxProps<Theme>> = {
         padding: 2,
         display: 'flex',
         flexDirection: 'column',
-        gap: 2,
+        gap: 4,
         minWidth: '300px',
+    },
+    dialogContent: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        minHeight: '200px',
     },
     title: {
         fontSize: '1.2rem',
         fontWeight: 600,
+    },
+    select: {
+        minWidth: '200px',
     },
     joinButton: {
         alignSelf: 'flex-end',
