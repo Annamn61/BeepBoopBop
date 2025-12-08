@@ -13,6 +13,7 @@ import MeasureHistory from './components/Pages/MeasureHistory/MeasureHistory';
 import Parser from './components/Pages/Parser/Parser';
 import Votes from './components/Pages/Votes/Votes';
 import Feedback from './components/Pages/Feedback/Feedback';
+import FeedbackAdmin from './components/Pages/FeedbackAdmin/FeedbackAdmin';
 import { useDataController } from './data/Controllers/dataController';
 import theme from './utils/theme';
 
@@ -80,6 +81,16 @@ function App() {
                   showSidebar={false}
                   showTabs={false}
                   children={<Feedback />}
+                />
+              }
+            />
+            <Route
+              path="/feedback-admin"
+              element={
+                <LayoutPage
+                  showSidebar={false}
+                  showTabs={false}
+                  children={<FeedbackAdmin />}
                 />
               }
             />

@@ -6,16 +6,21 @@ const ParsedFileViewer = ({ bill }: { bill?: ParsedBill }) => {
   if (!bill) return null;
 
   const renderLines = (bill: ParsedBill): JSX.Element[] => {
-    return bill.map((page, index) => (
-      <div key={index + 1}>
-        {page.pre.map((line, index) => {
+    return bill.map((page, pageNumber) => (
+      <div key={pageNumber + 1}>
+        {page.pre.map((line, lineNumber) => {
           let prepend = undefined;
           let text = line[0].text;
-          if (text.startsWith('(') || text.startsWith('SECTION')) {
+          if (
+            text.startsWith('(') ||
+            text.startsWith('SECTION') ||
+            text.startsWith('“(') ||
+            text.startsWith('“SECTION')
+          ) {
             prepend = '\t';
           }
           return (
-            <Typography key={'LINE-pre-' + index}>
+            <Typography key={'LINE-pre-' + lineNumber + '_' + pageNumber}>
               {line.map((span, index) => (
                 <Typography
                   component="span"
@@ -28,7 +33,7 @@ const ParsedFileViewer = ({ bill }: { bill?: ParsedBill }) => {
             </Typography>
           );
         })}
-        {page.content.map((line) => {
+        {page.content.map((line, lineNumber) => {
           let prepend = undefined;
           let editedLine = [...line];
           const first = editedLine.shift();
@@ -42,7 +47,12 @@ const ParsedFileViewer = ({ bill }: { bill?: ParsedBill }) => {
             };
             if (editedLine.length > 0) {
               let text = editedLine[0].text;
-              if (text.startsWith('(') || text.startsWith('SECTION')) {
+              if (
+                text.startsWith('(') ||
+                text.startsWith('SECTION') ||
+                text.startsWith('“(') ||
+                text.startsWith('“SECTION')
+              ) {
                 editedLine.unshift(tab);
               }
             }
@@ -50,7 +60,7 @@ const ParsedFileViewer = ({ bill }: { bill?: ParsedBill }) => {
             editedLine.unshift(first);
           }
           return (
-            <Typography key={'LINE-content-' + index}>
+            <Typography key={'LINE-content-' + lineNumber + '_' + pageNumber}>
               {editedLine.map((span, index) => (
                 <Typography
                   component="span"
@@ -64,11 +74,11 @@ const ParsedFileViewer = ({ bill }: { bill?: ParsedBill }) => {
           );
         })}
         {page.post.map((line) =>
-          line.map((span, index) => (
+          line.map((span, lineNumber) => (
             <Typography
               component="span"
               sx={getTextStyle(span)}
-              key={'post-' + index}
+              key={'LINE-post-' + lineNumber + '_' + pageNumber}
             >
               {span.text}
             </Typography>

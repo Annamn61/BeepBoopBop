@@ -3,11 +3,15 @@ import { useParams } from 'react-router-dom';
 import useMeasureStore from '../../../../store/MeasureStore';
 import Breadcrumbs from '../../../Accessories/Breadcrumbs/Breadcrumbs';
 import ParsedFileViewer from '../../Parser/ParsedFileViewer/ParsedFileViewer';
-import { getParsedBill } from '../../Parser/helpers';
+import { getParsedBill, getParsedInstructionsNEW } from '../../Parser/helpers';
 import { useEffect, useState } from 'react';
 import { ParsedBill } from '../../Parser/Types';
 import ViewInOlisButton from '../../../Accessories/ViewInOlisButton/ViewInOlisButton';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Switch, FormControlLabel } from '@mui/material';
+import FF from '../../../Things/FF/FF';
+import { applyInstructions } from '../../Parser/applyInstructions';
+// import { getParsedInstructions } from '../../Parser/HELPERS_COPY_INCASE_BROKEN';
 
 const DocumentViewer = () => {
   const [parsedFile, setParsedFile] = useState<ParsedBill>();
@@ -15,32 +19,59 @@ const DocumentViewer = () => {
   const params = useParams();
   const measureId = params.id;
   const documentName = params.name;
-
   const { getMeasureById } = useMeasureStore();
   const measure = getMeasureById(measureId);
+  const [applyAmendment, setApplyAmendment] = useState(false);
+  // House ammendments to introduced
+  const isAmendment = documentName?.includes('Amendment');
+  const fileBeingAmmended = isAmendment
+    ? measure?.MeasureDocuments?.find(
+        (document) =>
+          documentName?.includes(document.VersionDescription) &&
+          documentName !== document.VersionDescription
+      )
+    : undefined;
 
-  if (!measureId || !measure) {
-    return null;
-  }
-
-  const { MeasureDocuments } = measure;
-
-  const currentDoc = MeasureDocuments.find(
+  const currentDoc = measure?.MeasureDocuments?.find(
     (doc) => doc.VersionDescription === documentName
   );
 
-  const getParsedFile = async () => {
-    if (currentDoc) {
-      const introBill = await getParsedBill(currentDoc.DocumentUrl);
-      setLoading(false);
-      setParsedFile(introBill);
-    }
-  };
-
   useEffect(() => {
-    setLoading(true);
-    getParsedFile();
-  }, [currentDoc]);
+    if (currentDoc) {
+      setLoading(true);
+      const getParsedFile = async () => {
+        try {
+          const baseFile =
+            isAmendment && applyAmendment && fileBeingAmmended
+              ? await getParsedBill(fileBeingAmmended.DocumentUrl)
+              : await getParsedBill(currentDoc.DocumentUrl);
+          const parsedInstructions = isAmendment
+            ? await getParsedInstructionsNEW(currentDoc.DocumentUrl)
+            : [];
+          const engrossed =
+            isAmendment &&
+            applyInstructions(
+              structuredClone(baseFile),
+              structuredClone(parsedInstructions)
+            );
+
+          const fileToSet =
+            isAmendment && applyAmendment && engrossed ? engrossed : baseFile;
+
+          setParsedFile(fileToSet);
+        } catch (error) {
+          console.error('Error parsing file:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      getParsedFile();
+    }
+  }, [currentDoc, applyAmendment, fileBeingAmmended, isAmendment]);
+
+  if (!measureId || !measure || !currentDoc) {
+    return null;
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -60,6 +91,21 @@ const DocumentViewer = () => {
           <ViewInOlisButton url={currentDoc?.DocumentUrl} />
         )}
       </Box>
+      <FF value="amend">
+        {documentName?.includes('Amendment') && (
+          <FormControlLabel
+            value="applyAmendment"
+            control={
+              <Switch
+                checked={applyAmendment}
+                onChange={(e) => setApplyAmendment(e.target.checked)}
+                color="success"
+              />
+            }
+            label="Apply Amendments"
+          />
+        )}
+      </FF>
       {loading ? (
         <Box
           sx={{

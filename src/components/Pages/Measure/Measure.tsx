@@ -16,6 +16,7 @@ import MeasurePill from '../../Accessories/MeasurePill/MeasurePill';
 import SendEmailButton from '../../Accessories/SendEmailButton/SendEmailButton';
 import ViewInOlisButton from '../../Accessories/ViewInOlisButton/ViewInOlisButton';
 import { styles } from './Measure.styles';
+import { useUserStore } from '../../../store/UserStore';
 
 const Measure = ({
   measureModalId,
@@ -42,6 +43,9 @@ const Measure = ({
     getWebsiteByLegislatorCode,
   } = useLegislatorStore();
   const measure = getMeasureById(measureId);
+  const measureNickname = useUserStore
+    .getState()
+    .getUserMeasureNicknameById(measureId);
   const agendaItems = getUpcomingAgendaItemsById(measureId);
   const sponsors = getSortedMeasureSponsorsById(measureId);
   const chiefSponsors = getSortedMeasureChiefSponsorsById(measureId);
@@ -83,10 +87,13 @@ const Measure = ({
           </Box>
         </Box>
         <Typography variant="h1" sx={styles.title}>
-          {CatchLine}
+          {measureNickname || CatchLine}
         </Typography>
+        {measureNickname && (
+          <Typography variant="subtitle2">{CatchLine}</Typography>
+        )}
         <Box sx={styles.measureDocumentSection}>
-          <Typography variant="subtitle2">Measure Documents</Typography>
+          <Typography variant="h3">Measure Documents</Typography>
           <Box sx={styles.documentsContainer}>
             {MeasureDocuments.map((doc) => (
               <Link
@@ -94,6 +101,9 @@ const Measure = ({
                 sx={styles.measureDocument}
                 href={`/#/bill/${measureId}/document/${doc.VersionDescription}`}
                 key={doc.DocumentUrl}
+                onClick={() => {
+                  onModalClose?.();
+                }}
               >
                 <Typography variant="body1" sx={{ whiteSpace: 'nowrap' }}>
                   {doc.VersionDescription}
@@ -102,8 +112,37 @@ const Measure = ({
             ))}
           </Box>
         </Box>
-        <Box sx={{ ...styles.quicklook, ...(styles.infoSection as any) }}>
+        {/* <Box sx={{ ...styles.quicklook, ...(styles.infoSection as any) }}>
           <Typography variant="h3">Quicklook</Typography>
+        </Box> */}
+        <Box sx={styles.infoSection}>
+          <Typography variant="h3">Upcoming Events</Typography>
+          {!!agendaItems.length ? (
+            agendaItems.map((item) => (
+              <Box sx={styles.lineItem} key={item.CommitteeAgendaItemId}>
+                <Typography variant="subtitle2">
+                  {getShortFormatDateWithTime(new Date(item.MeetingDate))}
+                </Typography>
+                <Typography variant="body1">{item.MeetingType}</Typography>
+              </Box>
+            ))
+          ) : (
+            <Typography variant="subtitle2">No Upcoming Events</Typography>
+          )}
+        </Box>
+        <Box sx={{ ...styles.history, ...(styles.infoSection as any) }}>
+          <Typography variant="h3">History</Typography>
+          <Box sx={styles.historyItemsContainer}>
+            {getUpdatesById(measureId).map((updateItem) => (
+              <HistoryItemLine
+                selected={false}
+                toggleSelected={() => console.log('TODO: IMPLEMENT')}
+                key={updateItem.Key}
+                updateItem={updateItem}
+                variant="light"
+              />
+            ))}
+          </Box>
         </Box>
         <Box sx={styles.infoSection}>
           <Typography variant="h3">Summary</Typography>
@@ -169,40 +208,11 @@ const Measure = ({
               emails={allSponsorEmails}
               buttonText="Send Email To All Sponsors"
             />
-            <ExportContactsButton
+            {/* <ExportContactsButton
               legislatorCodes={allSponsorCodes}
               buttonText="Export Contacts"
-            />
+            /> */}
           </Box>
-        </Box>
-        <Box sx={{ ...styles.history, ...(styles.infoSection as any) }}>
-          <Typography variant="h3">History</Typography>
-          <Box sx={styles.historyItemsContainer}>
-            {getUpdatesById(measureId).map((updateItem) => (
-              <HistoryItemLine
-                selected={false}
-                toggleSelected={() => console.log('TODO: IMPLEMENT')}
-                key={updateItem.Key}
-                updateItem={updateItem}
-                variant="light"
-              />
-            ))}
-          </Box>
-        </Box>
-        <Box sx={styles.infoSection}>
-          <Typography variant="h3">Upcoming Events</Typography>
-          {!!agendaItems.length ? (
-            agendaItems.map((item) => (
-              <Box sx={styles.lineItem} key={item.CommitteeAgendaItemId}>
-                <Typography variant="subtitle2">
-                  {getShortFormatDateWithTime(new Date(item.MeetingDate))}
-                </Typography>
-                <Typography variant="body1">{item.MeetingType}</Typography>
-              </Box>
-            ))
-          ) : (
-            <Typography variant="subtitle2">No Upcoming Events</Typography>
-          )}
         </Box>
       </Box>
     </>

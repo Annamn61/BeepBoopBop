@@ -34,6 +34,8 @@ interface UserState {
     getUserMeasureMetadataById: (id: string) => UserTrackedMeasure | undefined;
     /** Gets the user defined color of a measure by its id */
     getUserMeasureColorById: (id: string) => string | undefined;
+    /** Gets the user defined nickname of a measure by its id */
+    getUserMeasureNicknameById: (id: string | undefined) => string | undefined;
     /** Update whether a measure is filtered or not by id */
     setUserTrackedMeasureFilterStatusById: (id: string, isDisplayed: boolean) => void;
     /**  Toggle all measures as filtered on or off except for this id */
@@ -89,6 +91,12 @@ export const useUserStore = create<UserState>((set, get) => ({
     const allMeasures = get().getAllTrackedMeasuresWithSource();
     const trackedMeasure = allMeasures.find(m => getMeasureUniqueId(m) === id);
     return trackedMeasure?.color;
+  },
+  getUserMeasureNicknameById: (id) => {
+    if (!id) return undefined;
+    const allMeasures = get().getAllTrackedMeasuresWithSource();
+    const trackedMeasure = allMeasures.find(m => getMeasureUniqueId(m) === id);
+    return trackedMeasure?.nickname;
   },
   setUserTrackedMeasureFilterStatusById: (id, isDisplayed) => set({userTrackedMeasures: getUserTrackedMeasuresWithNewFilterStatus(get().getSafeUserTrackedMeasures(), id, isDisplayed)}),
   toggleAllUserTrackedFilterStatusesBasedOnAnId: (id) => set({userTrackedMeasures: getToggledFilters(get().getSafeUserTrackedMeasures(), id)}),

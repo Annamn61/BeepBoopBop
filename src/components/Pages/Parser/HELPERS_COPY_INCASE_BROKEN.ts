@@ -10,7 +10,7 @@ export const CLOSE_QUOTE = '”'
 
 pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
-export const getParsedBill = async (url: string): Promise<ParsedBill> => {
+const getParsedBill = async (url: string): Promise<ParsedBill> => {
     // const url = 'https://olis.oregonlegislature.gov/liz/2025R1/Downloads/MeasureDocument/HB3179/House%20Amendments%20to%20Introduced'
     const proxy = `https://pdf-proxy.annamnorm61.workers.dev/?url=${encodeURIComponent(url)}`;
     const pdf: PDFDocumentProxy = await pdfjs.getDocument({
@@ -32,6 +32,11 @@ export const getParsedInstructions = async (url: string) => {
     const allLines = bill.flatMap((page) => page.content)
     const groups = getLineGroups(allLines);
     const instructionGroups =  getInstructionGroups(groups);
+    console.log('bill', bill);
+    console.log('allLines', allLines);
+    console.log('groups', groups);
+    console.log('instructionGroups', instructionGroups);
+    console.log('getInstructionActions(instructionGroups)', getInstructionActions(instructionGroups));
     return getInstructionActions(instructionGroups).flatMap(instructions => instructions);
 }
 
@@ -89,7 +94,7 @@ const getType = (lines: ParsedLine[]) => {
     return type;
 }
 
-export const getParsedPage = async (pdf: PDFDocumentProxy, pageNum: number): Promise<ParsedPage> => {
+const getParsedPage = async (pdf: PDFDocumentProxy, pageNum: number): Promise<ParsedPage> => {
     const unprocessedPage: PDFPageProxy = await pdf.getPage(pageNum);
     const content = await unprocessedPage.getTextContent();
 

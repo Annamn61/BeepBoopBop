@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, serverTimestamp, setDoc, updateDoc, writeBatch } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, serverTimestamp, setDoc, updateDoc, writeBatch } from "firebase/firestore";
 import { UserTrackedMeasure } from "../types/MeasureTypes";
 import { firebaseApp } from "../utils/firebaseInit";
 import { getMeasureUniqueId } from "../utils/measure";
@@ -116,14 +116,15 @@ export const getRemoteUserTrackedMeasures = async (user: User) => {
 }
 
 export interface FeedbackEntry {
-    timestamp: Date;
+    id: string;
+    timestamp: any; // Firestore Timestamp
     email: string;
     feedback: string;
     userId: string | null;
     status: string;
 }
 
-export const submitFeedback = async (feedbackData: Omit<FeedbackEntry, 'timestamp'>) => {
+export const submitFeedback = async (feedbackData: Omit<FeedbackEntry, 'timestamp' | 'id'>) => {
     try {
         const feedbackRef = collection(db, 'feedback');
         await addDoc(feedbackRef, {
@@ -133,6 +134,41 @@ export const submitFeedback = async (feedbackData: Omit<FeedbackEntry, 'timestam
         console.log("Feedback submitted successfully.");
     } catch (error) {
         console.error("Error submitting feedback:", error);
+        throw error;
+    }
+}
+
+// Get all feedback entries (admin only)
+export const getFeedbackEntries = async (): Promise<FeedbackEntry[]> => {
+    try {
+        const feedbackRef = collection(db, 'feedback');
+        const querySnapshot = await getDocs(feedbackRef);
+        const entries = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        })) as FeedbackEntry[];
+        
+        // Sort by timestamp descending (newest first)
+        return entries.sort((a, b) => {
+            if (!a.timestamp || !b.timestamp) return 0;
+            return b.timestamp.toMillis() - a.timestamp.toMillis();
+        });
+    } catch (error) {
+        console.error("Error fetching feedback entries:", error);
+        throw error;
+    }
+}
+
+// Update feedback status
+export const updateFeedbackStatus = async (feedbackId: string, status: string) => {
+    try {
+        const feedbackRef = doc(db, 'feedback', feedbackId);
+        await updateDoc(feedbackRef, {
+            status: status,
+        });
+        console.log("Feedback status updated successfully.");
+    } catch (error) {
+        console.error("Error updating feedback status:", error);
         throw error;
     }
 }
@@ -166,19 +202,14 @@ export const getAllGroups = async (): Promise<GroupSummary[]> => {
 // Get the groups a user is in
 export const getUserGroups = async (userId: string): Promise<GroupSummary[]> => {
     try {
-        const userRef = doc(db, 'users', userId);
-        const userDoc = await getDoc(userRef);
+        const userGroupsRef = collection(db, `users/${userId}/groups`);
+        const querySnapshot = await getDocs(userGroupsRef);
         
-        if (!userDoc.exists()) {
+        if (querySnapshot.empty) {
             return [];
         }
         
-        const userData = userDoc.data();
-        const groupIds: string[] = userData.groups || [];
-        
-        if (groupIds.length === 0) {
-            return [];
-        }
+        const groupIds = querySnapshot.docs.map(doc => doc.id);
         
         // Fetch group details for each group ID
         const groupPromises = groupIds.map(async (groupId) => {
@@ -204,19 +235,14 @@ export const getUserGroups = async (userId: string): Promise<GroupSummary[]> => 
 // Get group measures and store them in user document structure
 export const getUserGroupMeasures = async (userId: string): Promise<GroupMeasures> => {
     try {
-        const userRef = doc(db, 'users', userId);
-        const userDoc = await getDoc(userRef);
+        const userGroupsRef = collection(db, `users/${userId}/groups`);
+        const querySnapshot = await getDocs(userGroupsRef);
         
-        if (!userDoc.exists()) {
+        if (querySnapshot.empty) {
             return {};
         }
         
-        const userData = userDoc.data();
-        const groupIds: string[] = userData.groups || [];
-        
-        if (groupIds.length === 0) {
-            return {};
-        }
+        const groupIds = querySnapshot.docs.map(doc => doc.id);
         
         // Fetch group measures for each group
         const groupMeasures: GroupMeasures = {};
@@ -263,10 +289,8 @@ export const getGroup = async (groupId: string): Promise<Group | null> => {
 // Add a group to a user
 export const addGroupToUser = async (userId: string, groupId: string) => {
     try {
-        const userRef = doc(db, 'users', userId);
-        await updateDoc(userRef, {
-            groups: arrayUnion(groupId),
-        });
+        const groupRef = doc(db, `users/${userId}/groups`, groupId);
+        await setDoc(groupRef, {});
         console.log("Group added to user successfully.");
     } catch (error) {
         console.error("Error adding group to user:", error);
@@ -277,10 +301,9 @@ export const addGroupToUser = async (userId: string, groupId: string) => {
 // Delete a group from a user
 export const removeGroupFromUser = async (userId: string, groupId: string) => {
     try {
-        const userRef = doc(db, 'users', userId);
-        await updateDoc(userRef, {
-            groups: arrayRemove(groupId),
-        });
+        // Delete the document from the subcollection
+        const groupRef = doc(db, `users/${userId}/groups`, groupId);
+        await deleteDoc(groupRef);
         console.log("Group removed from user successfully.");
     } catch (error) {
         console.error("Error removing group from user:", error);

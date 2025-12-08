@@ -13,12 +13,14 @@ import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import ListItemText from '@mui/material/ListItemText';
+import Chip from '@mui/material/Chip';
 import { styles } from './AddGroup.styles';
 import {
   getAllGroups,
   addGroupToUser,
   removeGroupFromUser,
   getUserGroupMeasures,
+  getGroup,
 } from '../../../../data/firebaseFirestore';
 import { GroupSummary } from '../../../../store/UserStore';
 import { useUser } from '../../../../utils/user';
@@ -30,6 +32,7 @@ export const AddGroup = () => {
   const [allGroups, setAllGroups] = useState<GroupSummary[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const [adminGroupIds, setAdminGroupIds] = useState<Set<string>>(new Set());
   const { currentUser } = useUser();
   const { userGroups, addUserGroup, removeUserGroup, setGroupMeasures } =
     useUserStore();
@@ -46,11 +49,31 @@ export const AddGroup = () => {
           console.error('Error fetching groups:', error);
           setIsLoading(false);
         });
+
+      // Check admin status for each user group
+      if (currentUser && userGroups.length > 0) {
+        const adminChecks = userGroups.map((group) =>
+          getGroup(group.id)
+            .then((groupData) => {
+              if (groupData && groupData.admins.includes(currentUser.uid)) {
+                return group.id;
+              }
+              return null;
+            })
+            .catch(() => null)
+        );
+
+        Promise.all(adminChecks).then((adminIds) => {
+          setAdminGroupIds(
+            new Set(adminIds.filter((id): id is string => id !== null))
+          );
+        });
+      }
     } else {
       setSelectedGroupId('');
       setShowAddForm(false);
     }
-  }, [open]);
+  }, [open, currentUser, userGroups]);
 
   const handleJoin = async () => {
     if (!selectedGroupId || !currentUser) {
@@ -156,8 +179,20 @@ export const AddGroup = () => {
                 {userGroups.length > 0 && (
                   <Box>
                     {userGroups.map((group) => (
-                      <Box key={group.id} sx={{ display: 'flex', gap: 2 }}>
+                      <Box
+                        key={group.id}
+                        sx={{ display: 'flex', gap: 2, alignItems: 'center' }}
+                      >
                         <ListItemText primary={group.name} />
+                        {adminGroupIds.has(group.id) && (
+                          <Chip
+                            label="Admin"
+                            size="small"
+                            sx={{
+                              backgroundColor: '#ffee8c',
+                            }}
+                          />
+                        )}
                         <Button
                           variant="text"
                           onClick={() => handleLeave(group.id)}

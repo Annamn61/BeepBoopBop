@@ -1,13 +1,15 @@
 import { getDeletedLinesInstructions } from "./InstructionsParsing/DeleteLines";
 import { getDeletedPagesInstructions } from "./InstructionsParsing/DeletePages";
 import { getDeletedTokenInstructions } from "./InstructionsParsing/DeleteToken";
-import { ParsedInstruction } from "./Types";
+import { getInsertedLinesInstruction } from "./InstructionsParsing/InsertLines";
+import { ParsedInstruction, ParsedLine } from "./Types";
 import { CLOSE_QUOTE, OPEN_QUOTE } from "./helpers";
 
 export const getInstructionActions = (instructionGroups: ParsedInstruction[]) => {
     let page = 1;
     const instructionsLists = instructionGroups.map((group) => {
         const instructionText = group.instruction.lines.flatMap(line => line.slice(1).flatMap(piece => piece.text)).join('')
+        console.log('instructionText', instructionText);
         const { pageNumber, text } = extractPage(instructionText);
         const { lineNumber, text2 } =  extractLine(text);
         const pageNum = pageNumber || page;
@@ -16,7 +18,17 @@ export const getInstructionActions = (instructionGroups: ParsedInstruction[]) =>
         // const { tokens, tokenizedText } = tokenizeText("Delete lines 4 through 20 and delete pages 2 through 7 and insert:");
         const { tokens, tokenizedText } = tokenizeText(text2);
         const cleanedText = cleanText(tokenizedText);
-        const splitInstructions = getSplitInstructions({text: cleanedText, pageNum, lineNum: lineNumber, tokens});
+        // Extract content lines from the instruction group (the lines to insert)
+        const contentLines: ParsedLine[] = group.content 
+            ? group.content.flatMap(contentGroup => contentGroup.lines)
+            : [];
+        const splitInstructions = getSplitInstructions({
+            text: cleanedText, 
+            pageNum, 
+            lineNum: lineNumber, 
+            tokens,
+            contentLines
+        });
         return splitInstructions;
     })
     return instructionsLists;
@@ -68,7 +80,19 @@ export const tokenizeText = (text: string) => {
     };
 }
 
-export const getSplitInstructions = ({text, pageNum, lineNum, tokens}:{text: string, pageNum: number, lineNum?: number, tokens: string[]}) => {
+export const getSplitInstructions = ({
+    text, 
+    pageNum, 
+    lineNum, 
+    tokens,
+    contentLines
+}:{
+    text: string, 
+    pageNum: number, 
+    lineNum?: number, 
+    tokens: string[],
+    contentLines?: ParsedLine[]
+}) => {
     const cleanedText = text.trim();
     const instructionParts = [];
     const deletedLines = getDeletedLinesInstructions(cleanedText, pageNum);
@@ -87,7 +111,20 @@ export const getSplitInstructions = ({text, pageNum, lineNum, tokens}:{text: str
     // if(insertedToken.instruction) {
     //     instructionParts.push(insertedToken.instruction)
     // }
-    // const insertedLines = getInsertedLinesInstruction(insertedToken.remainingText, pageNum, )
+    // Determine where to insert: if we deleted lines, insert at the start of the deleted range
+    // Otherwise, use the lineNum from the instruction or default to 1
+    const insertAtLine = deletedLines.instruction 
+        ? deletedLines.instruction.startLine 
+        : (lineNum || 1);
+    const insertedLines = getInsertedLinesInstruction(
+        deletedToken.remainingText, 
+        pageNum, 
+        insertAtLine,
+        contentLines
+    );
+    if(insertedLines.instruction) {
+        instructionParts.push(insertedLines.instruction)
+    }
     return instructionParts;
 }
 

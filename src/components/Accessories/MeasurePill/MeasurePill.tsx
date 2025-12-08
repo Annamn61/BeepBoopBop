@@ -26,7 +26,7 @@ const MeasurePill = ({
   const navigate = useNavigate();
 
   const backgroundColor = {
-    backgroundColor: measureColor !== undefined ? measureColor : '#fff',
+    backgroundColor: measureColor !== undefined ? measureColor : '#9E9E9E', // Default darker grey for untracked bills
   };
 
   if (withModal) {

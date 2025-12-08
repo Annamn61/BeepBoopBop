@@ -26,7 +26,7 @@ const Bill = ({ billId }: BillProps) => {
   const committeeCode = getMeasureCommitteeCodeById(billId);
   const position = getUserTrackedMeasurePositionById(billId);
   const billTitle = getMeasureTitleById(billId);
-  const measureColor = getUserMeasureColorById(billId);
+  const measureColor = getUserMeasureColorById(billId) || '#9E9E9E'; // Default darker grey for untracked bills
 
   const colorStyles = {
     borderLeft: `8px solid ${measureColor}`,

@@ -33,9 +33,11 @@ export interface InsertTokenInstruction {
     token: string,
 }
 
+import { ParsedLine } from "../Types";
+
 export interface InsertLinesInstruction {
     type: 'INSERT_LINES',
     page: number, 
     atLine: number,
-    lines: any, // TODO - figure out what this should be 
+    lines: ParsedLine[], 
 }

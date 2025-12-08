@@ -27,7 +27,7 @@ export const getParsedBill = async (url: string): Promise<ParsedBill> => {
     return bill;
 }
 
-export const getParsedInstructions = async (url: string) => {
+export const getParsedInstructionsNEW = async (url: string) => {
     const bill = await getParsedBill(url);
     const allLines = bill.flatMap((page) => page.content)
     const groups = getLineGroups(allLines);
