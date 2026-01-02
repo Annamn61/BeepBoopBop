@@ -163,19 +163,35 @@ const Measure = ({
               Chief Sponsors
             </Typography>
             <Typography variant="body1">
-              {chiefSponsors.map((s) => (
-                <>
-                  <Link
-                    href={getWebsiteByLegislatorCode(s.LegislatoreCode)}
-                    target="_blank"
+              {chiefSponsors.map((s) => {
+                const party = getLegislatorPartyByCode(s.LegislatoreCode);
+
+                return (
+                  <Box
                     key={s.LegislatoreCode}
-                    sx={styles.hyperlink}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 1,
+                    }}
                   >
-                    {getFullLegislatorNameByCodeWithTitle(s.LegislatoreCode)}
-                  </Link>
-                  <br />
-                </>
-              ))}
+                    {party && (
+                      <PartyAffiliationBadge
+                        isCircleBadge={true}
+                        parties={[party]}
+                      />
+                    )}
+                    <Link
+                      href={getWebsiteByLegislatorCode(s.LegislatoreCode)}
+                      target="_blank"
+                      sx={styles.hyperlink}
+                    >
+                      {getFullLegislatorNameByCodeWithTitle(s.LegislatoreCode)}
+                    </Link>
+                  </Box>
+                );
+              })}
             </Typography>
           </Box>
           <Box sx={styles.lineItem}>
