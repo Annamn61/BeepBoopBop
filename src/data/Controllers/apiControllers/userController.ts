@@ -10,7 +10,6 @@ export const userUserController = () => {
     const { setUserTrackedMeasures, setAreUserMeasuresLoading, setUserGroups, setGroupMeasures } = useUserStore();
 
     useEffect(() => {
-        console.log('currentUser', currentUser);
         if(!currentUser) {
             setUserTrackedMeasures(undefined);
             setAreUserMeasuresLoading(false);

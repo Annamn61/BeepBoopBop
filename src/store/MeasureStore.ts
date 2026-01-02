@@ -3,6 +3,7 @@ import { Measure, MeasureDocument, MeasureObject, MeasureSponsors, OLISMeasureLo
 import { getKanbanLocationFromBilLocation } from '../components/Pages/BillLocationBoard/Locations/Locations.helpers';
 import { useUserStore } from './UserStore';
 import { getMeasureUniqueId } from '../utils/measure';
+import { useLegislatorStore } from './LegislatorStore';
 
 interface MeasureState {
   areOlisMeasuresLoading: OLISMeasureLoadingState;
@@ -42,6 +43,8 @@ interface MeasureState {
   getSortedMeasureSponsorsById: (id: string | undefined) => MeasureSponsors[]
   /** gets the sponsors that are members, sorted by print order */
   getSortedMeasureChiefSponsorsById: (id: string | undefined) => MeasureSponsors[]
+  /** get unique Measure Sponsor Parties by measure id */
+  getUniqueMeasureSponsorPartiesById: (id: string | undefined) => string[]
 }
 
 export const useMeasureStore = create<MeasureState>((set, get) => ({
@@ -85,7 +88,8 @@ export const useMeasureStore = create<MeasureState>((set, get) => ({
     return trackedMeasure?.nickname || get().getMeasureById(id)?.CatchLine || undefined;
   },
   getSortedMeasureSponsorsById: (id) => sortSponsors(get().getMeasureById(id)?.MeasureSponsors),
-  getSortedMeasureChiefSponsorsById: (id) => sortChiefSponsors(get().getMeasureById(id)?.MeasureSponsors)
+  getSortedMeasureChiefSponsorsById: (id) => sortChiefSponsors(get().getMeasureById(id)?.MeasureSponsors),
+  getUniqueMeasureSponsorPartiesById: (id) => getUniqueMeasureSponsorParties(get().getMeasureById(id)?.MeasureSponsors)
 }));
 
 const sortChiefSponsors = (sponsors: MeasureSponsors[] | undefined) => {
@@ -151,5 +155,20 @@ const getMeasuresFromMeasureObjects = (measureObjects: MeasureObject[]) => {
   });
   return ret;
 }
+
+const getUniqueMeasureSponsorParties = (sponsors: MeasureSponsors[] | undefined) => {
+    if(!sponsors) return []
+    const getLegislatorPartyByCode = useLegislatorStore.getState().getLegislatorPartyByCode;
+    const uniqueParties = new Set<string>();
+    sponsors.forEach((s) => {
+        const party = getLegislatorPartyByCode(s.LegislatoreCode);
+        if(party) {
+            uniqueParties.add(party);
+        }
+    });
+
+    return Array.from(uniqueParties);
+}
+
 
 export default useMeasureStore;

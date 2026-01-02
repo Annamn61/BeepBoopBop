@@ -72,7 +72,7 @@ export const styles: Record<string, SxProps<Theme>> = {
         display: 'flex',
         flexDirection: 'row',
         gap: 2,
-        '& *:first-child': {
+        '&>*:first-child': {
             minWidth: '100px',
         },
     },
@@ -94,6 +94,9 @@ export const styles: Record<string, SxProps<Theme>> = {
         gap: 1,
     },
     hyperlink: {
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 1,
         color: 'dimgray',
         textDecorationColor: 'dimgray',
         '&:hover': {

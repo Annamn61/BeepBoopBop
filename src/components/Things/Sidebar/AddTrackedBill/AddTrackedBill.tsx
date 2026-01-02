@@ -12,11 +12,12 @@ export const AddTrackedBill = () => {
     measureNumber: number,
     measureColor: string,
     sessionKey: string,
-    nickname: string
+    nickname: string,
+    position: 'Support' | 'Oppose' | '?'
   ) => {
     const newMeasure = {
       color: measureColor,
-      position: '?' as const,
+      position: position,
       MeasurePrefix: measurePrefix,
       MeasureNumber: measureNumber,
       isDisplayed: true,

@@ -10,13 +10,13 @@ import useHistoryStore from '../../../store/HistoryStore';
 import useLegislatorStore from '../../../store/LegislatorStore';
 import useMeasureStore from '../../../store/MeasureStore';
 import { getShortFormatDateWithTime } from '../../../utils/time';
-import ExportContactsButton from '../../Accessories/ExportContactsButton/ExportContactsButton';
 import HistoryItemLine from '../../Accessories/HistoryItemLine/HistoryItemLine';
 import MeasurePill from '../../Accessories/MeasurePill/MeasurePill';
 import SendEmailButton from '../../Accessories/SendEmailButton/SendEmailButton';
 import ViewInOlisButton from '../../Accessories/ViewInOlisButton/ViewInOlisButton';
 import { styles } from './Measure.styles';
 import { useUserStore } from '../../../store/UserStore';
+import PartyAffiliationBadge from '../../Accessories/PartyAffiliationBadge/PartyAffiliationBadge';
 
 const Measure = ({
   measureModalId,
@@ -41,6 +41,7 @@ const Measure = ({
     getFullLegislatorNameByCodeWithTitle,
     getEmailByLegislatorCode,
     getWebsiteByLegislatorCode,
+    getLegislatorPartyByCode,
   } = useLegislatorStore();
   const measure = getMeasureById(measureId);
   const measureNickname = useUserStore
@@ -60,11 +61,6 @@ const Measure = ({
     ...chiefSponsors.map((s) => getEmailByLegislatorCode(s.LegislatoreCode)),
     ...sponsors.map((s) => getEmailByLegislatorCode(s.LegislatoreCode)),
   ].filter((email) => email !== undefined) as string[];
-
-  const allSponsorCodes = [
-    ...chiefSponsors.map((s) => s.LegislatoreCode),
-    ...sponsors.map((s) => s.LegislatoreCode),
-  ];
 
   return (
     <>
@@ -185,19 +181,35 @@ const Measure = ({
           <Box sx={styles.lineItem}>
             <Typography variant="subtitle2">Sponsors</Typography>
             <Typography variant="body1">
-              {sponsors.map((s) => (
-                <>
-                  <Link
-                    href={getWebsiteByLegislatorCode(s.LegislatoreCode)}
-                    target="_blank"
+              {sponsors.map((s) => {
+                const party = getLegislatorPartyByCode(s.LegislatoreCode);
+
+                return (
+                  <Box
                     key={s.LegislatoreCode}
-                    sx={styles.hyperlink}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 1,
+                    }}
                   >
-                    {getFullLegislatorNameByCodeWithTitle(s.LegislatoreCode)}
-                  </Link>
-                  <br />
-                </>
-              ))}
+                    {party && (
+                      <PartyAffiliationBadge
+                        isCircleBadge={true}
+                        parties={[party]}
+                      />
+                    )}
+                    <Link
+                      href={getWebsiteByLegislatorCode(s.LegislatoreCode)}
+                      target="_blank"
+                      sx={styles.hyperlink}
+                    >
+                      {getFullLegislatorNameByCodeWithTitle(s.LegislatoreCode)}
+                    </Link>
+                  </Box>
+                );
+              })}
             </Typography>
           </Box>
           <Box sx={styles.lineItemButton}>

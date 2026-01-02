@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useModal } from '../../../utils/modal';
 import { useUser } from '../../../utils/user';
 import TitleLogo from '../../Accessories/TitleLogo/TitleLogo';
@@ -19,10 +19,9 @@ import ListItemText from '@mui/material/ListItemText';
 import { useNavigate } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import React from 'react';
 
-interface Props {}
-
-const Header = ({}: Props) => {
+const Header = () => {
   const { setModalClosed, anchorEl, setModalOpen } = useModal();
   const navigate = useNavigate();
   const { currentUser } = useUser();
@@ -35,18 +34,21 @@ const Header = ({}: Props) => {
     setModalClosed();
   }, [currentUser]);
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
-    setMenuAnchorEl(event.currentTarget);
-  };
+  const handleMenuClick = useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      setMenuAnchorEl(event.currentTarget);
+    },
+    []
+  );
 
-  const handleMenuClose = () => {
+  const handleMenuClose = useCallback(() => {
     setMenuAnchorEl(null);
-  };
+  }, []);
 
-  const handleFeedbackClick = () => {
+  const handleFeedbackClick = useCallback(() => {
     navigate('/feedback');
     handleMenuClose();
-  };
+  }, []);
 
   return (
     <Box sx={styles.container}>
@@ -133,4 +135,4 @@ const Header = ({}: Props) => {
   );
 };
 
-export default Header;
+export default React.memo(Header);

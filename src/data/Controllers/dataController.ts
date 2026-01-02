@@ -4,7 +4,7 @@ import { useCommitteeStoreController } from "./storeControllers/CommitteeStoreCo
 import { useLegislatorStoreController } from "./storeControllers/LegislatorStoreController";
 import { useMeasureStoreController } from "./storeControllers/MeasureStoreController";
 
-export const useDataController = () => {
+const useDataController = () => {
     userUserController();
     const { measuresCacheObject, committeesCacheObject, legislatorsCacheObject } = userOLISMeasureController();
     
@@ -12,3 +12,8 @@ export const useDataController = () => {
     useCommitteeStoreController(committeesCacheObject);
     useLegislatorStoreController(legislatorsCacheObject);
 }
+
+export const DataControllerWrapper = () => {
+    useDataController();
+    return null; // Doesn't render anything
+  }

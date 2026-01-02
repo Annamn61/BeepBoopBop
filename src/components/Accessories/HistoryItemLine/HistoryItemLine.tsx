@@ -16,6 +16,8 @@ import TestimonyButtons from './TestimonyButtons/TestimonyButtons';
 import MeetingButton from './MeetingButton/MeetingButton';
 import { useMediaQuery, useTheme } from '@mui/material';
 import { getMeasureUniqueId } from '../../../utils/measure';
+import useMeasureStore from '../../../store/MeasureStore';
+import PartyAffiliationBadge from '../PartyAffiliationBadge';
 
 interface HistoryItemProps {
   selected: boolean;
@@ -45,6 +47,10 @@ export const HistoryItemLine = ({
   const committeeMeeting =
     isMeeting && getCommitteeMeetingByIdAndDate(id, new Date(updateItem.Date));
 
+  const parties = useMeasureStore
+    .getState()
+    .getUniqueMeasureSponsorPartiesById(id);
+
   if (!updateItem) {
     return null;
   }
@@ -72,7 +78,13 @@ export const HistoryItemLine = ({
       <Box sx={styles.contentContainer}>
         <Box sx={styles.topLine}>
           {variant === 'full' && (
-            <MeasurePill id={getMeasureUniqueId(updateItem)} withModal={true} />
+            <Box display="flex" flexDirection="row" gap={1}>
+              <MeasurePill
+                id={getMeasureUniqueId(updateItem)}
+                withModal={true}
+              />
+              <PartyAffiliationBadge parties={parties} />
+            </Box>
           )}
           {canClick && (
             <IconButton

@@ -18,14 +18,19 @@ interface BillProps {
 const Bill = ({ billId }: BillProps) => {
   const { anchorEl, setModalOpen, setModalClosed } = useModal();
 
-  const { getMeasureCommitteeCodeById, getMeasureTitleById } =
-    useMeasureStore();
+  const {
+    getMeasureCommitteeCodeById,
+    getMeasureTitleById,
+    getMeasureNicknameById,
+  } = useMeasureStore();
   const { getUserTrackedMeasurePositionById, getUserMeasureColorById } =
     useUserStore();
 
   const committeeCode = getMeasureCommitteeCodeById(billId);
   const position = getUserTrackedMeasurePositionById(billId);
   const billTitle = getMeasureTitleById(billId);
+  const nickname = getMeasureNicknameById(billId);
+  const displayTitle = nickname || billTitle;
   const measureColor = getUserMeasureColorById(billId) || '#9E9E9E'; // Default darker grey for untracked bills
 
   const colorStyles = {
@@ -44,7 +49,7 @@ const Bill = ({ billId }: BillProps) => {
           key={billId}
         >
           <Typography variant="body1" sx={{ ...globalStyles.twoLineEllipses }}>
-            {billTitle}
+            {displayTitle}
           </Typography>
           {committeeCode && (
             <Typography variant="body2" sx={styles.committeeCode}>
@@ -53,7 +58,7 @@ const Bill = ({ billId }: BillProps) => {
           )}
           <Box sx={styles.info}>
             <Box>
-              {position === 'Support' && '🌍'}
+              {position === 'Support' && <span>🌍</span>}
               {position === 'Oppose' && '🚨'}
             </Box>
             <Typography variant="h5">

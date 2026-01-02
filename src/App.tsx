@@ -14,8 +14,8 @@ import Parser from './components/Pages/Parser/Parser';
 import Votes from './components/Pages/Votes/Votes';
 import Feedback from './components/Pages/Feedback/Feedback';
 import FeedbackAdmin from './components/Pages/FeedbackAdmin/FeedbackAdmin';
-import { useDataController } from './data/Controllers/dataController';
 import theme from './utils/theme';
+import { DataControllerWrapper } from './data/Controllers/dataController';
 
 function App() {
   const stored = sessionStorage.getItem('gh-path');
@@ -29,13 +29,13 @@ function App() {
       history.replaceState(null, '', stored);
     }
   }
-  useDataController();
 
   return (
     <ThemeProvider theme={theme}>
       <SnackbarProvider />
       <div className="app-container">
         <HashRouter>
+          <DataControllerWrapper />
           <Routes>
             <Route
               path="/"

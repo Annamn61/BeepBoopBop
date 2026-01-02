@@ -70,7 +70,7 @@ const SidebarMeasure = ({
   const loadingMeasureIds = useMeasureStore((state) => state.loadingMeasureIds);
   const { currentUser } = useUser();
 
-  const { isDisplayed, color, nickname } = userTrackedMeasure;
+  const { isDisplayed, color, nickname, position } = userTrackedMeasure;
   const uniqueId = getMeasureUniqueId(userTrackedMeasure);
   const isLoading = loadingMeasureIds.has(uniqueId);
 
@@ -133,6 +133,8 @@ const SidebarMeasure = ({
                 >
                   {getReadableId(userTrackedMeasure)}
                 </Typography>
+                {position === 'Support' && '🌍'}
+                {position === 'Oppose' && '🚨'}
                 {isDuplicate && (
                   <Chip
                     label="Duplicate"
@@ -234,7 +236,8 @@ const SidebarMeasure = ({
             measureNumber: number,
             measureColor: string,
             sessionKey: string,
-            nickname: string
+            nickname: string,
+            position: 'Support' | 'Oppose' | '?'
           ) => {
             if (isGroupMeasure && groupId) {
               // Update group measure
@@ -245,6 +248,7 @@ const SidebarMeasure = ({
                 color: measureColor,
                 SessionKey: sessionKey,
                 nickname: nickname,
+                position: position,
               };
 
               try {
@@ -271,6 +275,7 @@ const SidebarMeasure = ({
                 color: measureColor,
                 SessionKey: sessionKey,
                 nickname: nickname,
+                position: position,
               };
 
               // Optimistically update the store

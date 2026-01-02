@@ -1,15 +1,15 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 
 export const useModal = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-    const setModalOpen = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const setModalOpen = useCallback((e: React.MouseEvent<HTMLElement, MouseEvent>) => {
         setAnchorEl(e.currentTarget);
-    }
-
-    const setModalClosed = () => {
+    }, []);
+    
+    const setModalClosed = useCallback(() => {
         setAnchorEl(null);
-    }
+    }, [])
 
     return {
         anchorEl,

@@ -14,6 +14,10 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { UserTrackedMeasure } from '../../../../types/MeasureTypes';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 
 interface AddBillModalProps {
   title: string;
@@ -23,7 +27,8 @@ interface AddBillModalProps {
     measureNumber: number,
     measureColor: string,
     sessionKey: string,
-    nickname: string
+    nickname: string,
+    position: 'Support' | 'Oppose' | '?'
   ) => Promise<void> | void;
   initialValues?: UserTrackedMeasure;
   triggerIcon?: 'add' | 'edit';
@@ -56,6 +61,7 @@ export const AddBillModal = ({
   const [measureColor, setMeasureColor] = useState(MEASURE_COLORS.SAGE);
   const [sessionKey, setSessionKey] = useState('2025R1');
   const [nickname, setNickname] = useState('');
+  const [position, setPosition] = useState<'Support' | 'Oppose' | '?'>('?');
 
   const resetState = () => {
     if (initialValues) {
@@ -64,12 +70,14 @@ export const AddBillModal = ({
       setMeasureColor(initialValues.color);
       setSessionKey(initialValues.SessionKey);
       setNickname(initialValues.nickname);
+      setPosition(initialValues.position);
     } else {
       setMeasurePrefix('');
       setMeasureNumber('');
       setMeasureColor(MEASURE_COLORS.SAGE);
       setSessionKey('2025R1');
       setNickname('');
+      setPosition('?');
     }
   };
 
@@ -91,7 +99,8 @@ export const AddBillModal = ({
       Number(measureNumber),
       measureColor,
       sessionKey,
-      nickname
+      nickname,
+      position
     );
   };
 
@@ -179,6 +188,20 @@ export const AddBillModal = ({
             onChange={(e) => setNickname(e.target.value)}
             fullWidth
           />
+          <FormControl fullWidth>
+            <InputLabel>Position (optional)</InputLabel>
+            <Select
+              value={position}
+              label="Position (optional)"
+              onChange={(e) =>
+                setPosition(e.target.value as 'Support' | 'Oppose' | '?')
+              }
+            >
+              <MenuItem value="?">Not selected</MenuItem>
+              <MenuItem value="Support"> 🌍 Support</MenuItem>
+              <MenuItem value="Oppose"> 🚨 Oppose</MenuItem>
+            </Select>
+          </FormControl>
           <Button
             variant="filled"
             onClick={handleAdd}

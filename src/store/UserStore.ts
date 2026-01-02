@@ -84,7 +84,11 @@ export const useUserStore = create<UserState>((set, get) => ({
   },
   getUserTrackedMeasureUniqueIds: () => get().getSafeUserTrackedMeasures().map((measure) => getMeasureUniqueId(measure)),
   removeTrackedMeasureById: (id) => set({userTrackedMeasures: get().getSafeUserTrackedMeasures().filter((measure) => getMeasureUniqueId(measure) != id)}),
-  getUserTrackedMeasurePositionById: (id) => get().getSafeUserTrackedMeasures().find((utm: UserTrackedMeasure) => getMeasureUniqueId(utm) === id)?.position,
+  getUserTrackedMeasurePositionById: (id) => {
+    const allMeasures = get().getAllTrackedMeasuresWithSource();
+    const trackedMeasure = allMeasures.find(m => getMeasureUniqueId(m) === id);
+    return trackedMeasure?.position;
+  },
   getUserMeasureMetadataById: (id) => get().getSafeUserTrackedMeasures().find((measure: UserTrackedMeasure) => getMeasureUniqueId(measure) === id),
   getUserMeasureColorById: (id) => {
     // Check all tracked measures (user + group) for color

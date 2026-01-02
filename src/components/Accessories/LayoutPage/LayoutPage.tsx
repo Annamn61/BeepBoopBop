@@ -5,6 +5,7 @@ import Header from '../../Things/Header/Header';
 import PageTabs from '../../Things/PageTabs/PageTabs';
 import { Sidebar } from '../../Things/Sidebar/Sidebar';
 import { useState } from 'react';
+import React from 'react';
 
 interface Props {
   shouldLayoutChildren?: boolean;

@@ -24,13 +24,14 @@ export const AddGroupMeasure = ({
     measureNumber: number,
     measureColor: string,
     sessionKey: string,
-    nickname: string
+    nickname: string,
+    position: 'Support' | 'Oppose' | '?'
   ) => {
     const measure: UserTrackedMeasure = {
       MeasurePrefix: measurePrefix,
       MeasureNumber: measureNumber,
       SessionKey: sessionKey,
-      position: '?' as const,
+      position: position,
       isDisplayed: true,
       color: measureColor,
       nickname: nickname,
