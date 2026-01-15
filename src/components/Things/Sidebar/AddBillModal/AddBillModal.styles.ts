@@ -21,7 +21,19 @@ export const styles: Record<string, SxProps<Theme>> = {
         width: '80px'
     },
     number: {
-        width: '100px'
+        width: '100px',
+        height: '100%',
+        '& input[type=number]': {
+            '-moz-appearance': 'textfield',
+        },
+        '& input[type=number]::-webkit-outer-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: 0,
+        },
+        '& input[type=number]::-webkit-inner-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: 0,
+        },
     },
     sessionKey: {
         width: '100%'

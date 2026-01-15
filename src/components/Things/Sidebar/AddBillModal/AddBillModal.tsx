@@ -56,7 +56,7 @@ export const AddBillModal = ({
   );
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [measurePrefix, setMeasurePrefix] = useState('');
+  const [measurePrefix, setMeasurePrefix] = useState('HB');
   const [measureNumber, setMeasureNumber] = useState('');
   const [measureColor, setMeasureColor] = useState(MEASURE_COLORS.SAGE);
   const [sessionKey, setSessionKey] = useState('2025R1');
@@ -72,7 +72,7 @@ export const AddBillModal = ({
       setNickname(initialValues.nickname);
       setPosition(initialValues.position);
     } else {
-      setMeasurePrefix('');
+      setMeasurePrefix('HB');
       setMeasureNumber('');
       setMeasureColor(MEASURE_COLORS.SAGE);
       setSessionKey('2025R1');
@@ -147,17 +147,31 @@ export const AddBillModal = ({
             {title}
           </Typography>
           <Box sx={styles.form}>
-            <TextField
-              sx={styles.prefix}
-              placeholder="HB"
-              value={measurePrefix}
-              inputRef={inputRef}
-              onChange={(e) => setMeasurePrefix(e.target.value)}
-            />
+            <FormControl sx={styles.prefix}>
+              <InputLabel>Prefix</InputLabel>
+              <Select
+                value={measurePrefix}
+                label="Prefix"
+                onChange={(e) => setMeasurePrefix(e.target.value)}
+              >
+                <MenuItem value="HB">HB</MenuItem>
+                <MenuItem value="SB">SB</MenuItem>
+                <MenuItem value="SJR">SJR</MenuItem>
+              </Select>
+            </FormControl>
+
             <TextField
               sx={styles.number}
               placeholder="2024"
               value={measureNumber}
+              type="number"
+              slotProps={{
+                input: {
+                  style: {
+                    height: '100%',
+                  },
+                },
+              }}
               onChange={(e) => setMeasureNumber(e.target.value)}
             />
             <Button
@@ -173,14 +187,17 @@ export const AddBillModal = ({
               />
             </Button>
           </Box>
-          <TextField
-            sx={styles.sessionKey}
-            disabled={true}
-            placeholder="Session Key"
-            value={sessionKey}
-            onChange={(e) => setSessionKey(e.target.value)}
-            fullWidth
-          />
+          <FormControl fullWidth sx={styles.sessionKey}>
+            <InputLabel>Session Key</InputLabel>
+            <Select
+              value={sessionKey}
+              label="Session Key"
+              onChange={(e) => setSessionKey(e.target.value)}
+            >
+              <MenuItem value="2025R1">2025R1</MenuItem>
+              <MenuItem value="2026R1">2026R1</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             sx={styles.nickname}
             placeholder="Nickname (optional)"

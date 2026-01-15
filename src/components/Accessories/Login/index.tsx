@@ -9,6 +9,10 @@ import google from '../../../assets/GoogleLogo.svg';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { styles } from './Login.styles';
 import Typography from '@mui/material/Typography';
 import logo from '../../../assets/OreganoLogo.svg';
@@ -21,6 +25,8 @@ export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirmPass] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [error, setError] = useState<
     undefined | { field: string; message: string }
@@ -56,13 +62,28 @@ export const Login: React.FC = () => {
     <TextField
       sx={styles.field}
       value={password}
-      type="password"
+      type={showPassword ? 'text' : 'password'}
       variant="outlined"
       placeholder="Password"
       error={error && error.field === 'password'}
       helperText={error && error.field === 'password' ? error.message : null}
       autoFocus={true}
       onChange={(e) => setPassword(e.target.value)}
+      slotProps={{
+        input: {
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPassword(!showPassword)}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        },
+      }}
     />
   );
 
@@ -70,7 +91,7 @@ export const Login: React.FC = () => {
     <TextField
       sx={styles.field}
       value={confirm}
-      type="password"
+      type={showConfirmPassword ? 'text' : 'password'}
       variant="outlined"
       placeholder="Confirm Password"
       autoFocus={true}
@@ -78,6 +99,21 @@ export const Login: React.FC = () => {
       error={error && error.field === 'password2'}
       helperText={error && error.field === 'password2' ? error.message : null}
       onChange={(e) => setConfirmPass(e.target.value)}
+      slotProps={{
+        input: {
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                edge="end"
+              >
+                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        },
+      }}
     />
   );
 
