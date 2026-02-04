@@ -115,12 +115,11 @@ const sortUpdateDates = (history: GenericUpdateItem[]) => {
   const sortAndGroupUpdates = (updates: GenericUpdateItem[]) => {
     return sortUpdateDates(updates) 
       .reduce((acc: DateGroupedUpdates, entry) => {
-        const dateKey = new Date(entry.Date).toISOString().split("T")[0]; // Extract YYYY-MM-DD
-  
+        const dateKey = getYYYYMMDD(new Date(entry.Date));
         if (!acc[dateKey]) {
           acc[dateKey] = [];
         }
-  
+
         acc[dateKey].push(entry);
         return acc;
       }, {}); // Group by date

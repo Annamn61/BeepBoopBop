@@ -38,7 +38,7 @@ function MeetingCalendar() {
         step={15}
         timeslots={4}
         min={moment('7 am', 'h a').toDate()}
-        max={moment('6 pm', 'h a').toDate()}
+        max={moment('7 pm', 'h a').toDate()}
         eventPropGetter={(event) => {
           const backgroundColor = event.color || 'green'; // Default color
           return {

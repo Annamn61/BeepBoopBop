@@ -117,10 +117,6 @@ const MeasureHistory = () => {
                 <Box sx={styles.dateSection} key={key}>
                   <DateTitle dateString={key} />
                   <Box sx={styles.items}>
-                    {Object.keys(importantDates).includes(key) && (
-                      <Deadline dateKey={key} />
-                    )}
-
                     {futureHistory[key].map((update: GenericUpdateItem) => (
                       <HistoryItemLine
                         selected={selectedItem === update.Key}
@@ -134,6 +130,9 @@ const MeasureHistory = () => {
                         variant="full"
                       />
                     ))}
+                    {Object.keys(importantDates).includes(key) && (
+                      <Deadline dateKey={key} />
+                    )}
                   </Box>
                 </Box>
               ))}
