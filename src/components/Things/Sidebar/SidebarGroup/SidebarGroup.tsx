@@ -1,16 +1,16 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { GroupSummary, useUserStore } from '../../../../store/UserStore';
-import { styles } from './SidebarGroup.styles';
-import { useMemo, useEffect, useState } from 'react';
-import SidebarMeasure from '../SidebarMeasure/SidebarMeasure';
-import { getMeasureUniqueId, sortMeasures } from '../../../../utils/measure';
-import { AddGroupMeasure } from '../AddGroupMeasure/AddGroupMeasure';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  getUserGroupMeasures,
-  getGroup,
+    getGroup,
+    getUserGroupMeasures,
 } from '../../../../data/firebaseFirestore';
+import { GroupSummary, useUserStore } from '../../../../store/UserStore';
+import { getMeasureUniqueId, sortMeasuresMeasuresWithSource } from '../../../../utils/measure';
 import { useUser } from '../../../../utils/user';
+import { AddGroupMeasure } from '../AddGroupMeasure/AddGroupMeasure';
+import SidebarMeasure from '../SidebarMeasure/SidebarMeasure';
+import { styles } from './SidebarGroup.styles';
 
 interface SidebarGroupProps {
   group: GroupSummary;
@@ -92,7 +92,7 @@ const SidebarGroup = ({ group }: SidebarGroupProps) => {
           <AddGroupMeasure groupId={group.id} onMeasureAdded={fetchGroupData} />
         )}
       </Box>
-      {sortMeasures(groupMeasuresList).map((measure) => {
+      {sortMeasuresMeasuresWithSource(groupMeasuresList).map((measure) => {
         const isGroupMeasure =
           typeof measure.source === 'object' && measure.source.type === 'group';
         const groupSource = isGroupMeasure

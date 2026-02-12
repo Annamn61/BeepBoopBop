@@ -54,7 +54,16 @@ export const getMeasurePrefixNumberFromId = (id: string) => {
   }
 
 
-  export const sortMeasures = (measures: UserTrackedMeasure[] | UserTrackedMeasureWithSource[]) => {
+  export const sortMeasures = (measures: UserTrackedMeasure[]) => {
+    return measures.sort((a, b) => {
+      if(a.MeasurePrefix === b.MeasurePrefix) {
+        return a.MeasureNumber - b.MeasureNumber;
+      }
+      return a.MeasurePrefix.localeCompare(b.MeasurePrefix);
+    });
+  }
+
+  export const sortMeasuresMeasuresWithSource = (measures: UserTrackedMeasureWithSource[]) => {
     return measures.sort((a, b) => {
       if(a.MeasurePrefix === b.MeasurePrefix) {
         return a.MeasureNumber - b.MeasureNumber;
