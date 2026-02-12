@@ -11,7 +11,7 @@ import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import Drawer from '@mui/material/Drawer';
 import Tooltip from '@mui/material/Tooltip';
 import { useUserStore } from '../../../store/UserStore';
-import { getMeasureUniqueId } from '../../../utils/measure';
+import { getMeasureUniqueId, sortMeasures } from '../../../utils/measure';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { useUser } from '../../../utils/user';
@@ -59,7 +59,7 @@ export const Sidebar = ({ open, setOpen }: SidebarProps) => {
             </Box>
             {/* <SearchBar /> */}
             {userTrackedMeasures &&
-              userTrackedMeasures.map((utm) => (
+              sortMeasures(userTrackedMeasures).map((utm) => (
                 <SidebarMeasure
                   userTrackedMeasure={utm}
                   key={getMeasureUniqueId(utm)}

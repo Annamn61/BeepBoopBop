@@ -4,7 +4,7 @@ import { GroupSummary, useUserStore } from '../../../../store/UserStore';
 import { styles } from './SidebarGroup.styles';
 import { useMemo, useEffect, useState } from 'react';
 import SidebarMeasure from '../SidebarMeasure/SidebarMeasure';
-import { getMeasureUniqueId } from '../../../../utils/measure';
+import { getMeasureUniqueId, sortMeasures } from '../../../../utils/measure';
 import { AddGroupMeasure } from '../AddGroupMeasure/AddGroupMeasure';
 import {
   getUserGroupMeasures,
@@ -92,7 +92,7 @@ const SidebarGroup = ({ group }: SidebarGroupProps) => {
           <AddGroupMeasure groupId={group.id} onMeasureAdded={fetchGroupData} />
         )}
       </Box>
-      {groupMeasuresList.map((measure) => {
+      {sortMeasures(groupMeasuresList).map((measure) => {
         const isGroupMeasure =
           typeof measure.source === 'object' && measure.source.type === 'group';
         const groupSource = isGroupMeasure

@@ -1,3 +1,4 @@
+import { UserTrackedMeasure, UserTrackedMeasureWithSource } from "../types/MeasureTypes";
 import { SESSION_KEY } from "./constants";
 
 export const getMeasureUniqueId = (obj: { MeasurePrefix: string, MeasureNumber: number, SessionKey: string}) => {
@@ -50,4 +51,14 @@ export const getMeasurePrefixNumberFromId = (id: string) => {
     return {
       measurePrefix, measureNumber
     }
+  }
+
+
+  export const sortMeasures = (measures: UserTrackedMeasure[] | UserTrackedMeasureWithSource[]) => {
+    return measures.sort((a, b) => {
+      if(a.MeasurePrefix === b.MeasurePrefix) {
+        return a.MeasureNumber - b.MeasureNumber;
+      }
+      return a.MeasurePrefix.localeCompare(b.MeasurePrefix);
+    });
   }
