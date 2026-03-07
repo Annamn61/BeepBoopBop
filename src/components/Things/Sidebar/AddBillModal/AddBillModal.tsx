@@ -18,6 +18,52 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import Autocomplete from '@mui/material/Autocomplete';
+
+const sessionKeys = [
+    '2007I1',
+    '2007R1',
+    '2008S1',
+    '2009I1',
+    '2009R1',
+    '2010S1',
+    '2011R1',
+    '2012R1',
+    '2012S1',
+    '2013I1',
+    '2013R1',
+    '2013S1',
+    '2013S2',
+    '2014R1',
+    '2015I1',
+    '2015R1',
+    '2016R1',
+    '2017I1',
+    '2017R1',
+    '2018R1',
+    '2018S1',
+    '2019I1',
+    '2019R1',
+    '2020R1',
+    '2020S1',
+    '2020S2',
+    '2020S3',
+    '2021I1',
+    '2021R1',
+    '2021S1', 
+    '2021S2',
+    '2022R1',
+    '2023I1',
+    '2023R1',
+    '2024R1',
+    '2024S1',
+    '2025I1',
+    '2025R1',
+    '2025S1',
+    '2026R1'
+];
+
+const lastSessionKey = sessionKeys[sessionKeys.length - 1];
 
 interface AddBillModalProps {
   title: string;
@@ -59,7 +105,7 @@ export const AddBillModal = ({
   const [measurePrefix, setMeasurePrefix] = useState('HB');
   const [measureNumber, setMeasureNumber] = useState('');
   const [measureColor, setMeasureColor] = useState(MEASURE_COLORS.SAGE);
-  const [sessionKey, setSessionKey] = useState('2025R1');
+  const [sessionKey, setSessionKey] = useState(lastSessionKey);
   const [nickname, setNickname] = useState('');
   const [position, setPosition] = useState<'Support' | 'Oppose' | '?'>('?');
 
@@ -75,7 +121,7 @@ export const AddBillModal = ({
       setMeasurePrefix('HB');
       setMeasureNumber('');
       setMeasureColor(MEASURE_COLORS.SAGE);
-      setSessionKey('2025R1');
+      setSessionKey(lastSessionKey);
       setNickname('');
       setPosition('?');
     }
@@ -187,17 +233,17 @@ export const AddBillModal = ({
               />
             </Button>
           </Box>
-          <FormControl fullWidth sx={styles.sessionKey}>
-            <InputLabel>Session Key</InputLabel>
-            <Select
-              value={sessionKey}
-              label="Session Key"
-              onChange={(e) => setSessionKey(e.target.value)}
-            >
-              <MenuItem value="2025R1">2025R1</MenuItem>
-              <MenuItem value="2026R1">2026R1</MenuItem>
-            </Select>
-          </FormControl>
+          <Autocomplete
+            fullWidth
+            options={sessionKeys}
+            value={sessionKey}
+            onChange={(_e, newValue) => setSessionKey(newValue ?? lastSessionKey)}
+            onInputChange={(_e, value) => setSessionKey(value || lastSessionKey)}
+            freeSolo
+            renderInput={(params) => (
+              <TextField {...params} label="Session Key" />
+            )}
+          />
           <TextField
             sx={styles.nickname}
             placeholder="Nickname (optional)"
